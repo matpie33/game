@@ -1,6 +1,5 @@
 package core;
 
-import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.Vector3f;
@@ -11,15 +10,15 @@ public class GameSetUp extends SimpleApplication {
 	private ObjectPositioner objectPositioner = new ObjectPositioner();
 	private KeysSetup keysSetup = new KeysSetup();
 
-
+	@Override
 	public void simpleInitApp() {
 		setSettings();
 		modelLoader.loadModels(assetManager);
 		objectPositioner.addObjectsToScene(modelLoader, rootNode);
 		keysSetup.setupKeys(inputManager, modelLoader);
 		addLight();
-	}
 
+	}
 
 	private void addLight() {
 		DirectionalLight sun = new DirectionalLight();
@@ -29,5 +28,16 @@ public class GameSetUp extends SimpleApplication {
 
 	private void setSettings() {
 		getFlyByCamera().setMoveSpeed(20);
+
 	}
+
+	@Override
+	public void simpleUpdate(float tpf) {
+		Vector3f current = modelLoader.getDale()
+									  .getLocalTranslation();
+
+		cam.setLocation(new Vector3f(current.getX() - 5, current.getY() + 5,
+				current.getZ() - 5));
+	}
+
 }

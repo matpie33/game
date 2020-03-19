@@ -31,6 +31,18 @@
             <artifactId>jme3-plugins</artifactId>
             <version>3.2.2-stable</version>
         </dependency>
+        <dependency>
+            <groupId>org.jmonkeyengine</groupId>
+            <artifactId>jme3-bullet</artifactId>
+            <version>3.2.1-stable</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jmonkeyengine</groupId>
+            <artifactId>jme3-bullet-native</artifactId>
+            <version>3.2.2-stable</version>
+        </dependency>
+
+
 
 
 
