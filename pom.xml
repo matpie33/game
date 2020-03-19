@@ -26,6 +26,13 @@
             <version>3.1.0-beta1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jmonkeyengine</groupId>
+            <artifactId>jme3-plugins</artifactId>
+            <version>3.2.2-stable</version>
+        </dependency>
+
+
 
 
 
