@@ -1,5 +1,6 @@
 package core;
 
+import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.Vector3f;
@@ -8,12 +9,14 @@ public class GameSetUp extends SimpleApplication {
 
 	private ModelLoader modelLoader = new ModelLoader();
 	private ObjectPositioner objectPositioner = new ObjectPositioner();
+	private KeysSetup keysSetup = new KeysSetup();
 
 
 	public void simpleInitApp() {
 		setSettings();
 		modelLoader.loadModels(assetManager);
 		objectPositioner.addObjectsToScene(modelLoader, rootNode);
+		keysSetup.setupKeys(inputManager, modelLoader);
 		addLight();
 	}
 
