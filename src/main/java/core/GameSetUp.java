@@ -1,24 +1,22 @@
 package core;
 
-import com.jme3.animation.AnimChannel;
-import com.jme3.animation.AnimControl;
 import com.jme3.app.SimpleApplication;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 
 public class GameSetUp extends SimpleApplication {
 
 	private ModelLoader modelLoader = new ModelLoader();
-	private ObjectPositioner objectPositioner = new ObjectPositioner();
-	private KeysSetup keysSetup = new KeysSetup();
+	private ObjectInitialPositionSetter objectInitialPositionSetter = new ObjectInitialPositionSetter();
 	private AnimationController animationController = new AnimationController();
+	private KeysSetup keysSetup = new KeysSetup(animationController);
 
 	@Override
 	public void simpleInitApp() {
 		setSettings();
 		modelLoader.loadModels(assetManager);
-		objectPositioner.addObjectsToScene(modelLoader, rootNode);
+		objectInitialPositionSetter.addObjectsToScene(modelLoader, rootNode);
 		keysSetup.setupKeys(inputManager, modelLoader);
 		addLight();
 		animationController.setUpAnimations(modelLoader);
@@ -38,6 +36,13 @@ public class GameSetUp extends SimpleApplication {
 
 	@Override
 	public void simpleUpdate(float tpf) {
+		Spatial dale = modelLoader.getDale();
+		Vector3f localTranslation = dale.getLocalTranslation();
+
+		cam.setLocation(
+				new Vector3f(localTranslation.getX(), localTranslation.getY
+						() + 10,
+						localTranslation.getZ() - 10));
 	}
 
 }

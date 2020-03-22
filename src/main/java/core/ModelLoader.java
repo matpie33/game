@@ -17,7 +17,7 @@ public class ModelLoader {
 	private Spatial dale;
 
 	public void loadModels(AssetManager assetManager) {
-		dale = loadModel(assetManager, "act");
+		dale = loadModel(assetManager, "dale_v3");
 		for (int i = 0; i < NUMBER_OF_TREES; i++) {
 			trees.add(loadModel(assetManager, "tree"));
 		}

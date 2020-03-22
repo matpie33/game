@@ -7,7 +7,7 @@ import com.jme3.scene.Spatial;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObjectPositioner {
+public class ObjectInitialPositionSetter {
 
 	private List<Vector3f> treesCoordinates = new ArrayList<>();
 	private static final int FIRST_COORDINATE_OF_TREE_Z = 0;

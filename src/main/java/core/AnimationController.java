@@ -7,19 +7,27 @@ import com.jme3.animation.LoopMode;
 
 public class AnimationController implements AnimEventListener {
 
-	public void setUpAnimations (ModelLoader modelLoader){
+	public static final String STAND_ANIMATION = "stand";
+	public static final String WALK_ANIMATION = "walk";
+	private AnimChannel channel;
+
+	public void setUpAnimations(ModelLoader modelLoader) {
 		AnimControl control = modelLoader.getDale()
 										 .getControl(AnimControl.class);
 		control.addListener(this);
-		AnimChannel channel = control.createChannel();
-		channel.setAnim("my_animation");
-		channel.setLoopMode(LoopMode.Loop);
+		channel = control.createChannel();
+	}
+
+	public boolean isStanding() {
+		return STAND_ANIMATION.equals(channel.getAnimationName());
 	}
 
 	@Override
 	public void onAnimCycleDone(AnimControl animControl,
-			AnimChannel animChannel, String s) {
-
+			AnimChannel animChannel, String previousAnimation) {
+		if (WALK_ANIMATION.equals(previousAnimation)) {
+			animChannel.setAnim(STAND_ANIMATION);
+		}
 	}
 
 	@Override
@@ -27,4 +35,14 @@ public class AnimationController implements AnimEventListener {
 			String s) {
 
 	}
+
+	public void animateMovingForward() {
+
+		if (!WALK_ANIMATION.equals(channel.getAnimationName())) {
+			channel.setAnim(WALK_ANIMATION);
+			channel.setLoopMode(LoopMode.DontLoop);
+		}
+	}
+
+
 }

@@ -7,15 +7,25 @@ import com.jme3.input.controls.KeyTrigger;
 
 public class KeysSetup {
 
-	public static final String MOVE_LEFT_MAPPING_NAME = "moveLeft";
+	public static final String MOVE_LEFT_MAPPING_NAME = "moveForward";
+
+	private AnimationController animationController;
+	private ObjectPositionRotationHandler objectPositionRotationHandler = new ObjectPositionRotationHandler();
+
+	public KeysSetup(AnimationController animationController) {
+		this.animationController = animationController;
+	}
 
 	public void setupKeys(InputManager inputManager, ModelLoader modelLoader) {
 		inputManager.addMapping(MOVE_LEFT_MAPPING_NAME,
-				new KeyTrigger(KeyInput.KEY_J));
+				new KeyTrigger(KeyInput.KEY_W));
 		inputManager.addListener((ActionListener) (name, keyPressed, tpf) -> {
 			if (name.equals(MOVE_LEFT_MAPPING_NAME)) {
-				modelLoader.getDale()
-						   .move(1, 0, 0);
+				if (animationController.isStanding()){
+					objectPositionRotationHandler.moveObjectForward(modelLoader.getDale());
+				}
+				animationController.animateMovingForward();
+
 			}
 		}, MOVE_LEFT_MAPPING_NAME);
 	}
