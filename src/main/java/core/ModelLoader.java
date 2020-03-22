@@ -1,6 +1,7 @@
 package core;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class ModelLoader {
 	private Spatial dale;
 
 	public void loadModels(AssetManager assetManager) {
-		dale = loadModel(assetManager, "dale");
+		dale = loadModel(assetManager, "act");
 		for (int i = 0; i < NUMBER_OF_TREES; i++) {
 			trees.add(loadModel(assetManager, "tree"));
 		}
@@ -24,7 +25,8 @@ public class ModelLoader {
 
 	private Spatial loadModel(AssetManager assetManager, String modelName) {
 		return assetManager.loadModel(
-				String.format(MODELS_DIRECTORY + "%s" + MODEL_EXTENSION, modelName));
+				String.format(MODELS_DIRECTORY + "%s" + MODEL_EXTENSION,
+						modelName));
 	}
 
 	public List<Spatial> getTrees() {
