@@ -13,11 +13,14 @@ public class ModelLoader {
 	private static final int NUMBER_OF_TREES = 20;
 	private static final String MODELS_DIRECTORY = "models/";
 	private static final String MODEL_EXTENSION = ".mesh.xml";
+	private static final String SCENE_EXTENSION = ".scene";
 
 	private Spatial dale;
+	private Spatial scene;
 
 	public void loadModels(AssetManager assetManager) {
 		dale = loadModel(assetManager, "dale_v3");
+		scene = loadScene(assetManager, "main");
 		for (int i = 0; i < NUMBER_OF_TREES; i++) {
 			trees.add(loadModel(assetManager, "tree"));
 		}
@@ -28,6 +31,11 @@ public class ModelLoader {
 				String.format(MODELS_DIRECTORY + "%s" + MODEL_EXTENSION,
 						modelName));
 	}
+	private Spatial loadScene(AssetManager assetManager, String sceneName) {
+		return assetManager.loadModel(
+				String.format(MODELS_DIRECTORY + "%s" + SCENE_EXTENSION,
+						sceneName));
+	}
 
 	public List<Spatial> getTrees() {
 		return trees;
@@ -35,5 +43,9 @@ public class ModelLoader {
 
 	public Spatial getDale() {
 		return dale;
+	}
+
+	public Spatial getScene() {
+		return scene;
 	}
 }

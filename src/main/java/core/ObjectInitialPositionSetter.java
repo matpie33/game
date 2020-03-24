@@ -1,5 +1,13 @@
 package core;
 
+import com.jme3.app.state.AppStateManager;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.CharacterControl;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -48,6 +56,49 @@ public class ObjectInitialPositionSetter {
 		}
 
 		rootNode.attachChild(modelLoader.getDale());
+		rootNode.attachChild(modelLoader.getScene());
+	}
+
+	public void initializeObjects(ModelLoader modelLoader,
+			AppStateManager stateManager) {
+		BulletAppState bulletAppState = initializeBulletAppState(stateManager);
+		initializeScene(modelLoader, bulletAppState);
+		initializeDale(modelLoader, bulletAppState);
+	}
+
+	private BulletAppState initializeBulletAppState(
+			AppStateManager stateManager) {
+		BulletAppState bulletAppState = new BulletAppState();
+		stateManager.attach(bulletAppState);
+		return bulletAppState;
+	}
+
+	private void initializeDale(ModelLoader modelLoader,
+			BulletAppState bulletAppState) {
+		Spatial model = modelLoader.getDale();
+		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
+		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f,
+				1);
+		CharacterControl player = new CharacterControl(capsuleShape, 0.05f);
+		player.setJumpSpeed(20);
+		player.setFallSpeed(30);
+		player.setGravity(new Vector3f(0, -30f, 0));
+		model.addControl(player);
+		player.setPhysicsLocation(new Vector3f(0, 10, 0));
+
+		bulletAppState.getPhysicsSpace()
+					  .add(player);
+	}
+
+	private void initializeScene(ModelLoader modelLoader,
+			BulletAppState bulletAppState) {
+		Spatial scene = modelLoader.getScene();
+		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(
+				scene);
+		RigidBodyControl landscape = new RigidBodyControl(sceneShape, 0);
+		scene.addControl(landscape);
+		bulletAppState.getPhysicsSpace()
+					  .add(landscape);
 	}
 
 }

@@ -18,9 +18,6 @@ public class AnimationController implements AnimEventListener {
 		channel = control.createChannel();
 	}
 
-	public boolean isStanding() {
-		return STAND_ANIMATION.equals(channel.getAnimationName());
-	}
 
 	@Override
 	public void onAnimCycleDone(AnimControl animControl,
