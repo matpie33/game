@@ -82,7 +82,7 @@ public class ObjectInitialPositionSetter {
 		CharacterControl player = new CharacterControl(capsuleShape, 0.05f);
 		player.setJumpSpeed(20);
 		player.setFallSpeed(30);
-		player.setGravity(new Vector3f(0, -30f, 0));
+		player.setGravity(new Vector3f(0, -10f, 0));
 		model.addControl(player);
 		player.setPhysicsLocation(new Vector3f(0, 10, 0));
 

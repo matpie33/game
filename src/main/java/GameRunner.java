@@ -1,7 +1,7 @@
 import com.jme3.system.AppSettings;
 import core.GameSetUp;
 
-public class GameRun {
+public class GameRunner {
 
 	public static void main(String[] args) {
 		GameSetUp gameSetUp = new GameSetUp();

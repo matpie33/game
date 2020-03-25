@@ -66,4 +66,13 @@ public class ObjectsMovementHandler {
 		}
 	}
 
+	public void daleJump() {
+		CharacterControl control = modelLoader.getDale()
+											  .getControl(
+													  CharacterControl.class);
+		if (control.onGround()) {
+			control.jump(new Vector3f(0, 10f, 0));
+		}
+	}
+
 }
