@@ -44,7 +44,7 @@ public class GameSetUp extends SimpleApplication {
 
 	@Override
 	public void simpleUpdate(float tpf) {
-		objectsMovementHandler.handleMovement();
+		objectsMovementHandler.handleMovement(tpf);
 	}
 
 }

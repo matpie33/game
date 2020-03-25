@@ -22,16 +22,16 @@ public class ObjectsMovementHandler {
 		this.modelLoader = modelLoader;
 	}
 
-	public void handleMovement() {
-		handleDaleMovement();
+	public void handleMovement(float tpf) {
+		handleDaleMovement(tpf);
 		handleCameraMovement();
 
 	}
 
-	private void handleDaleMovement() {
+	private void handleDaleMovement(float tpf) {
 		modifiableWalkDirectionVector.set(0, 0, 0);
-		handleMovementByKeys(modifiableWalkDirectionVector);
-		setMovementDirection();
+		handleMovementByKeys(modifiableWalkDirectionVector, tpf);
+
 	}
 
 	private void setMovementDirection() {
@@ -45,14 +45,33 @@ public class ObjectsMovementHandler {
 	private void handleCameraMovement() {
 		Vector3f dalePosition = modelLoader.getDale()
 										   .getLocalTranslation();
-
-		camera.setLocation(new Vector3f(
-				dalePosition.getX() - DISTANCE_X_FROM_CAMERA_TO_DALE,
-				dalePosition.getY() + DISTANCE_Y_FROM_CAMERA_TO_DALE,
-				dalePosition.getZ()));
+		CharacterControl control = modelLoader.getDale()
+											  .getControl(
+													  CharacterControl.class);
+		Vector3f dalePositionMinusViewDirection = calculateCameraPositionBasedOnDaleViewDirection(
+				dalePosition, control);
+		adjustCameraYPosition(dalePositionMinusViewDirection);
+		camera.setLocation(dalePositionMinusViewDirection);
 	}
 
-	private void handleMovementByKeys(Vector3f walkDirection) {
+	private void adjustCameraYPosition(
+			Vector3f dalePositionMinusViewDirection) {
+		dalePositionMinusViewDirection.setY(
+				dalePositionMinusViewDirection.getY() + 10);
+		if (dalePositionMinusViewDirection.getY() < 5) {
+			dalePositionMinusViewDirection.setY(5);
+		}
+	}
+
+	private Vector3f calculateCameraPositionBasedOnDaleViewDirection(
+			Vector3f dalePosition, CharacterControl control) {
+		Vector3f viewDirection = control.getViewDirection();
+		Vector3f viewDirectionScaled = viewDirection.mult(20);
+		viewDirectionScaled.setY(viewDirectionScaled.getY());
+		return dalePosition.subtract(viewDirectionScaled);
+	}
+
+	private void handleMovementByKeys(Vector3f walkDirection, float tpf) {
 		Vector3f camDir = camera.getDirection()
 								.clone()
 								.multLocal(0.1f);
@@ -64,6 +83,10 @@ public class ObjectsMovementHandler {
 		if (daleState.isMovingBackward()) {
 			walkDirection.addLocal(camDir.negate());
 		}
+		if (daleState.isMovingLeft()) {
+		}
+		setMovementDirection();
+
 	}
 
 	public void daleJump() {
