@@ -7,32 +7,33 @@ import com.jme3.math.Vector3f;
 public class GameSetUp extends SimpleApplication {
 
 	private ModelLoader modelLoader = new ModelLoader();
-	private ObjectInitialPositionSetter objectInitialPositionSetter = new ObjectInitialPositionSetter();
+	private ObjectsInitializer objectsInitializer = new ObjectsInitializer();
 	private AnimationController animationController = new AnimationController();
-	private DaleState daleState = new DaleState();
 	private KeysSetup keysSetup;
 	private ObjectsMovementHandler objectsMovementHandler;
 
 	@Override
 	public void simpleInitApp() {
 		modelLoader.loadModels(assetManager);
-		initializeObjects();
+		DaleState daleState = initializeObjects();
 		addLight();
 		animationController.setUpAnimations(modelLoader);
 		objectsMovementHandler = new ObjectsMovementHandler(animationController,
 				cam, daleState, modelLoader);
-		setupKeys();
+		setupKeys(daleState);
 
 	}
 
-	private void setupKeys() {
+	private void setupKeys(DaleState daleState) {
 		keysSetup = new KeysSetup(daleState, objectsMovementHandler);
 		keysSetup.setupKeys(inputManager);
 	}
 
-	private void initializeObjects() {
-		objectInitialPositionSetter.initializeObjects(modelLoader, stateManager);
-		objectInitialPositionSetter.addObjectsToScene(modelLoader, rootNode);
+	private DaleState initializeObjects() {
+		DaleState daleState = objectsInitializer.initializeObjects(modelLoader,
+				stateManager);
+		objectsInitializer.addObjectsToScene(modelLoader, rootNode);
+		return daleState;
 	}
 
 	private void addLight() {
@@ -40,7 +41,6 @@ public class GameSetUp extends SimpleApplication {
 		sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f).normalizeLocal());
 		rootNode.addLight(sun);
 	}
-
 
 	@Override
 	public void simpleUpdate(float tpf) {

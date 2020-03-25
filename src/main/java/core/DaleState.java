@@ -1,11 +1,14 @@
 package core;
 
+import com.jme3.bullet.control.CharacterControl;
+
 public class DaleState {
 
 	private boolean isMovingForward;
 	private boolean isMovingBackward;
 	private boolean isMovingLeft;
 	private boolean isMovingRight;
+	private CharacterControl characterControl;
 
 	public boolean isMovingForward() {
 		return isMovingForward;
@@ -37,5 +40,13 @@ public class DaleState {
 
 	public void setMovingRight(boolean movingRight) {
 		isMovingRight = movingRight;
+	}
+
+	public void setCharacterControl(CharacterControl characterControl) {
+		this.characterControl = characterControl;
+	}
+
+	public CharacterControl getCharacterControl() {
+		return characterControl;
 	}
 }

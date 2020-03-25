@@ -15,13 +15,15 @@ import com.jme3.scene.Spatial;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObjectInitialPositionSetter {
+public class ObjectsInitializer {
 
 	private List<Vector3f> treesCoordinates = new ArrayList<>();
 	private static final int FIRST_COORDINATE_OF_TREE_Z = 0;
 	private static final int FIRST_COORDINATE_OF_TREE_X = 15;
 	private static final int INCREASE_X_BY = 20;
 	private static final int INCREASE_Z_BY = 40;
+
+	private DaleState daleState;
 
 	private void initializeTreesCoordinates(int numberOfTrees) {
 		treesCoordinates = new ArrayList<>();
@@ -59,11 +61,12 @@ public class ObjectInitialPositionSetter {
 		rootNode.attachChild(modelLoader.getScene());
 	}
 
-	public void initializeObjects(ModelLoader modelLoader,
+	public DaleState initializeObjects(ModelLoader modelLoader,
 			AppStateManager stateManager) {
 		BulletAppState bulletAppState = initializeBulletAppState(stateManager);
 		initializeScene(modelLoader, bulletAppState);
 		initializeDale(modelLoader, bulletAppState);
+		return daleState;
 	}
 
 	private BulletAppState initializeBulletAppState(
@@ -79,15 +82,19 @@ public class ObjectInitialPositionSetter {
 		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
 		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f,
 				1);
-		CharacterControl player = new CharacterControl(capsuleShape, 0.05f);
-		player.setJumpSpeed(20);
-		player.setFallSpeed(30);
-		player.setGravity(new Vector3f(0, -10f, 0));
-		model.addControl(player);
-		player.setPhysicsLocation(new Vector3f(0, 10, 0));
+		daleState = new DaleState();
+
+		CharacterControl daleControl = new CharacterControl(capsuleShape,
+				0.05f);
+		daleState.setCharacterControl(daleControl);
+		daleControl.setJumpSpeed(20);
+		daleControl.setFallSpeed(30);
+		daleControl.setGravity(new Vector3f(0, -10f, 0));
+		model.addControl(daleControl);
+		daleControl.setPhysicsLocation(new Vector3f(0, 10, 0));
 
 		bulletAppState.getPhysicsSpace()
-					  .add(player);
+					  .add(daleControl);
 	}
 
 	private void initializeScene(ModelLoader modelLoader,

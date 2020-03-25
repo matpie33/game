@@ -35,9 +35,7 @@ public class ObjectsMovementHandler {
 	}
 
 	private void setMovementDirection() {
-		CharacterControl control = modelLoader.getDale()
-											  .getControl(
-													  CharacterControl.class);
+		CharacterControl control = daleState.getCharacterControl();
 		control.setViewDirection(camera.getDirection());
 		control.setWalkDirection(modifiableWalkDirectionVector);
 	}
@@ -45,9 +43,7 @@ public class ObjectsMovementHandler {
 	private void handleCameraMovement() {
 		Vector3f dalePosition = modelLoader.getDale()
 										   .getLocalTranslation();
-		CharacterControl control = modelLoader.getDale()
-											  .getControl(
-													  CharacterControl.class);
+		CharacterControl control = daleState.getCharacterControl();
 		Vector3f dalePositionMinusViewDirection = calculateCameraPositionBasedOnDaleViewDirection(
 				dalePosition, control);
 		adjustCameraYPosition(dalePositionMinusViewDirection);
@@ -90,9 +86,7 @@ public class ObjectsMovementHandler {
 	}
 
 	public void daleJump() {
-		CharacterControl control = modelLoader.getDale()
-											  .getControl(
-													  CharacterControl.class);
+		CharacterControl control = daleState.getCharacterControl();
 		if (control.onGround()) {
 			control.jump(new Vector3f(0, 10f, 0));
 		}
