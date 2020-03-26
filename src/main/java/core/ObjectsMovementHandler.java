@@ -6,8 +6,6 @@ import com.jme3.renderer.Camera;
 
 public class ObjectsMovementHandler {
 
-	public static final int DISTANCE_X_FROM_CAMERA_TO_DALE = 20;
-	public static final int DISTANCE_Y_FROM_CAMERA_TO_DALE = 18;
 	private AnimationController animationController;
 	private Camera camera;
 	private DaleState daleState;

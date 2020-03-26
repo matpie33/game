@@ -11,6 +11,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import dto.ObjectsControlsDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class ObjectsInitializer {
 	private static final int INCREASE_Z_BY = 40;
 
 	private DaleState daleState;
+	private ObjectsControlsDTO objectsControlsDTO = new ObjectsControlsDTO();
 
 	private void initializeTreesCoordinates(int numberOfTrees) {
 		treesCoordinates = new ArrayList<>();
@@ -49,13 +51,15 @@ public class ObjectsInitializer {
 		List<Spatial> trees = modelLoader.getTrees();
 		initializeTreesCoordinates(trees.size());
 
-		for (int i = 0; i < trees.size(); i++) {
-			Spatial spatial = trees.get(i);
+		List<RigidBodyControl> treesControls = objectsControlsDTO.getTreesControls();
+		for (int i = 0; i < treesControls.size(); i++) {
+			RigidBodyControl control = treesControls.get(i);
 			Vector3f currentCoordinate = treesCoordinates.get(i);
-			spatial.move(currentCoordinate.getX(), currentCoordinate.getY(),
-					currentCoordinate.getZ());
-			rootNode.attachChild(spatial);
+			control.setPhysicsLocation(new Vector3f(currentCoordinate.getX(),
+					currentCoordinate.getY(),
+					currentCoordinate.getZ()));
 		}
+		trees.forEach(rootNode::attachChild);
 
 		rootNode.attachChild(modelLoader.getDale());
 		rootNode.attachChild(modelLoader.getScene());
@@ -66,7 +70,22 @@ public class ObjectsInitializer {
 		BulletAppState bulletAppState = initializeBulletAppState(stateManager);
 		initializeScene(modelLoader, bulletAppState);
 		initializeDale(modelLoader, bulletAppState);
+		initializeTree(modelLoader, bulletAppState);
 		return daleState;
+	}
+
+	private void initializeTree(ModelLoader modelLoader,
+			BulletAppState bulletAppState) {
+		List<Spatial> trees = modelLoader.getTrees();
+		for (Spatial tree : trees) {
+			CollisionShape collisionShape = CollisionShapeFactory.createMeshShape(
+					tree);
+			RigidBodyControl rigidBodyControl = new RigidBodyControl(
+					collisionShape, 0);
+			objectsControlsDTO.addTreeControl(rigidBodyControl);
+			tree.addControl(rigidBodyControl);
+			bulletAppState.getPhysicsSpace().add(rigidBodyControl);
+		}
 	}
 
 	private BulletAppState initializeBulletAppState(
@@ -87,6 +106,7 @@ public class ObjectsInitializer {
 		CharacterControl daleControl = new CharacterControl(capsuleShape,
 				0.05f);
 		daleState.setCharacterControl(daleControl);
+		objectsControlsDTO.setDaleControl(daleControl);
 		daleControl.setJumpSpeed(20);
 		daleControl.setFallSpeed(30);
 		daleControl.setGravity(new Vector3f(0, -10f, 0));
