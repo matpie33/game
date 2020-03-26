@@ -70,7 +70,7 @@ public class ObjectsMovementHandler {
 	private void handleMovementByKeys(Vector3f walkDirection, float tpf) {
 		Vector3f camDir = camera.getDirection()
 								.clone()
-								.multLocal(0.1f);
+								.multLocal(0.5f);
 		camDir.y = 0;
 		if (daleState.isMovingForward()) {
 			walkDirection.addLocal(camDir);

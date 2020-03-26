@@ -12,6 +12,7 @@ public class ModelLoader {
 	private List<Spatial> trees = new ArrayList<>();
 	private static final int NUMBER_OF_TREES = 20;
 	private static final String MODELS_DIRECTORY = "models/";
+	private static final String SCENE_DIRECTORY = "scene/";
 	private static final String MODEL_EXTENSION = ".mesh.xml";
 	private static final String SCENE_EXTENSION = ".scene";
 
@@ -20,7 +21,7 @@ public class ModelLoader {
 
 	public void loadModels(AssetManager assetManager) {
 		dale = loadModel(assetManager, "dale_v3");
-		scene = loadScene(assetManager, "main");
+		scene = loadScene(assetManager, "scene");
 		for (int i = 0; i < NUMBER_OF_TREES; i++) {
 			trees.add(loadModel(assetManager, "tree"));
 		}
@@ -33,7 +34,7 @@ public class ModelLoader {
 	}
 	private Spatial loadScene(AssetManager assetManager, String sceneName) {
 		return assetManager.loadModel(
-				String.format(MODELS_DIRECTORY + "%s" + SCENE_EXTENSION,
+				String.format(SCENE_DIRECTORY + "%s" + SCENE_EXTENSION,
 						sceneName));
 	}
 
