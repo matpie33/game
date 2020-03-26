@@ -18,10 +18,12 @@ public class ModelLoader {
 
 	private Spatial dale;
 	private Spatial scene;
+	private Spatial mark;
 
 	public void loadModels(AssetManager assetManager) {
 		dale = loadModel(assetManager, "dale_v3");
 		scene = loadScene(assetManager, "scene");
+		mark = loadModel(assetManager, "mark");
 		for (int i = 0; i < NUMBER_OF_TREES; i++) {
 			trees.add(loadModel(assetManager, "tree"));
 		}
@@ -48,5 +50,9 @@ public class ModelLoader {
 
 	public Spatial getScene() {
 		return scene;
+	}
+
+	public Spatial getMark() {
+		return mark;
 	}
 }

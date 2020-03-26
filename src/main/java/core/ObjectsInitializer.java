@@ -61,6 +61,7 @@ public class ObjectsInitializer {
 		}
 		trees.forEach(rootNode::attachChild);
 
+		rootNode.attachChild(modelLoader.getMark());
 		rootNode.attachChild(modelLoader.getDale());
 		rootNode.attachChild(modelLoader.getScene());
 	}
@@ -71,7 +72,13 @@ public class ObjectsInitializer {
 		initializeScene(modelLoader, bulletAppState);
 		initializeDale(modelLoader, bulletAppState);
 		initializeTree(modelLoader, bulletAppState);
+		initializeMark(modelLoader, bulletAppState);
 		return daleState;
+	}
+
+	private void initializeMark(ModelLoader modelLoader,
+			BulletAppState bulletAppState) {
+		modelLoader.getMark().setLocalTranslation(5,5,5);
 	}
 
 	private void initializeTree(ModelLoader modelLoader,
@@ -102,6 +109,7 @@ public class ObjectsInitializer {
 		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f,
 				1);
 		daleState = new DaleState();
+		daleState.setCarryingThrowableObject(false);
 
 		CharacterControl daleControl = new CharacterControl(capsuleShape,
 				0.05f);

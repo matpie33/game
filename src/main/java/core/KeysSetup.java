@@ -2,8 +2,12 @@ package core;
 
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.renderer.Camera;
+import com.jme3.scene.Node;
 
 public class KeysSetup implements ActionListener {
 

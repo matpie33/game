@@ -11,11 +11,14 @@ public class GameSetUp extends SimpleApplication {
 	private AnimationController animationController = new AnimationController();
 	private KeysSetup keysSetup;
 	private ObjectsMovementHandler objectsMovementHandler;
+	private ThrowingHandler throwingHandler;
+	private DaleState daleState;
 
 	@Override
 	public void simpleInitApp() {
+		throwingHandler = new ThrowingHandler();
 		modelLoader.loadModels(assetManager);
-		DaleState daleState = initializeObjects();
+		daleState = initializeObjects();
 		addLight();
 		animationController.setUpAnimations(modelLoader);
 		objectsMovementHandler = new ObjectsMovementHandler(animationController,
@@ -45,6 +48,7 @@ public class GameSetUp extends SimpleApplication {
 	@Override
 	public void simpleUpdate(float tpf) {
 		objectsMovementHandler.handleMovement(tpf);
+		throwingHandler.markThrowingDestination(cam, rootNode, modelLoader, daleState);
 	}
 
 }

@@ -9,6 +9,15 @@ public class DaleState {
 	private boolean isMovingLeft;
 	private boolean isMovingRight;
 	private CharacterControl characterControl;
+	private boolean isCarryingThrowableObject;
+
+	public boolean isCarryingThrowableObject() {
+		return isCarryingThrowableObject;
+	}
+
+	public void setCarryingThrowableObject(boolean carryingThrowableObject) {
+		isCarryingThrowableObject = carryingThrowableObject;
+	}
 
 	public boolean isMovingForward() {
 		return isMovingForward;
