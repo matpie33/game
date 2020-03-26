@@ -49,6 +49,7 @@ public class GameSetUp extends SimpleApplication {
 	public void simpleUpdate(float tpf) {
 		objectsMovementHandler.handleMovement(tpf);
 		throwingHandler.markThrowingDestination(cam, rootNode, modelLoader, daleState);
+		throwingHandler.markThrowableObject(cam, rootNode, modelLoader, daleState);
 	}
 
 }

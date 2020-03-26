@@ -59,11 +59,15 @@ public class ObjectsInitializer {
 					currentCoordinate.getY(),
 					currentCoordinate.getZ()));
 		}
+
 		trees.forEach(rootNode::attachChild);
+		objectsControlsDTO.getBoxControl().setPhysicsLocation(new Vector3f
+				(-20,10,4));
 
 		rootNode.attachChild(modelLoader.getMark());
 		rootNode.attachChild(modelLoader.getDale());
 		rootNode.attachChild(modelLoader.getScene());
+		rootNode.attachChild(modelLoader.getBox());
 	}
 
 	public DaleState initializeObjects(ModelLoader modelLoader,
@@ -73,7 +77,20 @@ public class ObjectsInitializer {
 		initializeDale(modelLoader, bulletAppState);
 		initializeTree(modelLoader, bulletAppState);
 		initializeMark(modelLoader, bulletAppState);
+		initializeBox(modelLoader, bulletAppState);
 		return daleState;
+	}
+
+	private void initializeBox(ModelLoader modelLoader,
+			BulletAppState bulletAppState) {
+		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(
+				modelLoader.getBox());
+		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 0);
+		modelLoader.getBox()
+				   .addControl(rigidBodyControl);
+		bulletAppState.getPhysicsSpace().add(rigidBodyControl);
+		objectsControlsDTO.addBoxControl(rigidBodyControl);
+
 	}
 
 	private void initializeMark(ModelLoader modelLoader,
@@ -106,7 +123,8 @@ public class ObjectsInitializer {
 			BulletAppState bulletAppState) {
 		Spatial model = modelLoader.getDale();
 		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
-		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f,
+		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(2f,
+				12f,
 				1);
 		daleState = new DaleState();
 		daleState.setCarryingThrowableObject(false);
@@ -119,7 +137,7 @@ public class ObjectsInitializer {
 		daleControl.setFallSpeed(30);
 		daleControl.setGravity(new Vector3f(0, -10f, 0));
 		model.addControl(daleControl);
-		daleControl.setPhysicsLocation(new Vector3f(0, 10, 0));
+		daleControl.setPhysicsLocation(new Vector3f(0, 10, -20));
 
 		bulletAppState.getPhysicsSpace()
 					  .add(daleControl);

@@ -12,6 +12,7 @@ public class ObjectsControlsDTO {
 	private List<RigidBodyControl> treesControls = new ArrayList<>();
 
 	private CharacterControl daleControl;
+	private RigidBodyControl boxControl;
 
 	public List<RigidBodyControl> getTreesControls() {
 		return Collections.unmodifiableList(treesControls);
@@ -28,5 +29,13 @@ public class ObjectsControlsDTO {
 
 	public void addTreeControl(RigidBodyControl rigidBodyControl) {
 		treesControls.add(rigidBodyControl);
+	}
+
+	public void addBoxControl(RigidBodyControl rigidBodyControl) {
+		boxControl = rigidBodyControl;
+	}
+
+	public RigidBodyControl getBoxControl() {
+		return boxControl;
 	}
 }

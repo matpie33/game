@@ -1,7 +1,6 @@
 package core;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 import java.util.ArrayList;
@@ -19,9 +18,13 @@ public class ModelLoader {
 	private Spatial dale;
 	private Spatial scene;
 	private Spatial mark;
+	private Spatial box;
+	private Spatial arrow;
 
 	public void loadModels(AssetManager assetManager) {
 		dale = loadModel(assetManager, "dale_v3");
+		arrow = loadModel(assetManager, "arrow");
+		box = loadModel(assetManager, "box");
 		scene = loadScene(assetManager, "scene");
 		mark = loadModel(assetManager, "mark");
 		for (int i = 0; i < NUMBER_OF_TREES; i++) {
@@ -29,11 +32,16 @@ public class ModelLoader {
 		}
 	}
 
+	public Spatial getArrow() {
+		return arrow;
+	}
+
 	private Spatial loadModel(AssetManager assetManager, String modelName) {
 		return assetManager.loadModel(
 				String.format(MODELS_DIRECTORY + "%s" + MODEL_EXTENSION,
 						modelName));
 	}
+
 	private Spatial loadScene(AssetManager assetManager, String sceneName) {
 		return assetManager.loadModel(
 				String.format(SCENE_DIRECTORY + "%s" + SCENE_EXTENSION,
@@ -50,6 +58,10 @@ public class ModelLoader {
 
 	public Spatial getScene() {
 		return scene;
+	}
+
+	public Spatial getBox() {
+		return box;
 	}
 
 	public Spatial getMark() {
