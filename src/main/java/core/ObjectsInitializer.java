@@ -85,7 +85,9 @@ public class ObjectsInitializer {
 			BulletAppState bulletAppState) {
 		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(
 				modelLoader.getBox());
-		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 0);
+		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
+				0.5f);
+		rigidBodyControl.setGravity(new Vector3f(0,5f,0));
 		modelLoader.getBox()
 				   .addControl(rigidBodyControl);
 		bulletAppState.getPhysicsSpace().add(rigidBodyControl);

@@ -13,12 +13,15 @@ public class GameSetUp extends SimpleApplication {
 	private ObjectsMovementHandler objectsMovementHandler;
 	private ThrowingHandler throwingHandler;
 	private DaleState daleState;
+	private GameState gameState;
 
 	@Override
 	public void simpleInitApp() {
-		throwingHandler = new ThrowingHandler();
+		gameState = new GameState();
 		modelLoader.loadModels(assetManager);
 		daleState = initializeObjects();
+		throwingHandler = new ThrowingHandler(cam, rootNode, modelLoader,
+				daleState, gameState);
 		addLight();
 		animationController.setUpAnimations(modelLoader);
 		objectsMovementHandler = new ObjectsMovementHandler(animationController,
@@ -28,7 +31,7 @@ public class GameSetUp extends SimpleApplication {
 	}
 
 	private void setupKeys(DaleState daleState) {
-		keysSetup = new KeysSetup(daleState, objectsMovementHandler);
+		keysSetup = new KeysSetup(daleState, objectsMovementHandler, throwingHandler);
 		keysSetup.setupKeys(inputManager);
 	}
 
@@ -48,8 +51,8 @@ public class GameSetUp extends SimpleApplication {
 	@Override
 	public void simpleUpdate(float tpf) {
 		objectsMovementHandler.handleMovement(tpf);
-		throwingHandler.markThrowingDestination(cam, rootNode, modelLoader, daleState);
-		throwingHandler.markThrowableObject(cam, rootNode, modelLoader, daleState);
+		throwingHandler.markThrowingDestination();
+		throwingHandler.markThrowableObject();
 	}
 
 }

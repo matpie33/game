@@ -6,8 +6,6 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.renderer.Camera;
-import com.jme3.scene.Node;
 
 public class KeysSetup implements ActionListener {
 
@@ -16,14 +14,18 @@ public class KeysSetup implements ActionListener {
 	public static final String MOVE_FORWARD = "moveForward";
 	public static final String MOVE_BACKWARD = "moveBackward";
 	public static final String JUMP = "jump";
+	public static final String PICK_THROWABLE_OBJECT = "pickThrowableObject";
 
 	private DaleState daleState;
 	private ObjectsMovementHandler objectsMovementHandler;
+	private ThrowingHandler throwingHandler;
 
 	public KeysSetup(DaleState daleState,
-			ObjectsMovementHandler objectsMovementHandler) {
+			ObjectsMovementHandler objectsMovementHandler,
+			ThrowingHandler throwingHandler) {
 		this.daleState = daleState;
 		this.objectsMovementHandler = objectsMovementHandler;
+		this.throwingHandler = throwingHandler;
 	}
 
 	public void setupKeys(InputManager inputManager) {
@@ -32,8 +34,10 @@ public class KeysSetup implements ActionListener {
 		inputManager.addMapping(MOVE_FORWARD, new KeyTrigger(KeyInput.KEY_W));
 		inputManager.addMapping(MOVE_BACKWARD, new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addMapping(JUMP, new KeyTrigger(KeyInput.KEY_SPACE));
+		inputManager.addMapping(PICK_THROWABLE_OBJECT,
+				new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
 		inputManager.addListener(this, MOVE_LEFT, MOVE_RIGHT, MOVE_FORWARD,
-				MOVE_BACKWARD, JUMP);
+				MOVE_BACKWARD, JUMP, PICK_THROWABLE_OBJECT);
 	}
 
 	@Override
@@ -52,6 +56,16 @@ public class KeysSetup implements ActionListener {
 		}
 		if (JUMP.equals(name)) {
 			objectsMovementHandler.daleJump();
+		}
+		if (PICK_THROWABLE_OBJECT.equals(name) && isPressed) {
+			if (!daleState.isCarryingThrowableObject()
+					&& throwingHandler.isCloseToThrowableObject()) {
+				daleState.setCarryingThrowableObject(true);
+				throwingHandler.hideCursor();
+			}
+			else {
+				daleState.setCarryingThrowableObject(false);
+			}
 		}
 
 	}
