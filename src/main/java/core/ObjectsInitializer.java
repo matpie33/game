@@ -11,6 +11,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import constants.NodeNames;
 import dto.ObjectsControlsDTO;
 
 import java.util.ArrayList;
@@ -59,6 +60,8 @@ public class ObjectsInitializer {
 					currentCoordinate.getY(),
 					currentCoordinate.getZ()));
 		}
+		Node throwables = new Node(NodeNames.THROWABLES);
+		throwables.attachChild(modelLoader.getBox());
 
 		trees.forEach(rootNode::attachChild);
 		objectsControlsDTO.getBoxControl().setPhysicsLocation(new Vector3f
@@ -67,7 +70,7 @@ public class ObjectsInitializer {
 		rootNode.attachChild(modelLoader.getMark());
 		rootNode.attachChild(modelLoader.getDale());
 		rootNode.attachChild(modelLoader.getScene());
-		rootNode.attachChild(modelLoader.getBox());
+		rootNode.attachChild(throwables);
 	}
 
 	public DaleState initializeObjects(ModelLoader modelLoader,

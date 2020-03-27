@@ -9,14 +9,17 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import constants.NodeNames;
 
 public class ThrowingHandler {
 
+	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
 	private Camera camera;
 	private Node rootNode;
 	private ModelLoader modelLoader;
 	private DaleState daleState;
 	private GameState gameState;
+
 
 	public ThrowingHandler(Camera camera, Node rootNode,
 			ModelLoader modelLoader, DaleState daleState, GameState gameState) {
@@ -67,7 +70,7 @@ public class ThrowingHandler {
 
 		if (gameState.isCursorShowing() && (closestCollision.getGeometry()
 				!= gameState.getSpatialOnWhichCursorIsShowing()
-				|| closestCollision.getDistance() > 5)) {
+				|| closestCollision.getDistance() > MINIMAL_DISTANCE_TO_PICK_OBJECT)) {
 
 			hideCursor();
 		}
@@ -80,7 +83,7 @@ public class ThrowingHandler {
 			return false;
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
 		return collisionResults.size() > 0
-				&& closestCollision.getDistance() < 5;
+				&& closestCollision.getDistance() < MINIMAL_DISTANCE_TO_PICK_OBJECT;
 
 	}
 
@@ -90,11 +93,8 @@ public class ThrowingHandler {
 				daleState.getCharacterControl()
 						 .getViewDirection());
 		CollisionResults collisionResults = new CollisionResults();
-		for (Spatial spatial : rootNode.getChildren()) {
-			if (spatial.equals(modelLoader.getDale()) || spatial.equals(
-					modelLoader.getScene())) {
-				continue;
-			}
+		Spatial throwables = rootNode.getChild(NodeNames.THROWABLES);
+		for (Spatial spatial : ((Node)throwables).getChildren()) {
 			spatial.collideWith(ray, collisionResults);
 		}
 		if (collisionResults.size() == 0) {
