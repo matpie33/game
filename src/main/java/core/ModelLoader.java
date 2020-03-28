@@ -22,7 +22,7 @@ public class ModelLoader {
 	private Spatial arrow;
 
 	public void loadModels(AssetManager assetManager) {
-		dale = loadModel(assetManager, "dale_v3");
+		dale = loadModel(assetManager, "model");
 		arrow = loadModel(assetManager, "arrow");
 		box = loadModel(assetManager, "box");
 		scene = loadScene(assetManager, "scene");

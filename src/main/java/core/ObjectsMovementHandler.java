@@ -1,8 +1,11 @@
 package core;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
+import com.jme3.scene.Geometry;
 
 public class ObjectsMovementHandler {
 
@@ -90,4 +93,25 @@ public class ObjectsMovementHandler {
 		}
 	}
 
+	public void moveBoxAboveDale() {
+		if (!daleState.isCarryingThrowableObject()){
+			return;
+		}
+		Geometry object = daleState.getThrowableObjectDTO()
+								   .getObject();
+		Vector3f dalePosition = modelLoader.getDale()
+										   .getLocalTranslation();
+		float height = ((BoundingBox) modelLoader.getDale()
+												 .getWorldBound()).getYExtent();
+		float boxHeight = ((BoundingBox) modelLoader.getBox()
+													.getWorldBound()).getYExtent();
+		RigidBodyControl control = modelLoader.getBox()
+											  .getControl(
+													  RigidBodyControl.class);
+		control.setGravity(Vector3f.ZERO);
+		control.setPhysicsLocation(new Vector3f(dalePosition.getX(),
+				dalePosition.getY() + height + boxHeight + 3f, dalePosition
+				.getZ
+				()));
+	}
 }

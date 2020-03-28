@@ -1,6 +1,7 @@
 package core;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.Vector3f;
 
@@ -43,8 +44,7 @@ public class GameSetUp extends SimpleApplication {
 	}
 
 	private void addLight() {
-		DirectionalLight sun = new DirectionalLight();
-		sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f).normalizeLocal());
+		AmbientLight sun = new AmbientLight();
 		rootNode.addLight(sun);
 	}
 
@@ -53,6 +53,7 @@ public class GameSetUp extends SimpleApplication {
 		objectsMovementHandler.handleMovement(tpf);
 		throwingHandler.markThrowingDestination();
 		throwingHandler.markThrowableObject();
+		objectsMovementHandler.moveBoxAboveDale();
 	}
 
 }

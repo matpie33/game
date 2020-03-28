@@ -58,14 +58,7 @@ public class KeysSetup implements ActionListener {
 			objectsMovementHandler.daleJump();
 		}
 		if (PICK_THROWABLE_OBJECT.equals(name) && isPressed) {
-			if (!daleState.isCarryingThrowableObject()
-					&& throwingHandler.isCloseToThrowableObject()) {
-				daleState.setCarryingThrowableObject(true);
-				throwingHandler.hideCursor();
-			}
-			else {
-				daleState.setCarryingThrowableObject(false);
-			}
+			throwingHandler.handleRightClickPressed();
 		}
 
 	}

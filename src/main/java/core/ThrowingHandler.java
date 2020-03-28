@@ -20,7 +20,6 @@ public class ThrowingHandler {
 	private DaleState daleState;
 	private GameState gameState;
 
-
 	public ThrowingHandler(Camera camera, Node rootNode,
 			ModelLoader modelLoader, DaleState daleState, GameState gameState) {
 		this.camera = camera;
@@ -34,10 +33,18 @@ public class ThrowingHandler {
 		if (!daleState.isCarryingThrowableObject()) {
 			return;
 		}
-		Ray ray = new Ray(camera.getLocation(), camera.getDirection());
+		Vector3f viewDir = daleState.getCharacterControl()
+								 .getViewDirection()
+								 .mult(100);
+		Ray ray = new Ray(daleState.getCharacterControl()
+								   .getPhysicsLocation(),
+				viewDir);
 		CollisionResults collisionResults = new CollisionResults();
 		for (Spatial spatial : rootNode.getChildren()) {
-			if (spatial.equals(modelLoader.getDale())) {
+			if (spatial.equals(modelLoader.getDale()) ||
+					daleState.getThrowableObjectDTO()
+							 .getObject()
+							 .getParent() == spatial) {
 				continue;
 			}
 			spatial.collideWith(ray, collisionResults);
@@ -70,7 +77,8 @@ public class ThrowingHandler {
 
 		if (gameState.isCursorShowing() && (closestCollision.getGeometry()
 				!= gameState.getSpatialOnWhichCursorIsShowing()
-				|| closestCollision.getDistance() > MINIMAL_DISTANCE_TO_PICK_OBJECT)) {
+				|| closestCollision.getDistance()
+				> MINIMAL_DISTANCE_TO_PICK_OBJECT)) {
 
 			hideCursor();
 		}
@@ -82,8 +90,8 @@ public class ThrowingHandler {
 		if (collisionResults == null)
 			return false;
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
-		return collisionResults.size() > 0
-				&& closestCollision.getDistance() < MINIMAL_DISTANCE_TO_PICK_OBJECT;
+		return collisionResults.size() > 0 && closestCollision.getDistance()
+				< MINIMAL_DISTANCE_TO_PICK_OBJECT;
 
 	}
 
@@ -94,7 +102,7 @@ public class ThrowingHandler {
 						 .getViewDirection());
 		CollisionResults collisionResults = new CollisionResults();
 		Spatial throwables = rootNode.getChild(NodeNames.THROWABLES);
-		for (Spatial spatial : ((Node)throwables).getChildren()) {
+		for (Spatial spatial : ((Node) throwables).getChildren()) {
 			spatial.collideWith(ray, collisionResults);
 		}
 		if (collisionResults.size() == 0) {
@@ -128,4 +136,29 @@ public class ThrowingHandler {
 		CollisionResults collisionResults = getDistanceToObjects();
 		return isCloseEnoughToAnyObject(collisionResults);
 	}
+
+	public void handleRightClickPressed() {
+		if (daleState.isCarryingThrowableObject()) {
+			putAsideObject();
+		}
+		else {
+			pickupObject();
+		}
+	}
+
+	private void pickupObject() {
+		CollisionResults collisionResults = getDistanceToObjects();
+		if (isCloseToThrowableObject()) {
+			daleState.setCarryingThrowableObject(true);
+			daleState.setCarriedObject(
+					collisionResults.getClosestCollision()
+									.getGeometry());
+			hideCursor();
+		}
+	}
+
+	private void putAsideObject() {
+		daleState.setCarryingThrowableObject(false);
+	}
+
 }
