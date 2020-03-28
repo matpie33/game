@@ -2,15 +2,16 @@ package core;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import constants.NodeNames;
+import constants.PhysicsControls;
 
 public class ThrowingHandler {
 
@@ -34,17 +35,17 @@ public class ThrowingHandler {
 		if (!daleState.isCarryingThrowableObject()) {
 			return;
 		}
-		Vector3f viewDir = daleState.getCharacterControl()
-									.getViewDirection()
-									.mult(100);
-		Ray ray = new Ray(daleState.getCharacterControl()
-								   .getPhysicsLocation(), viewDir);
+		Spatial dale = modelLoader.getDale();
+		Vector3f viewDir = dale.getControl(PhysicsControls.DALE)
+							   .getViewDirection()
+							   .mult(100);
+		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
+							  .getPhysicsLocation(), viewDir);
 		CollisionResults collisionResults = new CollisionResults();
 		for (Spatial spatial : rootNode.getChildren()) {
-			if (spatial.equals(modelLoader.getDale()) ||
-					daleState.getThrowableObjectDTO()
-							 .getObject()
-							 .getParent() == spatial) {
+			if (spatial.equals(dale) || daleState.getCarriedObject()
+												 .getObject()
+												 .getParent() == spatial) {
 				continue;
 			}
 			spatial.collideWith(ray, collisionResults);
@@ -96,10 +97,11 @@ public class ThrowingHandler {
 	}
 
 	private CollisionResults getDistanceToObjects() {
-		Ray ray = new Ray(daleState.getCharacterControl()
-								   .getPhysicsLocation(),
-				daleState.getCharacterControl()
-						 .getViewDirection());
+		Spatial dale = modelLoader.getDale();
+		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
+							  .getPhysicsLocation(),
+				dale.getControl(PhysicsControls.DALE)
+					.getViewDirection());
 		CollisionResults collisionResults = new CollisionResults();
 		Spatial throwables = rootNode.getChild(NodeNames.THROWABLES);
 		for (Spatial spatial : ((Node) throwables).getChildren()) {
@@ -149,34 +151,46 @@ public class ThrowingHandler {
 	private void pickupObject() {
 		CollisionResults collisionResults = getDistanceToObjects();
 		if (isCloseToThrowableObject()) {
-			RigidBodyControl control = modelLoader.getBox()
-												  .getControl(
-														  RigidBodyControl.class);
-			control.clearForces();
-			control.applyCentralForce(new Vector3f(0, 9f, 0));
+			Geometry geometry = collisionResults.getClosestCollision()
+												.getGeometry();
+			Object control = geometry.getParent()
+									 .getControl(
+
+											 PhysicsControls.BOX);
+
+			PhysicsControls.BOX.cast(control)
+							   .clearForces();
+			PhysicsControls.BOX.cast(control)
+							   .applyCentralForce(new Vector3f(0, 9f, 0));
 			daleState.setCarryingThrowableObject(true);
-			daleState.setCarriedObject(collisionResults.getClosestCollision()
-													   .getGeometry());
+			daleState.setCarriedObject(geometry);
 			hideCursor();
 		}
 	}
 
 	private void putAsideObject() {
 		daleState.setCarryingThrowableObject(false);
-		RigidBodyControl control = modelLoader.getBox()
-											  .getControl(
-													  RigidBodyControl.class);
-		control.applyCentralForce(camera.getDirection().mult(3f));
+		daleState.getCarriedObject()
+				 .getObject()
+				 .getParent()
+				 .getControl(PhysicsControls.BOX)
+				 .applyCentralForce(camera.getDirection()
+										  .mult(3f));
 	}
 
 	public void tryToThrowObject() {
 		if (daleState.isCarryingThrowableObject()) {
 			daleState.setCarryingThrowableObject(false);
-			Spatial box = modelLoader.getBox();
-			RigidBodyControl control = box.getControl(RigidBodyControl.class);
-			control.setGravity(new Vector3f(0, -10f, 0));
-			control.setLinearVelocity(new Vector3f(camera.getDirection()
-														 .mult(80f)));
+			Object control = daleState.getCarriedObject()
+									  .getObject()
+									  .getParent()
+									  .getControl(PhysicsControls.BOX);
+			PhysicsControls.BOX.cast(control)
+							   .setGravity(new Vector3f(0, -10f, 0));
+			PhysicsControls.BOX.cast(control)
+							   .setLinearVelocity(new Vector3f(
+									   camera.getDirection()
+											 .mult(80f)));
 		}
 
 	}

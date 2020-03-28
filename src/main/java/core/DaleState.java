@@ -1,6 +1,5 @@
 package core;
 
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.scene.Geometry;
 import dto.ThrowableObjectDTO;
 
@@ -10,15 +9,10 @@ public class DaleState {
 	private boolean isMovingBackward;
 	private boolean isMovingLeft;
 	private boolean isMovingRight;
-	private CharacterControl characterControl;
-	private ThrowableObjectDTO throwableObjectDTO = new ThrowableObjectDTO();
+	private ThrowableObjectDTO carriedObject = new ThrowableObjectDTO();
 
-	public ThrowableObjectDTO getThrowableObjectDTO() {
-		return throwableObjectDTO;
-	}
-
-	public void setThrowableObjectDTO(ThrowableObjectDTO throwableObjectDTO) {
-		this.throwableObjectDTO = throwableObjectDTO;
+	public ThrowableObjectDTO getCarriedObject() {
+		return carriedObject;
 	}
 
 	public boolean isMovingForward() {
@@ -45,31 +39,19 @@ public class DaleState {
 		isMovingLeft = movingLeft;
 	}
 
-	public boolean isMovingRight() {
-		return isMovingRight;
-	}
-
 	public void setMovingRight(boolean movingRight) {
 		isMovingRight = movingRight;
 	}
 
-	public void setCharacterControl(CharacterControl characterControl) {
-		this.characterControl = characterControl;
-	}
-
-	public CharacterControl getCharacterControl() {
-		return characterControl;
-	}
-
 	public boolean isCarryingThrowableObject() {
-		return throwableObjectDTO.isCarried();
+		return carriedObject.isCarried();
 	}
 
 	public void setCarryingThrowableObject(boolean carrying) {
-		throwableObjectDTO.setCarried(carrying);
+		carriedObject.setCarried(carrying);
 	}
 
 	public void setCarriedObject(Geometry geometry) {
-		throwableObjectDTO.setObject(geometry);
+		carriedObject.setObject(geometry);
 	}
 }

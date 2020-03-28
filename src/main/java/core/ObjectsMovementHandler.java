@@ -1,11 +1,11 @@
 package core;
 
 import com.jme3.bounding.BoundingBox;
-import com.jme3.bullet.control.CharacterControl;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
+import constants.PhysicsControls;
 
 public class ObjectsMovementHandler {
 
@@ -36,17 +36,18 @@ public class ObjectsMovementHandler {
 	}
 
 	private void setMovementDirection() {
-		CharacterControl control = daleState.getCharacterControl();
-		control.setViewDirection(camera.getDirection());
-		control.setWalkDirection(modifiableWalkDirectionVector);
+		Spatial dale = modelLoader.getDale();
+		dale.getControl(PhysicsControls.DALE)
+			.setViewDirection(camera.getDirection());
+		dale.getControl(PhysicsControls.DALE)
+			.setWalkDirection(modifiableWalkDirectionVector);
 	}
 
 	private void handleCameraMovement() {
 		Vector3f dalePosition = modelLoader.getDale()
 										   .getLocalTranslation();
-		CharacterControl control = daleState.getCharacterControl();
 		Vector3f dalePositionMinusViewDirection = calculateCameraPositionBasedOnDaleViewDirection(
-				dalePosition, control);
+				dalePosition);
 		adjustCameraYPosition(dalePositionMinusViewDirection);
 		camera.setLocation(dalePositionMinusViewDirection);
 	}
@@ -61,8 +62,10 @@ public class ObjectsMovementHandler {
 	}
 
 	private Vector3f calculateCameraPositionBasedOnDaleViewDirection(
-			Vector3f dalePosition, CharacterControl control) {
-		Vector3f viewDirection = control.getViewDirection();
+			Vector3f dalePosition) {
+		Vector3f viewDirection = modelLoader.getDale()
+											.getControl(PhysicsControls.DALE)
+											.getViewDirection();
 		Vector3f viewDirectionScaled = viewDirection.mult(20);
 		viewDirectionScaled.setY(viewDirectionScaled.getY());
 		return dalePosition.subtract(viewDirectionScaled);
@@ -87,9 +90,12 @@ public class ObjectsMovementHandler {
 	}
 
 	public void daleJump() {
-		CharacterControl control = daleState.getCharacterControl();
-		if (control.onGround()) {
-			control.jump(new Vector3f(0, 10f, 0));
+		if (modelLoader.getDale()
+					   .getControl(PhysicsControls.DALE)
+					   .onGround()) {
+			modelLoader.getDale()
+					   .getControl(PhysicsControls.DALE)
+					   .jump(new Vector3f(0, 10f, 0));
 		}
 	}
 
@@ -97,19 +103,17 @@ public class ObjectsMovementHandler {
 		if (!daleState.isCarryingThrowableObject()) {
 			return;
 		}
-		Geometry object = daleState.getThrowableObjectDTO()
-								   .getObject();
+		Geometry carriedObject = daleState.getCarriedObject()
+										  .getObject();
 		Vector3f dalePosition = modelLoader.getDale()
 										   .getLocalTranslation();
-		float height = ((BoundingBox) modelLoader.getDale()
-												 .getWorldBound()).getYExtent();
-		float boxHeight = ((BoundingBox) modelLoader.getBox()
-													.getWorldBound()).getYExtent();
-		RigidBodyControl control = modelLoader.getBox()
-											  .getControl(
-													  RigidBodyControl.class);
-		control.setPhysicsLocation(new Vector3f(dalePosition.getX(),
-				dalePosition.getY() + height + boxHeight + 3f,
-				dalePosition.getZ()));
+		float carriedObjectHeight = ((BoundingBox) modelLoader.getDale()
+															  .getWorldBound()).getYExtent();
+		float boxHeight = ((BoundingBox) carriedObject.getWorldBound()).getYExtent();
+		carriedObject.getParent()
+					 .getControl(PhysicsControls.BOX)
+					 .setPhysicsLocation(new Vector3f(dalePosition.getX(),
+							 dalePosition.getY() + carriedObjectHeight
+									 + boxHeight + 3f, dalePosition.getZ()));
 	}
 }

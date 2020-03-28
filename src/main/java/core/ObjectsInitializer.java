@@ -12,7 +12,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import constants.NodeNames;
-import dto.ObjectsControlsDTO;
+import constants.PhysicsControls;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ public class ObjectsInitializer {
 	private static final int INCREASE_Z_BY = 40;
 
 	private DaleState daleState;
-	private ObjectsControlsDTO objectsControlsDTO = new ObjectsControlsDTO();
 
 	private void initializeTreesCoordinates(int numberOfTrees) {
 		treesCoordinates = new ArrayList<>();
@@ -52,20 +51,21 @@ public class ObjectsInitializer {
 		List<Spatial> trees = modelLoader.getTrees();
 		initializeTreesCoordinates(trees.size());
 
-		List<RigidBodyControl> treesControls = objectsControlsDTO.getTreesControls();
-		for (int i = 0; i < treesControls.size(); i++) {
-			RigidBodyControl control = treesControls.get(i);
+		List<Spatial> trees1 = modelLoader.getTrees();
+		for (int i = 0; i < trees1.size(); i++) {
+			Spatial tree = trees1.get(i);
 			Vector3f currentCoordinate = treesCoordinates.get(i);
-			control.setPhysicsLocation(new Vector3f(currentCoordinate.getX(),
-					currentCoordinate.getY(),
-					currentCoordinate.getZ()));
+			tree.getControl(PhysicsControls.TREE)
+				.setPhysicsLocation(new Vector3f(currentCoordinate.getX(),
+						currentCoordinate.getY(), currentCoordinate.getZ()));
 		}
 		Node throwables = new Node(NodeNames.THROWABLES);
 		throwables.attachChild(modelLoader.getBox());
 
 		trees.forEach(rootNode::attachChild);
-		objectsControlsDTO.getBoxControl().setPhysicsLocation(new Vector3f
-				(-20,10,4));
+		modelLoader.getBox()
+				   .getControl(PhysicsControls.BOX)
+				   .setPhysicsLocation(new Vector3f(-20, 10, 4));
 
 		rootNode.attachChild(modelLoader.getMark());
 		rootNode.attachChild(modelLoader.getDale());
@@ -86,21 +86,22 @@ public class ObjectsInitializer {
 
 	private void initializeBox(ModelLoader modelLoader,
 			BulletAppState bulletAppState) {
-		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(
-				modelLoader.getBox());
+		Spatial box = modelLoader.getBox();
+		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
+
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
 				0.5f);
-		rigidBodyControl.setGravity(new Vector3f(0,5f,0));
-		modelLoader.getBox()
-				   .addControl(rigidBodyControl);
-		bulletAppState.getPhysicsSpace().add(rigidBodyControl);
-		objectsControlsDTO.addBoxControl(rigidBodyControl);
+		rigidBodyControl.setGravity(new Vector3f(0, 5f, 0));
+		box.addControl(rigidBodyControl);
+		bulletAppState.getPhysicsSpace()
+					  .add(rigidBodyControl);
 
 	}
 
 	private void initializeMark(ModelLoader modelLoader,
 			BulletAppState bulletAppState) {
-		modelLoader.getMark().setLocalTranslation(5,5,5);
+		modelLoader.getMark()
+				   .setLocalTranslation(5, 5, 5);
 	}
 
 	private void initializeTree(ModelLoader modelLoader,
@@ -111,9 +112,9 @@ public class ObjectsInitializer {
 					tree);
 			RigidBodyControl rigidBodyControl = new RigidBodyControl(
 					collisionShape, 0);
-			objectsControlsDTO.addTreeControl(rigidBodyControl);
 			tree.addControl(rigidBodyControl);
-			bulletAppState.getPhysicsSpace().add(rigidBodyControl);
+			bulletAppState.getPhysicsSpace()
+						  .add(rigidBodyControl);
 		}
 	}
 
@@ -128,16 +129,13 @@ public class ObjectsInitializer {
 			BulletAppState bulletAppState) {
 		Spatial model = modelLoader.getDale();
 		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
-		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(2f,
-				2f,
+		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(2f, 2f,
 				1);
 		daleState = new DaleState();
 		daleState.setCarryingThrowableObject(false);
 
 		CharacterControl daleControl = new CharacterControl(capsuleShape,
 				0.05f);
-		daleState.setCharacterControl(daleControl);
-		objectsControlsDTO.setDaleControl(daleControl);
 		daleControl.setJumpSpeed(20);
 		daleControl.setFallSpeed(30);
 		daleControl.setGravity(new Vector3f(0, -10f, 0));
