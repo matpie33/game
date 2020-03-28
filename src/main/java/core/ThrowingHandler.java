@@ -2,6 +2,7 @@ package core;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
@@ -34,11 +35,10 @@ public class ThrowingHandler {
 			return;
 		}
 		Vector3f viewDir = daleState.getCharacterControl()
-								 .getViewDirection()
-								 .mult(100);
+									.getViewDirection()
+									.mult(100);
 		Ray ray = new Ray(daleState.getCharacterControl()
-								   .getPhysicsLocation(),
-				viewDir);
+								   .getPhysicsLocation(), viewDir);
 		CollisionResults collisionResults = new CollisionResults();
 		for (Spatial spatial : rootNode.getChildren()) {
 			if (spatial.equals(modelLoader.getDale()) ||
@@ -111,7 +111,7 @@ public class ThrowingHandler {
 		return collisionResults;
 	}
 
-	public void hideCursor() {
+	private void hideCursor() {
 		gameState.setCursorNotShowing();
 		rootNode.detachChild(modelLoader.getArrow());
 	}
@@ -137,7 +137,7 @@ public class ThrowingHandler {
 		return isCloseEnoughToAnyObject(collisionResults);
 	}
 
-	public void handleRightClickPressed() {
+	public void tryToPickObject() {
 		if (daleState.isCarryingThrowableObject()) {
 			putAsideObject();
 		}
@@ -149,16 +149,35 @@ public class ThrowingHandler {
 	private void pickupObject() {
 		CollisionResults collisionResults = getDistanceToObjects();
 		if (isCloseToThrowableObject()) {
+			RigidBodyControl control = modelLoader.getBox()
+												  .getControl(
+														  RigidBodyControl.class);
+			control.clearForces();
+			control.applyCentralForce(new Vector3f(0, 9f, 0));
 			daleState.setCarryingThrowableObject(true);
-			daleState.setCarriedObject(
-					collisionResults.getClosestCollision()
-									.getGeometry());
+			daleState.setCarriedObject(collisionResults.getClosestCollision()
+													   .getGeometry());
 			hideCursor();
 		}
 	}
 
 	private void putAsideObject() {
 		daleState.setCarryingThrowableObject(false);
+		RigidBodyControl control = modelLoader.getBox()
+											  .getControl(
+													  RigidBodyControl.class);
+		control.applyCentralForce(camera.getDirection().mult(3f));
 	}
 
+	public void tryToThrowObject() {
+		if (daleState.isCarryingThrowableObject()) {
+			daleState.setCarryingThrowableObject(false);
+			Spatial box = modelLoader.getBox();
+			RigidBodyControl control = box.getControl(RigidBodyControl.class);
+			control.setGravity(new Vector3f(0, -10f, 0));
+			control.setLinearVelocity(new Vector3f(camera.getDirection()
+														 .mult(80f)));
+		}
+
+	}
 }

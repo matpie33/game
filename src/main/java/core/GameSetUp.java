@@ -2,8 +2,6 @@ package core;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;
-import com.jme3.light.DirectionalLight;
-import com.jme3.math.Vector3f;
 
 public class GameSetUp extends SimpleApplication {
 
@@ -32,7 +30,8 @@ public class GameSetUp extends SimpleApplication {
 	}
 
 	private void setupKeys(DaleState daleState) {
-		keysSetup = new KeysSetup(daleState, objectsMovementHandler, throwingHandler);
+		keysSetup = new KeysSetup(daleState, objectsMovementHandler,
+				throwingHandler);
 		keysSetup.setupKeys(inputManager);
 	}
 

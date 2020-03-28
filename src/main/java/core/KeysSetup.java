@@ -15,6 +15,7 @@ public class KeysSetup implements ActionListener {
 	public static final String MOVE_BACKWARD = "moveBackward";
 	public static final String JUMP = "jump";
 	public static final String PICK_THROWABLE_OBJECT = "pickThrowableObject";
+	public static final String THROW_OBJECT = "throwObject";
 
 	private DaleState daleState;
 	private ObjectsMovementHandler objectsMovementHandler;
@@ -36,8 +37,10 @@ public class KeysSetup implements ActionListener {
 		inputManager.addMapping(JUMP, new KeyTrigger(KeyInput.KEY_SPACE));
 		inputManager.addMapping(PICK_THROWABLE_OBJECT,
 				new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+		inputManager.addMapping(THROW_OBJECT,
+				new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		inputManager.addListener(this, MOVE_LEFT, MOVE_RIGHT, MOVE_FORWARD,
-				MOVE_BACKWARD, JUMP, PICK_THROWABLE_OBJECT);
+				MOVE_BACKWARD, JUMP, PICK_THROWABLE_OBJECT, THROW_OBJECT);
 	}
 
 	@Override
@@ -58,7 +61,10 @@ public class KeysSetup implements ActionListener {
 			objectsMovementHandler.daleJump();
 		}
 		if (PICK_THROWABLE_OBJECT.equals(name) && isPressed) {
-			throwingHandler.handleRightClickPressed();
+			throwingHandler.tryToPickObject();
+		}
+		if (THROW_OBJECT.equals(name) && isPressed) {
+			throwingHandler.tryToThrowObject();
 		}
 
 	}

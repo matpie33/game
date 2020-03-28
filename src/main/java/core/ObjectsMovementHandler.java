@@ -94,7 +94,7 @@ public class ObjectsMovementHandler {
 	}
 
 	public void moveBoxAboveDale() {
-		if (!daleState.isCarryingThrowableObject()){
+		if (!daleState.isCarryingThrowableObject()) {
 			return;
 		}
 		Geometry object = daleState.getThrowableObjectDTO()
@@ -108,10 +108,8 @@ public class ObjectsMovementHandler {
 		RigidBodyControl control = modelLoader.getBox()
 											  .getControl(
 													  RigidBodyControl.class);
-		control.setGravity(Vector3f.ZERO);
 		control.setPhysicsLocation(new Vector3f(dalePosition.getX(),
-				dalePosition.getY() + height + boxHeight + 3f, dalePosition
-				.getZ
-				()));
+				dalePosition.getY() + height + boxHeight + 3f,
+				dalePosition.getZ()));
 	}
 }
