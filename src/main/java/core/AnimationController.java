@@ -12,10 +12,10 @@ public class AnimationController implements AnimEventListener {
 	private AnimChannel channel;
 
 	public void setUpAnimations(ModelLoader modelLoader) {
-		AnimControl control = modelLoader.getDale()
-										 .getControl(AnimControl.class);
-		control.addListener(this);
-		channel = control.createChannel();
+//		AnimControl control = modelLoader.getDale()
+//										 .getControl(AnimControl.class);
+//		control.addListener(this);
+//		channel = control.createChannel();
 	}
 
 
@@ -35,10 +35,10 @@ public class AnimationController implements AnimEventListener {
 
 	public void animateMovingForward() {
 
-		if (!WALK_ANIMATION.equals(channel.getAnimationName())) {
-			channel.setAnim(WALK_ANIMATION);
-			channel.setLoopMode(LoopMode.DontLoop);
-		}
+//		if (!WALK_ANIMATION.equals(channel.getAnimationName())) {
+//			channel.setAnim(WALK_ANIMATION);
+//			channel.setLoopMode(LoopMode.DontLoop);
+//		}
 	}
 
 
