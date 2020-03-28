@@ -54,7 +54,7 @@ public class ObjectsMovementHandler {
 	private void adjustCameraYPosition(
 			Vector3f dalePositionMinusViewDirection) {
 		dalePositionMinusViewDirection.setY(
-				dalePositionMinusViewDirection.getY() + 10);
+				dalePositionMinusViewDirection.getY() + 3);
 		if (dalePositionMinusViewDirection.getY() < 5) {
 			dalePositionMinusViewDirection.setY(5);
 		}

@@ -129,7 +129,7 @@ public class ObjectsInitializer {
 		Spatial model = modelLoader.getDale();
 		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
 		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(2f,
-				12f,
+				2f,
 				1);
 		daleState = new DaleState();
 		daleState.setCarryingThrowableObject(false);
