@@ -20,6 +20,7 @@ import java.util.List;
 public class ObjectsInitializer {
 
 	private List<Vector3f> treesCoordinates = new ArrayList<>();
+	private List<Vector3f> boxesCoordinates = new ArrayList<>();
 	private static final int FIRST_COORDINATE_OF_TREE_Z = 0;
 	private static final int FIRST_COORDINATE_OF_TREE_X = 15;
 	private static final int INCREASE_X_BY = 20;
@@ -27,8 +28,7 @@ public class ObjectsInitializer {
 
 	private DaleState daleState;
 
-	private void initializeTreesCoordinates(int numberOfTrees) {
-		treesCoordinates = new ArrayList<>();
+	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes) {
 		boolean increaseXNow = true;
 		int currentXCoordinate = FIRST_COORDINATE_OF_TREE_X;
 		int currentZCoordinate;
@@ -43,29 +43,26 @@ public class ObjectsInitializer {
 			}
 			treesCoordinates.add(
 					new Vector3f(currentXCoordinate, 0, currentZCoordinate));
+			if (i < numberOfBoxes) {
+				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 10,
+						currentZCoordinate - 70));
+			}
 			increaseXNow = !increaseXNow;
 		}
 	}
 
 	public void addObjectsToScene(ModelLoader modelLoader, Node rootNode) {
 		List<Spatial> trees = modelLoader.getTrees();
-		initializeTreesCoordinates(trees.size());
+		List<Spatial> boxes = modelLoader.getBoxes();
+		initializeCoordinates(trees.size(), boxes.size());
 
-		List<Spatial> trees1 = modelLoader.getTrees();
-		for (int i = 0; i < trees1.size(); i++) {
-			Spatial tree = trees1.get(i);
-			Vector3f currentCoordinate = treesCoordinates.get(i);
-			tree.getControl(PhysicsControls.TREE)
-				.setPhysicsLocation(new Vector3f(currentCoordinate.getX(),
-						currentCoordinate.getY(), currentCoordinate.getZ()));
-		}
+		setObjectsCoordinates(trees, treesCoordinates, PhysicsControls.TREE);
+		setObjectsCoordinates(boxes, boxesCoordinates, PhysicsControls.BOX);
 		Node throwables = new Node(NodeNames.THROWABLES);
-		throwables.attachChild(modelLoader.getBox());
+		modelLoader.getBoxes()
+				   .forEach(throwables::attachChild);
 
 		trees.forEach(rootNode::attachChild);
-		modelLoader.getBox()
-				   .getControl(PhysicsControls.BOX)
-				   .setPhysicsLocation(new Vector3f(-20, 10, 4));
 
 		rootNode.attachChild(modelLoader.getMark());
 		rootNode.attachChild(modelLoader.getDale());
@@ -73,38 +70,50 @@ public class ObjectsInitializer {
 		rootNode.attachChild(throwables);
 	}
 
+	private void setObjectsCoordinates(List<Spatial> objects,
+			List<Vector3f> coordinates,
+			Class<RigidBodyControl> physicsRigidBody) {
+		for (int i = 0; i < objects.size(); i++) {
+			Spatial object = objects.get(i);
+			Vector3f currentCoordinate = coordinates.get(i);
+			object.getControl(physicsRigidBody)
+				  .setPhysicsLocation(new Vector3f(currentCoordinate.getX(),
+						  currentCoordinate.getY(), currentCoordinate.getZ()));
+		}
+	}
+
 	public DaleState initializeObjects(ModelLoader modelLoader,
 			AppStateManager stateManager) {
 		BulletAppState bulletAppState = initializeBulletAppState(stateManager);
 		initializeScene(modelLoader, bulletAppState);
 		initializeDale(modelLoader, bulletAppState);
-		initializeTree(modelLoader, bulletAppState);
-		initializeMark(modelLoader, bulletAppState);
-		initializeBox(modelLoader, bulletAppState);
+		initializeTrees(modelLoader, bulletAppState);
+		initializeMark(modelLoader);
+		initializeBoxes(modelLoader, bulletAppState);
 		return daleState;
 	}
 
-	private void initializeBox(ModelLoader modelLoader,
+	private void initializeBoxes(ModelLoader modelLoader,
 			BulletAppState bulletAppState) {
-		Spatial box = modelLoader.getBox();
-		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
+		for (Spatial box : modelLoader.getBoxes()) {
+			CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
 
-		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
-				0.5f);
-		rigidBodyControl.setGravity(new Vector3f(0, 5f, 0));
-		box.addControl(rigidBodyControl);
-		bulletAppState.getPhysicsSpace()
-					  .add(rigidBodyControl);
+			RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
+					0.5f);
+			rigidBodyControl.setGravity(new Vector3f(0, 5f, 0));
+			box.addControl(rigidBodyControl);
+			bulletAppState.getPhysicsSpace()
+						  .add(rigidBodyControl);
+		}
 
 	}
 
-	private void initializeMark(ModelLoader modelLoader,
-			BulletAppState bulletAppState) {
+	private void initializeMark(ModelLoader modelLoader) {
 		modelLoader.getMark()
 				   .setLocalTranslation(5, 5, 5);
 	}
 
-	private void initializeTree(ModelLoader modelLoader,
+	private void initializeTrees(ModelLoader modelLoader,
 			BulletAppState bulletAppState) {
 		List<Spatial> trees = modelLoader.getTrees();
 		for (Spatial tree : trees) {
