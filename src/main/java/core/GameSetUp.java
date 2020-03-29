@@ -13,9 +13,12 @@ public class GameSetUp extends SimpleApplication {
 	private ThrowingHandler throwingHandler;
 	private DaleState daleState;
 	private GameState gameState;
+	private SoundsInitializer soundsInitializer;
 
 	@Override
 	public void simpleInitApp() {
+		soundsInitializer = new SoundsInitializer(rootNode, assetManager);
+		soundsInitializer.addMusic();
 		gameState = new GameState();
 		modelLoader.loadModels(assetManager);
 		daleState = initializeObjects();
