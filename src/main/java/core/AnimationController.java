@@ -10,6 +10,7 @@ public class AnimationController implements AnimEventListener {
 	public static final String STAND_ANIMATION = "stand";
 	public static final String RUN_ANIMATION = "run";
 	public static final String WALK_BACK_ANIMATION = "walk_back";
+	public static final String HOLDING_OBJECT = "hold_object";
 	private AnimChannel channel;
 	private DaleState daleState;
 
@@ -35,7 +36,12 @@ public class AnimationController implements AnimEventListener {
 			animChannel.setAnim(WALK_BACK_ANIMATION);
 		}
 		else{
-			animChannel.setAnim(STAND_ANIMATION);
+			if (daleState.isCarryingThrowableObject()){
+				animChannel.setAnim(HOLDING_OBJECT);
+			}
+			else{
+				animChannel.setAnim(STAND_ANIMATION);
+			}
 		}
 
 	}
@@ -62,5 +68,11 @@ public class AnimationController implements AnimEventListener {
 		}
 	}
 
+	public void animateStanding (){
+		channel.setAnim(STAND_ANIMATION);
+	}
 
+	public void animateHoldingObject() {
+		channel.setAnim(HOLDING_OBJECT);
+	}
 }

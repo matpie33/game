@@ -21,14 +21,17 @@ public class ThrowingHandler {
 	private ModelLoader modelLoader;
 	private DaleState daleState;
 	private GameState gameState;
+	private AnimationController animationController;
 
 	public ThrowingHandler(Camera camera, Node rootNode,
-			ModelLoader modelLoader, DaleState daleState, GameState gameState) {
+			ModelLoader modelLoader, DaleState daleState, GameState
+			gameState, AnimationController animationController) {
 		this.camera = camera;
 		this.rootNode = rootNode;
 		this.modelLoader = modelLoader;
 		this.daleState = daleState;
 		this.gameState = gameState;
+		this.animationController = animationController;
 	}
 
 	public void markThrowingDestination() {
@@ -165,6 +168,7 @@ public class ThrowingHandler {
 			daleState.setCarryingThrowableObject(true);
 			daleState.setCarriedObject(geometry);
 			hideCursor();
+			animationController.animateHoldingObject();
 		}
 	}
 
@@ -176,6 +180,7 @@ public class ThrowingHandler {
 				 .getControl(PhysicsControls.BOX)
 				 .applyCentralForce(camera.getDirection()
 										  .mult(3f));
+		animationController.animateStanding();
 	}
 
 	public void tryToThrowObject() {
@@ -191,6 +196,7 @@ public class ThrowingHandler {
 							   .setLinearVelocity(new Vector3f(
 									   camera.getDirection()
 											 .mult(80f)));
+			animationController.animateStanding();
 		}
 
 	}

@@ -24,7 +24,7 @@ public class GameSetUp extends SimpleApplication {
 		daleState = initializeObjects();
 		animationController = new AnimationController(daleState);
 		throwingHandler = new ThrowingHandler(cam, rootNode, modelLoader,
-				daleState, gameState);
+				daleState, gameState, animationController);
 		addLight();
 		animationController.setUpAnimations(modelLoader);
 		objectsMovementHandler = new ObjectsMovementHandler(animationController,

@@ -115,6 +115,6 @@ public class ObjectsMovementHandler {
 					 .getControl(PhysicsControls.BOX)
 					 .setPhysicsLocation(new Vector3f(dalePosition.getX(),
 							 dalePosition.getY() + carriedObjectHeight
-									 + boxHeight + 3f, dalePosition.getZ()));
+									 + boxHeight + 1f, dalePosition.getZ()));
 	}
 }
