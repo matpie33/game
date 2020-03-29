@@ -8,14 +8,14 @@ import com.jme3.animation.LoopMode;
 public class AnimationController implements AnimEventListener {
 
 	public static final String STAND_ANIMATION = "stand";
-	public static final String WALK_ANIMATION = "walk";
+	public static final String WALK_ANIMATION = "run";
 	private AnimChannel channel;
 
 	public void setUpAnimations(ModelLoader modelLoader) {
-//		AnimControl control = modelLoader.getDale()
-//										 .getControl(AnimControl.class);
-//		control.addListener(this);
-//		channel = control.createChannel();
+		AnimControl control = modelLoader.getDale()
+										 .getControl(AnimControl.class);
+		control.addListener(this);
+		channel = control.createChannel();
 	}
 
 
@@ -35,10 +35,10 @@ public class AnimationController implements AnimEventListener {
 
 	public void animateMovingForward() {
 
-//		if (!WALK_ANIMATION.equals(channel.getAnimationName())) {
-//			channel.setAnim(WALK_ANIMATION);
-//			channel.setLoopMode(LoopMode.DontLoop);
-//		}
+		if (!WALK_ANIMATION.equals(channel.getAnimationName())) {
+			channel.setAnim(WALK_ANIMATION);
+			channel.setLoopMode(LoopMode.DontLoop);
+		}
 	}
 
 
