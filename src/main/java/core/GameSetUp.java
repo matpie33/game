@@ -7,7 +7,7 @@ public class GameSetUp extends SimpleApplication {
 
 	private ModelLoader modelLoader = new ModelLoader();
 	private ObjectsInitializer objectsInitializer = new ObjectsInitializer();
-	private AnimationController animationController = new AnimationController();
+	private AnimationController animationController;
 	private KeysSetup keysSetup;
 	private ObjectsMovementHandler objectsMovementHandler;
 	private ThrowingHandler throwingHandler;
@@ -19,6 +19,7 @@ public class GameSetUp extends SimpleApplication {
 		gameState = new GameState();
 		modelLoader.loadModels(assetManager);
 		daleState = initializeObjects();
+		animationController = new AnimationController(daleState);
 		throwingHandler = new ThrowingHandler(cam, rootNode, modelLoader,
 				daleState, gameState);
 		addLight();

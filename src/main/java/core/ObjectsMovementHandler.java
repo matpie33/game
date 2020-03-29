@@ -81,7 +81,8 @@ public class ObjectsMovementHandler {
 			animationController.animateMovingForward();
 		}
 		if (daleState.isMovingBackward()) {
-			walkDirection.addLocal(camDir.negate());
+			walkDirection.addLocal(camDir.negate().mult(0.3f));
+			animationController.animateMovingBackward();
 		}
 		if (daleState.isMovingLeft()) {
 		}
