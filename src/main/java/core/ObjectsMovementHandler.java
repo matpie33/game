@@ -38,8 +38,6 @@ public class ObjectsMovementHandler {
 	private void setMovementDirection() {
 		Spatial dale = modelLoader.getDale();
 		dale.getControl(PhysicsControls.DALE)
-			.setViewDirection(camera.getDirection());
-		dale.getControl(PhysicsControls.DALE)
 			.setWalkDirection(modifiableWalkDirectionVector);
 	}
 
@@ -54,8 +52,12 @@ public class ObjectsMovementHandler {
 
 	private void adjustCameraYPosition(
 			Vector3f dalePositionMinusViewDirection) {
+		float distanceAboveHead = 3;
+		if (daleState.isCarryingThrowableObject()) {
+			distanceAboveHead = 10;
+		}
 		dalePositionMinusViewDirection.setY(
-				dalePositionMinusViewDirection.getY() + 3);
+				dalePositionMinusViewDirection.getY() + distanceAboveHead);
 		if (dalePositionMinusViewDirection.getY() < 5) {
 			dalePositionMinusViewDirection.setY(5);
 		}
@@ -63,10 +65,8 @@ public class ObjectsMovementHandler {
 
 	private Vector3f calculateCameraPositionBasedOnDaleViewDirection(
 			Vector3f dalePosition) {
-		Vector3f viewDirection = modelLoader.getDale()
-											.getControl(PhysicsControls.DALE)
-											.getViewDirection();
-		Vector3f viewDirectionScaled = viewDirection.mult(20);
+		Vector3f cameraDirection = camera.getDirection();
+		Vector3f viewDirectionScaled = cameraDirection.mult(20);
 		viewDirectionScaled.setY(viewDirectionScaled.getY());
 		return dalePosition.subtract(viewDirectionScaled);
 	}
@@ -77,11 +77,14 @@ public class ObjectsMovementHandler {
 								.multLocal(0.5f);
 		camDir.y = 0;
 		if (daleState.isMovingForward()) {
+			setDaleViewDirectionToCameraDirection();
 			walkDirection.addLocal(camDir);
 			animationController.animateMovingForward();
 		}
 		if (daleState.isMovingBackward()) {
-			walkDirection.addLocal(camDir.negate().mult(0.3f));
+			setDaleViewDirectionToCameraDirection();
+			walkDirection.addLocal(camDir.negate()
+										 .mult(0.5f));
 			animationController.animateMovingBackward();
 		}
 		if (daleState.isMovingLeft()) {
@@ -90,13 +93,21 @@ public class ObjectsMovementHandler {
 
 	}
 
+	private void setDaleViewDirectionToCameraDirection() {
+		Vector3f direction = camera.getDirection();
+		modelLoader.getDale()
+				   .getControl(PhysicsControls.DALE)
+				   .setViewDirection(new Vector3f(direction.getX(), 0,
+						   direction.getZ()));
+	}
+
 	public void daleJump() {
 		if (modelLoader.getDale()
 					   .getControl(PhysicsControls.DALE)
 					   .onGround()) {
 			modelLoader.getDale()
 					   .getControl(PhysicsControls.DALE)
-					   .jump(new Vector3f(0, 10f, 0));
+					   .jump(new Vector3f(0, 30f, 0));
 		}
 	}
 

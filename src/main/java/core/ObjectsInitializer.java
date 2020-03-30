@@ -155,9 +155,7 @@ public class ObjectsInitializer {
 
 		CharacterControl daleControl = new CharacterControl(capsuleShape,
 				0.05f);
-		daleControl.setJumpSpeed(1);
-		daleControl.setFallSpeed(100);
-		daleControl.setGravity(new Vector3f(0, -20f, 0));
+		daleControl.setGravity(new Vector3f(0, -40f, 0));
 		model.addControl(daleControl);
 		daleControl.setPhysicsLocation(new Vector3f(0, 5, -20));
 
