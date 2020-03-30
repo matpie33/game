@@ -1,6 +1,7 @@
 package core;
 
 import com.jme3.app.state.AppStateManager;
+import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
@@ -27,6 +28,13 @@ public class ObjectsInitializer {
 	private static final int INCREASE_Z_BY = 40;
 
 	private DaleState daleState;
+	private CollisionHandler collisionHandler;
+
+	public ObjectsInitializer(ModelLoader modelLoader,
+			AssetManager assetManager, Node rootNode) {
+		collisionHandler = new CollisionHandler(modelLoader, assetManager,
+				rootNode);
+	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes) {
 		boolean increaseXNow = true;
@@ -44,7 +52,7 @@ public class ObjectsInitializer {
 			treesCoordinates.add(
 					new Vector3f(currentXCoordinate, 0, currentZCoordinate));
 			if (i < numberOfBoxes) {
-				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 10,
+				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 4,
 						currentZCoordinate - 70));
 			}
 			increaseXNow = !increaseXNow;
@@ -131,6 +139,8 @@ public class ObjectsInitializer {
 			AppStateManager stateManager) {
 		BulletAppState bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
+		bulletAppState.getPhysicsSpace()
+					  .addCollisionListener(collisionHandler);
 		return bulletAppState;
 	}
 
@@ -145,11 +155,11 @@ public class ObjectsInitializer {
 
 		CharacterControl daleControl = new CharacterControl(capsuleShape,
 				0.05f);
-		daleControl.setJumpSpeed(20);
-		daleControl.setFallSpeed(30);
-		daleControl.setGravity(new Vector3f(0, -10f, 0));
+		daleControl.setJumpSpeed(1);
+		daleControl.setFallSpeed(100);
+		daleControl.setGravity(new Vector3f(0, -20f, 0));
 		model.addControl(daleControl);
-		daleControl.setPhysicsLocation(new Vector3f(0, 10, -20));
+		daleControl.setPhysicsLocation(new Vector3f(0, 5, -20));
 
 		bulletAppState.getPhysicsSpace()
 					  .add(daleControl);

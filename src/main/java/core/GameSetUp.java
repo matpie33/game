@@ -1,12 +1,22 @@
 package core;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh;
 import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
+import com.jme3.light.PointLight;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
+import com.jme3.texture.Texture;
+
+import java.awt.*;
 
 public class GameSetUp extends SimpleApplication {
 
 	private ModelLoader modelLoader = new ModelLoader();
-	private ObjectsInitializer objectsInitializer = new ObjectsInitializer();
+	private ObjectsInitializer objectsInitializer;
 	private AnimationController animationController;
 	private KeysSetup keysSetup;
 	private ObjectsMovementHandler objectsMovementHandler;
@@ -21,6 +31,8 @@ public class GameSetUp extends SimpleApplication {
 		soundsInitializer.addMusic();
 		gameState = new GameState();
 		modelLoader.loadModels(assetManager);
+		objectsInitializer = new ObjectsInitializer(modelLoader,
+				assetManager, rootNode);
 		daleState = initializeObjects();
 		animationController = new AnimationController(daleState);
 		throwingHandler = new ThrowingHandler(cam, rootNode, modelLoader,
@@ -47,8 +59,13 @@ public class GameSetUp extends SimpleApplication {
 	}
 
 	private void addLight() {
-		AmbientLight sun = new AmbientLight();
-		rootNode.addLight(sun);
+
+
+		DirectionalLight dl = new DirectionalLight();
+		dl.setColor(ColorRGBA.White);
+		dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+		rootNode.addLight(dl);
+
 	}
 
 	@Override
