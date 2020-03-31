@@ -2,6 +2,7 @@ package core;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Spatial;
+import com.jme3.util.SkyFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,27 @@ public class ModelLoader {
 	private Spatial scene;
 	private Spatial mark;
 	private Spatial arrow;
+	private Spatial sky;
 
 	public void loadModels(AssetManager assetManager) {
+		createScene(assetManager);
+		createModels(assetManager);
+		createSky(assetManager);
+	}
+
+	private void createSky(AssetManager assetManager) {
+		sky = SkyFactory.createSky(assetManager,
+				"models/clouds.dds",
+				SkyFactory.EnvMapType.CubeMap);
+	}
+
+	private void createScene(AssetManager assetManager) {
+		scene = loadScene(assetManager, "scene");
+	}
+
+	private void createModels(AssetManager assetManager) {
 		dale = loadModel(assetManager, "dalev4");
 		arrow = loadModel(assetManager, "arrow");
-		scene = loadScene(assetManager, "scene");
 		mark = loadModel(assetManager, "mark");
 		for (int i = 0; i < NUMBER_OF_TREES; i++) {
 			trees.add(loadModel(assetManager, "tree"));
@@ -49,6 +66,10 @@ public class ModelLoader {
 		return assetManager.loadModel(
 				String.format(SCENE_DIRECTORY + "%s" + SCENE_EXTENSION,
 						sceneName));
+	}
+
+	public Spatial getSky() {
+		return sky;
 	}
 
 	public List<Spatial> getTrees() {

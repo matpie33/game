@@ -12,6 +12,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.util.SkyFactory;
 import constants.NodeNames;
 import constants.PhysicsControls;
 
@@ -72,6 +73,7 @@ public class ObjectsInitializer {
 
 		trees.forEach(rootNode::attachChild);
 
+		rootNode.attachChild(modelLoader.getSky());
 		rootNode.attachChild(modelLoader.getMark());
 		rootNode.attachChild(modelLoader.getDale());
 		rootNode.attachChild(modelLoader.getScene());
@@ -100,6 +102,7 @@ public class ObjectsInitializer {
 		initializeBoxes(modelLoader, bulletAppState);
 		return daleState;
 	}
+
 
 	private void initializeBoxes(ModelLoader modelLoader,
 			BulletAppState bulletAppState) {

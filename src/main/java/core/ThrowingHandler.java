@@ -191,7 +191,7 @@ public class ThrowingHandler {
 									  .getParent()
 									  .getControl(PhysicsControls.BOX);
 			PhysicsControls.BOX.cast(control)
-							   .setGravity(new Vector3f(0, -10f, 0));
+							   .setGravity(new Vector3f(0, -40f, 0));
 			PhysicsControls.BOX.cast(control)
 							   .setLinearVelocity(new Vector3f(
 									   camera.getDirection()
