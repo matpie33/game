@@ -61,10 +61,14 @@ public class GameSetUp extends SimpleApplication {
 	private void addLight() {
 
 
-		DirectionalLight dl = new DirectionalLight();
-		dl.setColor(ColorRGBA.White);
-		dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-		rootNode.addLight(dl);
+		DirectionalLight directionalLight = new DirectionalLight();
+		directionalLight.setColor(ColorRGBA.White);
+		directionalLight.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+		rootNode.addLight(directionalLight);
+
+		AmbientLight ambientLight = new AmbientLight();
+		ambientLight.setColor(ColorRGBA.White.mult(0.15f));
+		rootNode.addLight(ambientLight);
 
 	}
 
