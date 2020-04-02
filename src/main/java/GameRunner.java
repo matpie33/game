@@ -6,6 +6,7 @@ public class GameRunner {
 	public static void main(String[] args) {
 		GameSetUp gameSetUp = new GameSetUp();
 		AppSettings settings = new AppSettings(true);
+		settings.setFullscreen(true);
 		gameSetUp.setShowSettings(false);
 		gameSetUp.setSettings(settings);
 		gameSetUp.start();
