@@ -31,13 +31,13 @@ public class CollisionHandler implements PhysicsCollisionListener {
 	public static final String MATERIAL_DEFINITION_PATH = "Common/MatDefs/Misc/Particle.j3md";
 	public static final String TEXTURE_PATH = "models/debris.png";
 	public static final String TEXTURE_NAME = "Texture";
-	private ModelLoader modelLoader;
 	private AssetManager assetManager;
 	private Node rootNode;
+	private ObjectsHolderDTO objectsHolderDTO;
 
-	public CollisionHandler(ModelLoader modelLoader, AssetManager assetManager,
+	public CollisionHandler(ObjectsHolderDTO objectsHolderDTO, AssetManager assetManager,
 			Node rootNode) {
-		this.modelLoader = modelLoader;
+		this.objectsHolderDTO = objectsHolderDTO;
 		this.assetManager = assetManager;
 		this.rootNode = rootNode;
 	}
@@ -50,9 +50,9 @@ public class CollisionHandler implements PhysicsCollisionListener {
 	private void handleCollision(PhysicsCollisionEvent event) {
 		Spatial nodeA = event.getNodeA();
 		Spatial nodeB = event.getNodeB();
-		boolean isABox = modelLoader.getBoxes()
+		boolean isABox = objectsHolderDTO.getBoxes()
 									.contains(nodeA);
-		boolean isBBox = modelLoader.getBoxes()
+		boolean isBBox = objectsHolderDTO.getBoxes()
 									.contains(nodeB);
 		if ((isABox || isBBox) && event.getAppliedImpulse() > MINIMUM_IMPULSE_TO_DESTROY_BOX) {
 			clearNode(nodeA, isABox);

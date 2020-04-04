@@ -18,17 +18,17 @@ public class ThrowingHandler {
 	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
 	private Camera camera;
 	private Node rootNode;
-	private ModelLoader modelLoader;
 	private DaleState daleState;
 	private GameState gameState;
 	private AnimationController animationController;
+	private ObjectsHolderDTO objectsHolderDTO;
 
 	public ThrowingHandler(Camera camera, Node rootNode,
-			ModelLoader modelLoader, DaleState daleState, GameState
+			ObjectsHolderDTO objectsHolderDTO, DaleState daleState, GameState
 			gameState, AnimationController animationController) {
 		this.camera = camera;
 		this.rootNode = rootNode;
-		this.modelLoader = modelLoader;
+		this.objectsHolderDTO = objectsHolderDTO;
 		this.daleState = daleState;
 		this.gameState = gameState;
 		this.animationController = animationController;
@@ -38,7 +38,7 @@ public class ThrowingHandler {
 		if (!daleState.isCarryingThrowableObject()) {
 			return;
 		}
-		Spatial dale = modelLoader.getDale();
+		Spatial dale = objectsHolderDTO.getDale();
 		Vector3f viewDir = dale.getControl(PhysicsControls.DALE)
 							   .getViewDirection()
 							   .mult(100);
@@ -56,7 +56,7 @@ public class ThrowingHandler {
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
 		if (collisionResults.size() > 0) {
 			Vector3f contactPoint = closestCollision.getContactPoint();
-			modelLoader.getMark()
+			objectsHolderDTO.getMark()
 					   .setLocalTranslation(contactPoint);
 		}
 	}
@@ -75,7 +75,7 @@ public class ThrowingHandler {
 				&& isCloseEnoughToAnyObject(collisionResults)) {
 
 			calculateArrowPosition(closestCollision);
-			rootNode.attachChild(modelLoader.getArrow());
+			rootNode.attachChild(objectsHolderDTO.getArrow());
 			gameState.setCursorShowingAt(closestCollision.getGeometry());
 		}
 
@@ -100,7 +100,7 @@ public class ThrowingHandler {
 	}
 
 	private CollisionResults getDistanceToObjects() {
-		Spatial dale = modelLoader.getDale();
+		Spatial dale = objectsHolderDTO.getDale();
 		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
 							  .getPhysicsLocation(),
 				dale.getControl(PhysicsControls.DALE)
@@ -118,11 +118,11 @@ public class ThrowingHandler {
 
 	private void hideCursor() {
 		gameState.setCursorNotShowing();
-		rootNode.detachChild(modelLoader.getArrow());
+		rootNode.detachChild(objectsHolderDTO.getArrow());
 	}
 
 	private void calculateArrowPosition(CollisionResult closestCollision) {
-		Spatial arrow = modelLoader.getArrow();
+		Spatial arrow = objectsHolderDTO.getArrow();
 		BoundingVolume collisionObjectBounds = closestCollision.getGeometry()
 															   .getWorldBound();
 		float yDimensionArrow = ((BoundingBox) arrow.getWorldBound()).getYExtent();

@@ -53,6 +53,7 @@
             <artifactId>jme3-plugins</artifactId>
             <version>${jme3_version}</version>
         </dependency>
+
     </dependencies>
 
 

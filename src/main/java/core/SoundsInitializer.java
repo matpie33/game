@@ -23,8 +23,8 @@ public class SoundsInitializer {
 				AudioData.DataType.Buffer);
 		audio_gun.setPositional(false);
 		audio_gun.setLooping(true);
-		audio_gun.setVolume(5);
-		audio_gun.play();
+		audio_gun.setVolume(1);
+//		audio_gun.play();
 		rootNode.attachChild(audio_gun);
 	}
 

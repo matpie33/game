@@ -13,33 +13,35 @@ public class AnimationController implements AnimEventListener {
 	public static final String HOLDING_OBJECT = "hold_object";
 	private AnimChannel channel;
 	private DaleState daleState;
+	private ObjectsHolderDTO objectsHolderDTO;
 
-	public AnimationController(DaleState daleState) {
+	public AnimationController(DaleState daleState,
+			ObjectsHolderDTO objectsHolderDTO) {
 		this.daleState = daleState;
+		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
 	public void setUpAnimations(ModelLoader modelLoader) {
-		AnimControl control = modelLoader.getDale()
-										 .getControl(AnimControl.class);
+		AnimControl control = objectsHolderDTO.getDale()
+											  .getControl(AnimControl.class);
 		control.addListener(this);
 		channel = control.createChannel();
 	}
 
-
 	@Override
 	public void onAnimCycleDone(AnimControl animControl,
 			AnimChannel animChannel, String previousAnimation) {
-		if (daleState.isMovingForward()){
+		if (daleState.isMovingForward()) {
 			animChannel.setAnim(RUN_ANIMATION);
 		}
-		else if (daleState.isMovingBackward()){
+		else if (daleState.isMovingBackward()) {
 			animChannel.setAnim(WALK_BACK_ANIMATION);
 		}
-		else{
-			if (daleState.isCarryingThrowableObject()){
+		else {
+			if (daleState.isCarryingThrowableObject()) {
 				animChannel.setAnim(HOLDING_OBJECT);
 			}
-			else{
+			else {
 				animChannel.setAnim(STAND_ANIMATION);
 			}
 		}
@@ -68,7 +70,7 @@ public class AnimationController implements AnimEventListener {
 		}
 	}
 
-	public void animateStanding (){
+	public void animateStanding() {
 		channel.setAnim(STAND_ANIMATION);
 	}
 

@@ -1,21 +1,14 @@
 package core;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.effect.ParticleEmitter;
-import com.jme3.effect.ParticleMesh;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
-import com.jme3.light.PointLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.texture.Texture;
-
-import java.awt.*;
 
 public class GameSetUp extends SimpleApplication {
 
-	private ModelLoader modelLoader = new ModelLoader();
+	private ModelLoader modelLoader;
 	private ObjectsInitializer objectsInitializer;
 	private AnimationController animationController;
 	private KeysSetup keysSetup;
@@ -24,46 +17,63 @@ public class GameSetUp extends SimpleApplication {
 	private DaleState daleState;
 	private GameState gameState;
 	private SoundsInitializer soundsInitializer;
+	private TerrainCreator terrainCreator;
+	private ObjectsHolderDTO objectsHolderDTO = new ObjectsHolderDTO();
 
 	@Override
 	public void simpleInitApp() {
-		soundsInitializer = new SoundsInitializer(rootNode, assetManager);
-		soundsInitializer.addMusic();
+		loadModels();
+		setupTerrain();
+		initializeObjects();
+		initializeMusic();
 		gameState = new GameState();
-		modelLoader.loadModels(assetManager);
-		objectsInitializer = new ObjectsInitializer(modelLoader,
-				assetManager, rootNode);
-		daleState = initializeObjects();
-		animationController = new AnimationController(daleState);
-		throwingHandler = new ThrowingHandler(cam, rootNode, modelLoader,
+		animationController = new AnimationController(daleState,
+				objectsHolderDTO);
+		throwingHandler = new ThrowingHandler(cam, rootNode, objectsHolderDTO,
 				daleState, gameState, animationController);
-		addLight();
+		setupLight();
 		animationController.setUpAnimations(modelLoader);
-		objectsMovementHandler = new ObjectsMovementHandler(animationController,
-				cam, daleState, modelLoader);
 		setupKeys(daleState);
 
 	}
 
+	private void initializeMusic() {
+		soundsInitializer = new SoundsInitializer(rootNode, assetManager);
+		soundsInitializer.addMusic();
+	}
+
+	private void loadModels() {
+		modelLoader = new ModelLoader(objectsHolderDTO);
+		modelLoader.loadModels(assetManager);
+	}
+
+	private void setupTerrain() {
+		terrainCreator = new TerrainCreator(assetManager, getStateManager(),
+				rootNode, getCamera(), objectsHolderDTO);
+		terrainCreator.setupTerrain();
+	}
+
 	private void setupKeys(DaleState daleState) {
+		objectsMovementHandler = new ObjectsMovementHandler(animationController,
+				cam, daleState, objectsHolderDTO);
 		keysSetup = new KeysSetup(daleState, objectsMovementHandler,
 				throwingHandler);
 		keysSetup.setupKeys(inputManager);
 	}
 
-	private DaleState initializeObjects() {
-		DaleState daleState = objectsInitializer.initializeObjects(modelLoader,
-				stateManager);
-		objectsInitializer.addObjectsToScene(modelLoader, rootNode);
-		return daleState;
+	private void initializeObjects() {
+		objectsInitializer = new ObjectsInitializer(assetManager, rootNode,
+				objectsHolderDTO, cam);
+		daleState = objectsInitializer.initializeObjects(stateManager);
+		objectsInitializer.addObjectsToScene(rootNode);
 	}
 
-	private void addLight() {
-
+	private void setupLight() {
 
 		DirectionalLight directionalLight = new DirectionalLight();
 		directionalLight.setColor(ColorRGBA.White);
-		directionalLight.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+		directionalLight.setDirection(
+				new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
 		rootNode.addLight(directionalLight);
 
 		AmbientLight ambientLight = new AmbientLight();
