@@ -20,34 +20,45 @@ public class GameSetUp extends SimpleApplication {
 	private TerrainCreator terrainCreator;
 	private ObjectsHolderDTO objectsHolderDTO = new ObjectsHolderDTO();
 
+	private GameSetUp (){
+		if (Holder.INSTANCE != null){
+			throw new IllegalStateException("Instance of this class already "
+					+ "constructed");
+		}
+	}
+
+	public static GameSetUp getInstance (){
+		return Holder.INSTANCE;
+	}
+
 	@Override
 	public void simpleInitApp() {
-		loadModels();
-		setupTerrain();
-		initializeObjects();
-		initializeMusic();
+		setUpModels();
+		setUpTerrain();
+		setUpObjects();
+		setUpMusic();
 		gameState = new GameState();
 		animationController = new AnimationController(daleState,
 				objectsHolderDTO);
 		throwingHandler = new ThrowingHandler(cam, rootNode, objectsHolderDTO,
 				daleState, gameState, animationController);
-		setupLight();
+		setUpLight();
 		animationController.setUpAnimations(modelLoader);
 		setupKeys(daleState);
 
 	}
 
-	private void initializeMusic() {
+	private void setUpMusic() {
 		soundsInitializer = new SoundsInitializer(rootNode, assetManager);
 		soundsInitializer.addMusic();
 	}
 
-	private void loadModels() {
+	private void setUpModels() {
 		modelLoader = new ModelLoader(objectsHolderDTO);
 		modelLoader.loadModels(assetManager);
 	}
 
-	private void setupTerrain() {
+	private void setUpTerrain() {
 		terrainCreator = new TerrainCreator(assetManager, getStateManager(),
 				rootNode, getCamera(), objectsHolderDTO);
 		terrainCreator.setupTerrain();
@@ -61,14 +72,14 @@ public class GameSetUp extends SimpleApplication {
 		keysSetup.setupKeys(inputManager);
 	}
 
-	private void initializeObjects() {
+	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(assetManager, rootNode,
 				objectsHolderDTO, cam);
 		daleState = objectsInitializer.initializeObjects(stateManager);
 		objectsInitializer.addObjectsToScene(rootNode);
 	}
 
-	private void setupLight() {
+	private void setUpLight() {
 
 		DirectionalLight directionalLight = new DirectionalLight();
 		directionalLight.setColor(ColorRGBA.White);
@@ -89,5 +100,10 @@ public class GameSetUp extends SimpleApplication {
 		throwingHandler.markThrowableObject();
 		objectsMovementHandler.moveBoxAboveDale();
 	}
+
+	private static class Holder {
+		private static final GameSetUp INSTANCE = new GameSetUp();
+	}
+
 
 }

@@ -4,7 +4,7 @@ import core.GameSetUp;
 public class GameRunner {
 
 	public static void main(String[] args) {
-		GameSetUp gameSetUp = new GameSetUp();
+		GameSetUp gameSetUp = GameSetUp.getInstance();
 		AppSettings settings = new AppSettings(true);
 		settings.setFullscreen(true);
 		gameSetUp.setShowSettings(false);
