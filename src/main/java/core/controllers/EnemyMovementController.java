@@ -17,6 +17,7 @@ public class EnemyMovementController {
 	public static final int MINIMUM_VALUE = 1;
 	public static final int MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION = 5;
 	public static final int MAXIMUM_PIXEL_MOVEMENT_IN_DIRECTION = 10;
+	public static final int MOVEMENT_SPEED = 20;
 	private GameStateDTO gameStateDTO;
 
 	public EnemyMovementController(GameStateDTO gameStateDTO) {
@@ -39,11 +40,13 @@ public class EnemyMovementController {
 		Spatial dog = dogMovementDTO.getDog();
 		boolean isXMovement = isXMovement(
 				dogMovementDTO.getMovementDirection());
-		float movementSpeed = 1 * tpf;
+		float movementSpeed = MOVEMENT_SPEED * tpf;
 		float xMovement = isXMovement ? movementSpeed : 0;
 		float zMovement = isXMovement ? 0 : movementSpeed;
 		CharacterControl control = dog.getControl(PhysicsControls.DOG);
-		control.setWalkDirection(new Vector3f(xMovement, 0, zMovement));
+		Vector3f vec = new Vector3f(xMovement, 0, zMovement);
+		control.setWalkDirection(vec);
+		control.setViewDirection(vec);
 	}
 
 	private void setNewRandomDirectionAndMaximumPixels(

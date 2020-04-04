@@ -13,8 +13,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.terrain.geomipmap.TerrainLodControl;
-import com.jme3.terrain.geomipmap.TerrainQuad;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
@@ -74,7 +72,8 @@ public class ObjectsInitializer {
 						currentZCoordinate - 70));
 			}
 			if (i < numberOfDogs) {
-				dogsCoordinates.add(new Vector3f(currentZCoordinate, 260, -30));
+				dogsCoordinates.add(
+						new Vector3f(currentZCoordinate - 150, 260, -30));
 			}
 			increaseXNow = !increaseXNow;
 		}
@@ -103,9 +102,9 @@ public class ObjectsInitializer {
 		rootNode.attachChild(objectsHolderDTO.getSky());
 		rootNode.attachChild(objectsHolderDTO.getMark());
 		rootNode.attachChild(objectsHolderDTO.getDale());
-		//		rootNode.attachChild(objectsHolderDTO.getScene());
+		rootNode.attachChild(objectsHolderDTO.getScene());
 		rootNode.attachChild(throwables);
-		rootNode.attachChild(objectsHolderDTO.getTerrain());
+		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
 	}
 
 	private void setObjectsCoordinates(List<Spatial> objects,
@@ -119,8 +118,7 @@ public class ObjectsInitializer {
 	}
 
 	private void setObjectsCoordinatesForDogs(List<Spatial> objects,
-			List<Vector3f> coordinates,
-			Class<CharacterControl> controlClass) {
+			List<Vector3f> coordinates, Class<CharacterControl> controlClass) {
 		for (int i = 0; i < objects.size(); i++) {
 			Spatial object = objects.get(i);
 			object.getControl(controlClass)
@@ -131,7 +129,7 @@ public class ObjectsInitializer {
 	public DaleStateDTO initializeObjects() {
 		BulletAppState bulletAppState = initializeBulletAppState();
 		initializeDogs(bulletAppState);
-		//		initializeScene( bulletAppState);
+		initializeScene(bulletAppState);
 		initializeTerrain(bulletAppState);
 		initializeDale(bulletAppState);
 		initializeTrees(bulletAppState);
@@ -141,18 +139,18 @@ public class ObjectsInitializer {
 	}
 
 	private void initializeTerrain(BulletAppState state) {
-		TerrainQuad terrain = objectsHolderDTO.getTerrain();
-		terrain.setLocalTranslation(0, 0, 0);
-		terrain.setLocalScale(1f, 1f, 1f);
-		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(
-				terrain);
-		RigidBodyControl landscape = new RigidBodyControl(sceneShape, 0);
-		terrain.addControl(landscape);
-		state.getPhysicsSpace()
-			 .add(landscape);
-
-		TerrainLodControl control = new TerrainLodControl(terrain, camera);
-		terrain.addControl(control);
+		//		TerrainQuad terrain = objectsHolderDTO.getTerrain();
+		//		terrain.setLocalTranslation(0, 0, 0);
+		//		terrain.setLocalScale(1f, 1f, 1f);
+		//		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(
+		//				terrain);
+		//		RigidBodyControl landscape = new RigidBodyControl(sceneShape, 0);
+		//		terrain.addControl(landscape);
+		//		state.getPhysicsSpace()
+		//			 .add(landscape);
+		//
+		//		TerrainLodControl control = new TerrainLodControl(terrain, camera);
+		//		terrain.addControl(control);
 	}
 
 	private void initializeBoxes(BulletAppState bulletAppState) {
@@ -244,10 +242,12 @@ public class ObjectsInitializer {
 
 	private void initializeScene(BulletAppState bulletAppState) {
 		Spatial scene = objectsHolderDTO.getScene();
+		scene.setLocalScale(10);
 		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(
 				scene);
 		RigidBodyControl landscape = new RigidBodyControl(sceneShape, 0);
 		scene.addControl(landscape);
+		landscape.setPhysicsLocation(new Vector3f(0, 230, 0));
 		bulletAppState.getPhysicsSpace()
 					  .add(landscape);
 	}
