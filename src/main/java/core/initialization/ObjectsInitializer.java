@@ -68,7 +68,8 @@ public class ObjectsInitializer {
 						currentZCoordinate - 70));
 			}
 			if (i < numberOfDogs) {
-				dogsCoordinates.add(new Vector3f(currentZCoordinate, 285, -20));
+				dogsCoordinates.add(new Vector3f(currentZCoordinate, 260,
+						-30));
 			}
 			increaseXNow = !increaseXNow;
 		}
@@ -81,8 +82,8 @@ public class ObjectsInitializer {
 		initializeCoordinates(trees.size(), boxes.size(), dogs.size());
 
 		setObjectsCoordinates(trees, treesCoordinates, PhysicsControls.TREE);
+		setObjectsCoordinates(dogs, dogsCoordinates, PhysicsControls.DOG);
 		setObjectsCoordinates(boxes, boxesCoordinates, PhysicsControls.BOX);
-		setDogsCoordinates();
 		Node throwables = new Node(NodeNames.THROWABLES);
 		objectsHolderDTO.getBoxes()
 						.forEach(throwables::attachChild);
@@ -101,14 +102,6 @@ public class ObjectsInitializer {
 		rootNode.attachChild(objectsHolderDTO.getTerrain());
 	}
 
-	private void setDogsCoordinates() {
-		List<Spatial> dogs = objectsHolderDTO.getDogs();
-		for (int i = 0; i < dogsCoordinates.size(); i++) {
-			dogs.get(i)
-				.getControl(CharacterControl.class)
-				.setPhysicsLocation(dogsCoordinates.get(i));
-		}
-	}
 
 	private void setObjectsCoordinates(List<Spatial> objects,
 			List<Vector3f> coordinates,
@@ -183,6 +176,7 @@ public class ObjectsInitializer {
 		AppStateManager stateManager = GameApplication.getInstance()
 													  .getStateManager();
 		BulletAppState bulletAppState = new BulletAppState();
+		bulletAppState.setDebugEnabled(true);
 		stateManager.attach(bulletAppState);
 		bulletAppState.getPhysicsSpace()
 					  .addCollisionListener(collisionController);
@@ -212,11 +206,11 @@ public class ObjectsInitializer {
 	private void initializeDogs(BulletAppState bulletAppState) {
 		for (Spatial model : objectsHolderDTO.getDogs()) {
 			float height = ((BoundingBox) model.getWorldBound()).getYExtent();
-			CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(2f,
-					height, 1);
+			float width = ((BoundingBox) model.getWorldBound()).getXExtent();
+			CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(height,
+					width, 0);
 
-			CharacterControl control = new CharacterControl(capsuleShape,
-					0.05f);
+			RigidBodyControl control = new RigidBodyControl(capsuleShape);
 			control.setGravity(new Vector3f(0, -40f, 0));
 			model.addControl(control);
 
