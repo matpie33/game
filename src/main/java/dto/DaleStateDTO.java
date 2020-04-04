@@ -1,9 +1,9 @@
-package core;
+package dto;
 
 import com.jme3.scene.Geometry;
 import dto.ThrowableObjectDTO;
 
-public class DaleState {
+public class DaleStateDTO {
 
 	private boolean isMovingForward;
 	private boolean isMovingBackward;

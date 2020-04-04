@@ -1,9 +1,10 @@
-package core;
+package core.initialization;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
+import dto.ObjectsHolderDTO;
 
 public class ModelLoader {
 

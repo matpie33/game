@@ -1,4 +1,4 @@
-package core;
+package core.initialization;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioData;

@@ -1,4 +1,4 @@
-package core;
+package core.controllers;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
@@ -13,8 +13,9 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import dto.ObjectsHolderDTO;
 
-public class CollisionHandler implements PhysicsCollisionListener {
+public class CollisionController implements PhysicsCollisionListener {
 
 	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 9;
 	public static final float STARTING_SIZE = 1.5f;
@@ -35,7 +36,7 @@ public class CollisionHandler implements PhysicsCollisionListener {
 	private Node rootNode;
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public CollisionHandler(ObjectsHolderDTO objectsHolderDTO, AssetManager assetManager,
+	public CollisionController(ObjectsHolderDTO objectsHolderDTO, AssetManager assetManager,
 			Node rootNode) {
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.assetManager = assetManager;

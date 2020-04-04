@@ -1,4 +1,4 @@
-package core;
+package core.controllers;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
@@ -12,30 +12,32 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import constants.NodeNames;
 import constants.PhysicsControls;
+import dto.DaleStateDTO;
+import dto.GameStateDTO;
+import dto.ObjectsHolderDTO;
 
-public class ThrowingHandler {
+public class ThrowingController {
 
 	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
 	private Camera camera;
 	private Node rootNode;
-	private DaleState daleState;
-	private GameState gameState;
+	private DaleStateDTO daleStateDTO;
+	private GameStateDTO gameStateDTO;
 	private AnimationController animationController;
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public ThrowingHandler(Camera camera, Node rootNode,
-			ObjectsHolderDTO objectsHolderDTO, DaleState daleState, GameState
-			gameState, AnimationController animationController) {
+	public ThrowingController(Camera camera, Node rootNode,
+			ObjectsHolderDTO objectsHolderDTO, DaleStateDTO daleStateDTO, GameStateDTO gameStateDTO, AnimationController animationController) {
 		this.camera = camera;
 		this.rootNode = rootNode;
 		this.objectsHolderDTO = objectsHolderDTO;
-		this.daleState = daleState;
-		this.gameState = gameState;
+		this.daleStateDTO = daleStateDTO;
+		this.gameStateDTO = gameStateDTO;
 		this.animationController = animationController;
 	}
 
 	public void markThrowingDestination() {
-		if (!daleState.isCarryingThrowableObject()) {
+		if (!daleStateDTO.isCarryingThrowableObject()) {
 			return;
 		}
 		Spatial dale = objectsHolderDTO.getDale();
@@ -46,9 +48,9 @@ public class ThrowingHandler {
 							  .getPhysicsLocation(), viewDir);
 		CollisionResults collisionResults = new CollisionResults();
 		for (Spatial spatial : rootNode.getChildren()) {
-			if (spatial.equals(dale) || daleState.getCarriedObject()
-												 .getObject()
-												 .getParent() == spatial) {
+			if (spatial.equals(dale) || daleStateDTO.getCarriedObject()
+													.getObject()
+													.getParent() == spatial) {
 				continue;
 			}
 			spatial.collideWith(ray, collisionResults);
@@ -62,7 +64,7 @@ public class ThrowingHandler {
 	}
 
 	public void markThrowableObject() {
-		if (daleState.isCarryingThrowableObject()) {
+		if (daleStateDTO.isCarryingThrowableObject()) {
 			return;
 		}
 		CollisionResults collisionResults = getDistanceToObjects();
@@ -70,17 +72,17 @@ public class ThrowingHandler {
 			return;
 		}
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
-		if (!gameState.isCursorShowing()
-				&& !daleState.isCarryingThrowableObject()
+		if (!gameStateDTO.isCursorShowing()
+				&& !daleStateDTO.isCarryingThrowableObject()
 				&& isCloseEnoughToAnyObject(collisionResults)) {
 
 			calculateArrowPosition(closestCollision);
 			rootNode.attachChild(objectsHolderDTO.getArrow());
-			gameState.setCursorShowingAt(closestCollision.getGeometry());
+			gameStateDTO.setCursorShowingAt(closestCollision.getGeometry());
 		}
 
-		if (gameState.isCursorShowing() && (closestCollision.getGeometry()
-				!= gameState.getSpatialOnWhichCursorIsShowing()
+		if (gameStateDTO.isCursorShowing() && (closestCollision.getGeometry()
+				!= gameStateDTO.getSpatialOnWhichCursorIsShowing()
 				|| closestCollision.getDistance()
 				> MINIMAL_DISTANCE_TO_PICK_OBJECT)) {
 
@@ -117,7 +119,7 @@ public class ThrowingHandler {
 	}
 
 	private void hideCursor() {
-		gameState.setCursorNotShowing();
+		gameStateDTO.setCursorNotShowing();
 		rootNode.detachChild(objectsHolderDTO.getArrow());
 	}
 
@@ -143,7 +145,7 @@ public class ThrowingHandler {
 	}
 
 	public void tryToPickObject() {
-		if (daleState.isCarryingThrowableObject()) {
+		if (daleStateDTO.isCarryingThrowableObject()) {
 			putAsideObject();
 		}
 		else {
@@ -165,31 +167,31 @@ public class ThrowingHandler {
 							   .clearForces();
 			PhysicsControls.BOX.cast(control)
 							   .applyCentralForce(new Vector3f(0, 9f, 0));
-			daleState.setCarryingThrowableObject(true);
-			daleState.setCarriedObject(geometry);
+			daleStateDTO.setCarryingThrowableObject(true);
+			daleStateDTO.setCarriedObject(geometry);
 			hideCursor();
 			animationController.animateHoldingObject();
 		}
 	}
 
 	private void putAsideObject() {
-		daleState.setCarryingThrowableObject(false);
-		daleState.getCarriedObject()
-				 .getObject()
-				 .getParent()
-				 .getControl(PhysicsControls.BOX)
-				 .applyCentralForce(camera.getDirection()
+		daleStateDTO.setCarryingThrowableObject(false);
+		daleStateDTO.getCarriedObject()
+					.getObject()
+					.getParent()
+					.getControl(PhysicsControls.BOX)
+					.applyCentralForce(camera.getDirection()
 										  .mult(3f));
 		animationController.animateStanding();
 	}
 
 	public void tryToThrowObject() {
-		if (daleState.isCarryingThrowableObject()) {
-			daleState.setCarryingThrowableObject(false);
-			Object control = daleState.getCarriedObject()
-									  .getObject()
-									  .getParent()
-									  .getControl(PhysicsControls.BOX);
+		if (daleStateDTO.isCarryingThrowableObject()) {
+			daleStateDTO.setCarryingThrowableObject(false);
+			Object control = daleStateDTO.getCarriedObject()
+										 .getObject()
+										 .getParent()
+										 .getControl(PhysicsControls.BOX);
 			PhysicsControls.BOX.cast(control)
 							   .setGravity(new Vector3f(0, -40f, 0));
 			PhysicsControls.BOX.cast(control)

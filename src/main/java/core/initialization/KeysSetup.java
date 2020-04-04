@@ -1,4 +1,4 @@
-package core;
+package core.initialization;
 
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -6,6 +6,9 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import dto.DaleStateDTO;
+import core.controllers.ObjectsMovementController;
+import core.controllers.ThrowingController;
 
 public class KeysSetup implements ActionListener {
 
@@ -17,16 +20,16 @@ public class KeysSetup implements ActionListener {
 	public static final String PICK_THROWABLE_OBJECT = "pickThrowableObject";
 	public static final String THROW_OBJECT = "throwObject";
 
-	private DaleState daleState;
-	private ObjectsMovementHandler objectsMovementHandler;
-	private ThrowingHandler throwingHandler;
+	private DaleStateDTO daleStateDTO;
+	private ObjectsMovementController objectsMovementController;
+	private ThrowingController throwingController;
 
-	public KeysSetup(DaleState daleState,
-			ObjectsMovementHandler objectsMovementHandler,
-			ThrowingHandler throwingHandler) {
-		this.daleState = daleState;
-		this.objectsMovementHandler = objectsMovementHandler;
-		this.throwingHandler = throwingHandler;
+	public KeysSetup(DaleStateDTO daleStateDTO,
+			ObjectsMovementController objectsMovementController,
+			ThrowingController throwingController) {
+		this.daleStateDTO = daleStateDTO;
+		this.objectsMovementController = objectsMovementController;
+		this.throwingController = throwingController;
 	}
 
 	public void setupKeys(InputManager inputManager) {
@@ -46,25 +49,25 @@ public class KeysSetup implements ActionListener {
 	@Override
 	public void onAction(String name, boolean isPressed, float tpf) {
 		if (MOVE_LEFT.equals(name)) {
-			daleState.setMovingLeft(isPressed);
+			daleStateDTO.setMovingLeft(isPressed);
 		}
 		if (MOVE_RIGHT.equals(name)) {
-			daleState.setMovingRight(isPressed);
+			daleStateDTO.setMovingRight(isPressed);
 		}
 		if (MOVE_FORWARD.equals(name)) {
-			daleState.setMovingForward(isPressed);
+			daleStateDTO.setMovingForward(isPressed);
 		}
 		if (MOVE_BACKWARD.equals(name)) {
-			daleState.setMovingBackward(isPressed);
+			daleStateDTO.setMovingBackward(isPressed);
 		}
 		if (JUMP.equals(name)) {
-			objectsMovementHandler.daleJump();
+			objectsMovementController.daleJump();
 		}
 		if (PICK_THROWABLE_OBJECT.equals(name) && isPressed) {
-			throwingHandler.tryToPickObject();
+			throwingController.tryToPickObject();
 		}
 		if (THROW_OBJECT.equals(name) && isPressed) {
-			throwingHandler.tryToThrowObject();
+			throwingController.tryToThrowObject();
 		}
 
 	}

@@ -5,6 +5,13 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import core.controllers.AnimationController;
+import core.controllers.ObjectsMovementController;
+import core.controllers.ThrowingController;
+import dto.DaleStateDTO;
+import dto.GameStateDTO;
+import dto.ObjectsHolderDTO;
+import core.initialization.*;
 
 public class GameSetUp extends SimpleApplication {
 
@@ -12,10 +19,10 @@ public class GameSetUp extends SimpleApplication {
 	private ObjectsInitializer objectsInitializer;
 	private AnimationController animationController;
 	private KeysSetup keysSetup;
-	private ObjectsMovementHandler objectsMovementHandler;
-	private ThrowingHandler throwingHandler;
-	private DaleState daleState;
-	private GameState gameState;
+	private ObjectsMovementController objectsMovementController;
+	private ThrowingController throwingController;
+	private DaleStateDTO daleStateDTO;
+	private GameStateDTO gameStateDTO;
 	private SoundsInitializer soundsInitializer;
 	private TerrainCreator terrainCreator;
 	private ObjectsHolderDTO objectsHolderDTO = new ObjectsHolderDTO();
@@ -37,14 +44,14 @@ public class GameSetUp extends SimpleApplication {
 		setUpTerrain();
 		setUpObjects();
 		setUpMusic();
-		gameState = new GameState();
-		animationController = new AnimationController(daleState,
+		gameStateDTO = new GameStateDTO();
+		animationController = new AnimationController(daleStateDTO,
 				objectsHolderDTO);
-		throwingHandler = new ThrowingHandler(cam, rootNode, objectsHolderDTO,
-				daleState, gameState, animationController);
+		throwingController = new ThrowingController(cam, rootNode, objectsHolderDTO,
+				daleStateDTO, gameStateDTO, animationController);
 		setUpLight();
 		animationController.setUpAnimations(modelLoader);
-		setupKeys(daleState);
+		setupKeys(daleStateDTO);
 
 	}
 
@@ -64,18 +71,18 @@ public class GameSetUp extends SimpleApplication {
 		terrainCreator.setupTerrain();
 	}
 
-	private void setupKeys(DaleState daleState) {
-		objectsMovementHandler = new ObjectsMovementHandler(animationController,
-				cam, daleState, objectsHolderDTO);
-		keysSetup = new KeysSetup(daleState, objectsMovementHandler,
-				throwingHandler);
+	private void setupKeys(DaleStateDTO daleStateDTO) {
+		objectsMovementController = new ObjectsMovementController(animationController,
+				cam, daleStateDTO, objectsHolderDTO);
+		keysSetup = new KeysSetup(daleStateDTO, objectsMovementController,
+				throwingController);
 		keysSetup.setupKeys(inputManager);
 	}
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(assetManager, rootNode,
 				objectsHolderDTO, cam);
-		daleState = objectsInitializer.initializeObjects(stateManager);
+		daleStateDTO = objectsInitializer.initializeObjects(stateManager);
 		objectsInitializer.addObjectsToScene(rootNode);
 	}
 
@@ -95,10 +102,10 @@ public class GameSetUp extends SimpleApplication {
 
 	@Override
 	public void simpleUpdate(float tpf) {
-		objectsMovementHandler.handleMovement(tpf);
-		throwingHandler.markThrowingDestination();
-		throwingHandler.markThrowableObject();
-		objectsMovementHandler.moveBoxAboveDale();
+		objectsMovementController.handleMovement(tpf);
+		throwingController.markThrowingDestination();
+		throwingController.markThrowableObject();
+		objectsMovementController.moveBoxAboveDale();
 	}
 
 	private static class Holder {

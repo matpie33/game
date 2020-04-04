@@ -1,10 +1,10 @@
-package core;
+package dto;
 
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import dto.ThrowableObjectCursorDTO;
 
-public class GameState {
+public class GameStateDTO {
 
 	private ThrowableObjectCursorDTO throwableObjectCursorDTO = new
 			ThrowableObjectCursorDTO();

@@ -1,4 +1,4 @@
-package core;
+package dto;
 
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;

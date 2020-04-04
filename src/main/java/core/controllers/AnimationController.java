@@ -1,9 +1,12 @@
-package core;
+package core.controllers;
 
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
+import dto.DaleStateDTO;
+import dto.ObjectsHolderDTO;
+import core.initialization.ModelLoader;
 
 public class AnimationController implements AnimEventListener {
 
@@ -12,12 +15,12 @@ public class AnimationController implements AnimEventListener {
 	public static final String WALK_BACK_ANIMATION = "walk_back";
 	public static final String HOLDING_OBJECT = "hold_object";
 	private AnimChannel channel;
-	private DaleState daleState;
+	private DaleStateDTO daleStateDTO;
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public AnimationController(DaleState daleState,
+	public AnimationController(DaleStateDTO daleStateDTO,
 			ObjectsHolderDTO objectsHolderDTO) {
-		this.daleState = daleState;
+		this.daleStateDTO = daleStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
@@ -31,14 +34,14 @@ public class AnimationController implements AnimEventListener {
 	@Override
 	public void onAnimCycleDone(AnimControl animControl,
 			AnimChannel animChannel, String previousAnimation) {
-		if (daleState.isMovingForward()) {
+		if (daleStateDTO.isMovingForward()) {
 			animChannel.setAnim(RUN_ANIMATION);
 		}
-		else if (daleState.isMovingBackward()) {
+		else if (daleStateDTO.isMovingBackward()) {
 			animChannel.setAnim(WALK_BACK_ANIMATION);
 		}
 		else {
-			if (daleState.isCarryingThrowableObject()) {
+			if (daleStateDTO.isCarryingThrowableObject()) {
 				animChannel.setAnim(HOLDING_OBJECT);
 			}
 			else {

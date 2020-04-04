@@ -1,4 +1,4 @@
-package core;
+package core.controllers;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
@@ -6,21 +6,23 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import dto.DaleStateDTO;
+import dto.ObjectsHolderDTO;
 
-public class ObjectsMovementHandler {
+public class ObjectsMovementController {
 
 	private AnimationController animationController;
 	private Camera camera;
-	private DaleState daleState;
+	private DaleStateDTO daleStateDTO;
 	private Vector3f modifiableWalkDirectionVector = new Vector3f(0, 0, 0);
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public ObjectsMovementHandler(AnimationController animationController,
-			Camera camera, DaleState daleState,
+	public ObjectsMovementController(AnimationController animationController,
+			Camera camera, DaleStateDTO daleStateDTO,
 			ObjectsHolderDTO objectsHolderDTO) {
 		this.animationController = animationController;
 		this.camera = camera;
-		this.daleState = daleState;
+		this.daleStateDTO = daleStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
@@ -54,7 +56,7 @@ public class ObjectsMovementHandler {
 	private void adjustCameraYPosition(
 			Vector3f dalePositionMinusViewDirection) {
 		float distanceAboveHead = 3;
-		if (daleState.isCarryingThrowableObject()) {
+		if (daleStateDTO.isCarryingThrowableObject()) {
 			distanceAboveHead = 10;
 		}
 		dalePositionMinusViewDirection.setY(
@@ -74,18 +76,18 @@ public class ObjectsMovementHandler {
 								.clone()
 								.multLocal(0.5f);
 		camDir.y = 0;
-		if (daleState.isMovingForward()) {
+		if (daleStateDTO.isMovingForward()) {
 			setDaleViewDirectionToCameraDirection();
 			walkDirection.addLocal(camDir);
 			animationController.animateMovingForward();
 		}
-		if (daleState.isMovingBackward()) {
+		if (daleStateDTO.isMovingBackward()) {
 			setDaleViewDirectionToCameraDirection();
 			walkDirection.addLocal(camDir.negate()
 										 .mult(0.5f));
 			animationController.animateMovingBackward();
 		}
-		if (daleState.isMovingLeft()) {
+		if (daleStateDTO.isMovingLeft()) {
 		}
 		setMovementDirection();
 
@@ -110,11 +112,11 @@ public class ObjectsMovementHandler {
 	}
 
 	public void moveBoxAboveDale() {
-		if (!daleState.isCarryingThrowableObject()) {
+		if (!daleStateDTO.isCarryingThrowableObject()) {
 			return;
 		}
-		Geometry carriedObject = daleState.getCarriedObject()
-										  .getObject();
+		Geometry carriedObject = daleStateDTO.getCarriedObject()
+											 .getObject();
 		Vector3f dalePosition = objectsHolderDTO.getDale()
 												.getLocalTranslation();
 		float carriedObjectHeight = ((BoundingBox) objectsHolderDTO.getDale()

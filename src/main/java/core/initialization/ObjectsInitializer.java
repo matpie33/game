@@ -1,4 +1,4 @@
-package core;
+package core.initialization;
 
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
@@ -17,6 +17,9 @@ import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import constants.NodeNames;
 import constants.PhysicsControls;
+import core.controllers.CollisionController;
+import dto.DaleStateDTO;
+import dto.ObjectsHolderDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +33,14 @@ public class ObjectsInitializer {
 	private static final int INCREASE_X_BY = 20;
 	private static final int INCREASE_Z_BY = 40;
 
-	private DaleState daleState;
-	private CollisionHandler collisionHandler;
+	private DaleStateDTO daleStateDTO;
+	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private Camera camera;
 
 	public ObjectsInitializer(AssetManager assetManager, Node rootNode,
 			ObjectsHolderDTO objectsHolderDTO, Camera camera) {
-		collisionHandler = new CollisionHandler(objectsHolderDTO, assetManager,
+		collisionController = new CollisionController(objectsHolderDTO, assetManager,
 				rootNode);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.camera = camera;
@@ -99,7 +102,7 @@ public class ObjectsInitializer {
 		}
 	}
 
-	public DaleState initializeObjects(AppStateManager stateManager) {
+	public DaleStateDTO initializeObjects(AppStateManager stateManager) {
 		BulletAppState bulletAppState = initializeBulletAppState(stateManager);
 		//		initializeScene( bulletAppState);
 		initializeTerrain(bulletAppState);
@@ -107,7 +110,7 @@ public class ObjectsInitializer {
 		initializeTrees(bulletAppState);
 		initializeMark();
 		initializeBoxes(bulletAppState);
-		return daleState;
+		return daleStateDTO;
 	}
 
 	private void initializeTerrain(BulletAppState state) {
@@ -162,7 +165,7 @@ public class ObjectsInitializer {
 		BulletAppState bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
 		bulletAppState.getPhysicsSpace()
-					  .addCollisionListener(collisionHandler);
+					  .addCollisionListener(collisionController);
 		return bulletAppState;
 	}
 
@@ -171,8 +174,8 @@ public class ObjectsInitializer {
 		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
 		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(2f, 2f,
 				1);
-		daleState = new DaleState();
-		daleState.setCarryingThrowableObject(false);
+		daleStateDTO = new DaleStateDTO();
+		daleStateDTO.setCarryingThrowableObject(false);
 
 		CharacterControl daleControl = new CharacterControl(capsuleShape,
 				0.05f);
