@@ -6,24 +6,25 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.ObjectsHolderDTO;
 
 public class ObjectsMovementController {
 
 	private AnimationController animationController;
-	private Camera camera;
 	private DaleStateDTO daleStateDTO;
 	private Vector3f modifiableWalkDirectionVector = new Vector3f(0, 0, 0);
 	private ObjectsHolderDTO objectsHolderDTO;
+	private Camera camera;
 
 	public ObjectsMovementController(AnimationController animationController,
-			Camera camera, DaleStateDTO daleStateDTO,
-			ObjectsHolderDTO objectsHolderDTO) {
+			DaleStateDTO daleStateDTO, ObjectsHolderDTO objectsHolderDTO) {
 		this.animationController = animationController;
-		this.camera = camera;
 		this.daleStateDTO = daleStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
+		GameApplication gameApplication = GameApplication.getInstance();
+		camera = gameApplication.getCamera();
 	}
 
 	public void handleMovement(float tpf) {

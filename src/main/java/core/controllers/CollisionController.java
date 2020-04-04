@@ -10,9 +10,9 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import core.GameApplication;
 import dto.ObjectsHolderDTO;
 
 public class CollisionController implements PhysicsCollisionListener {
@@ -32,15 +32,10 @@ public class CollisionController implements PhysicsCollisionListener {
 	public static final String MATERIAL_DEFINITION_PATH = "Common/MatDefs/Misc/Particle.j3md";
 	public static final String TEXTURE_PATH = "models/debris.png";
 	public static final String TEXTURE_NAME = "Texture";
-	private AssetManager assetManager;
-	private Node rootNode;
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public CollisionController(ObjectsHolderDTO objectsHolderDTO, AssetManager assetManager,
-			Node rootNode) {
+	public CollisionController(ObjectsHolderDTO objectsHolderDTO) {
 		this.objectsHolderDTO = objectsHolderDTO;
-		this.assetManager = assetManager;
-		this.rootNode = rootNode;
 	}
 
 	@Override
@@ -52,10 +47,11 @@ public class CollisionController implements PhysicsCollisionListener {
 		Spatial nodeA = event.getNodeA();
 		Spatial nodeB = event.getNodeB();
 		boolean isABox = objectsHolderDTO.getBoxes()
-									.contains(nodeA);
+										 .contains(nodeA);
 		boolean isBBox = objectsHolderDTO.getBoxes()
-									.contains(nodeB);
-		if ((isABox || isBBox) && event.getAppliedImpulse() > MINIMUM_IMPULSE_TO_DESTROY_BOX) {
+										 .contains(nodeB);
+		if ((isABox || isBBox)
+				&& event.getAppliedImpulse() > MINIMUM_IMPULSE_TO_DESTROY_BOX) {
 			clearNode(nodeA, isABox);
 			clearNode(nodeB, isBBox);
 
@@ -74,11 +70,14 @@ public class CollisionController implements PhysicsCollisionListener {
 			boxParticles.setLowLife(MINIMUM_ANIMATION_TIME);
 			boxParticles.setHighLife(MAXIMUM_ANIMATION_TIME);
 			boxParticles.getParticleInfluencer()
-						.setInitialVelocity(new Vector3f(0, STARTING_VELOCITY_Y, 0));
+						.setInitialVelocity(
+								new Vector3f(0, STARTING_VELOCITY_Y, 0));
 			boxParticles.getParticleInfluencer()
 						.setVelocityVariation(VELOCITY_VARIATION);
 			boxParticles.setImagesX(IMAGES_IN_TEXTURE_HORIZONTALLY);
 			boxParticles.setImagesY(IMAGES_IN_TEXTURE_VERTICALLY);
+			AssetManager assetManager = GameApplication.getInstance()
+													   .getAssetManager();
 			Material material = new Material(assetManager,
 					MATERIAL_DEFINITION_PATH);
 			material.setTexture(TEXTURE_NAME,
@@ -86,7 +85,9 @@ public class CollisionController implements PhysicsCollisionListener {
 			boxParticles.setMaterial(material);
 			boxParticles.setLocalTranslation(nodeA.getLocalTranslation());
 			boxParticles.emitAllParticles();
-			rootNode.attachChild(boxParticles);
+			GameApplication.getInstance()
+						   .getRootNode()
+						   .attachChild(boxParticles);
 
 		}
 
@@ -94,11 +95,11 @@ public class CollisionController implements PhysicsCollisionListener {
 
 	private void clearNode(Spatial node, boolean isBox) {
 		if (isBox && node.getParent() != null) {
-			RigidBodyControl control = node.getControl(
-					PhysicsControls.BOX);
-			control.getPhysicsSpace().remove(control);
+			RigidBodyControl control = node.getControl(PhysicsControls.BOX);
+			control.getPhysicsSpace()
+				   .remove(control);
 			node.getParent()
-				 .detachChild(node);
+				.detachChild(node);
 		}
 	}
 

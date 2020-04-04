@@ -1,15 +1,13 @@
 package core.initialization;
 
-import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
-import com.jme3.renderer.Camera;
-import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture2D;
+import core.GameApplication;
 import dto.ObjectsHolderDTO;
 import external.HeightBasedAlphaMapGenerator;
 
@@ -17,24 +15,16 @@ public class TerrainCreator {
 
 	private AssetManager assetManager;
 	private HeightBasedAlphaMapGenerator heightBasedAlphaMapGenerator;
-	private AppStateManager stateManager;
-	private Node rootNode;
-	private Camera camera;
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public TerrainCreator(AssetManager assetManager,
-			AppStateManager stateManager, Node rootNode, Camera camera,
-			ObjectsHolderDTO objectsHolderDTO) {
-		this.assetManager = assetManager;
-		this.stateManager = stateManager;
-		this.rootNode = rootNode;
-		this.camera = camera;
+	public TerrainCreator(ObjectsHolderDTO objectsHolderDTO) {
 		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
 	public void setupTerrain() {
 
-		Material material = new Material(assetManager,
+		Material material = new Material(GameApplication.getInstance()
+														.getAssetManager(),
 				"Common/MatDefs/Terrain/Terrain.j3md");
 
 		Texture road = objectsHolderDTO.getRoad();

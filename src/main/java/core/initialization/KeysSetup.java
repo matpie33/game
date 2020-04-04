@@ -6,6 +6,7 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import core.GameApplication;
 import dto.DaleStateDTO;
 import core.controllers.ObjectsMovementController;
 import core.controllers.ThrowingController;
@@ -32,7 +33,9 @@ public class KeysSetup implements ActionListener {
 		this.throwingController = throwingController;
 	}
 
-	public void setupKeys(InputManager inputManager) {
+	public void setupKeys() {
+		InputManager inputManager = GameApplication.getInstance()
+												   .getInputManager();
 		inputManager.addMapping(MOVE_LEFT, new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addMapping(MOVE_RIGHT, new KeyTrigger(KeyInput.KEY_D));
 		inputManager.addMapping(MOVE_FORWARD, new KeyTrigger(KeyInput.KEY_W));

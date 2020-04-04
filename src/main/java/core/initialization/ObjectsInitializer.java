@@ -1,7 +1,6 @@
 package core.initialization;
 
 import com.jme3.app.state.AppStateManager;
-import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
@@ -17,6 +16,7 @@ import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import constants.NodeNames;
 import constants.PhysicsControls;
+import core.GameApplication;
 import core.controllers.CollisionController;
 import dto.DaleStateDTO;
 import dto.ObjectsHolderDTO;
@@ -38,12 +38,11 @@ public class ObjectsInitializer {
 	private ObjectsHolderDTO objectsHolderDTO;
 	private Camera camera;
 
-	public ObjectsInitializer(AssetManager assetManager, Node rootNode,
-			ObjectsHolderDTO objectsHolderDTO, Camera camera) {
-		collisionController = new CollisionController(objectsHolderDTO, assetManager,
-				rootNode);
+	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO) {
+		collisionController = new CollisionController(objectsHolderDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
-		this.camera = camera;
+		this.camera = GameApplication.getInstance()
+									 .getCamera();
 	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes) {
@@ -69,7 +68,7 @@ public class ObjectsInitializer {
 		}
 	}
 
-	public void addObjectsToScene(Node rootNode) {
+	public void addObjectsToScene() {
 		List<Spatial> trees = objectsHolderDTO.getTrees();
 		List<Spatial> boxes = objectsHolderDTO.getBoxes();
 		initializeCoordinates(trees.size(), boxes.size());
@@ -79,6 +78,8 @@ public class ObjectsInitializer {
 		Node throwables = new Node(NodeNames.THROWABLES);
 		objectsHolderDTO.getBoxes()
 						.forEach(throwables::attachChild);
+		Node rootNode = GameApplication.getInstance()
+									   .getRootNode();
 
 		trees.forEach(rootNode::attachChild);
 
@@ -102,8 +103,8 @@ public class ObjectsInitializer {
 		}
 	}
 
-	public DaleStateDTO initializeObjects(AppStateManager stateManager) {
-		BulletAppState bulletAppState = initializeBulletAppState(stateManager);
+	public DaleStateDTO initializeObjects() {
+		BulletAppState bulletAppState = initializeBulletAppState();
 		//		initializeScene( bulletAppState);
 		initializeTerrain(bulletAppState);
 		initializeDale(bulletAppState);
@@ -160,8 +161,9 @@ public class ObjectsInitializer {
 		}
 	}
 
-	private BulletAppState initializeBulletAppState(
-			AppStateManager stateManager) {
+	private BulletAppState initializeBulletAppState() {
+		AppStateManager stateManager = GameApplication.getInstance()
+													  .getStateManager();
 		BulletAppState bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
 		bulletAppState.getPhysicsSpace()

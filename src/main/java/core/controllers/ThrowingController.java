@@ -6,12 +6,12 @@ import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import constants.NodeNames;
 import constants.PhysicsControls;
+import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -19,21 +19,20 @@ import dto.ObjectsHolderDTO;
 public class ThrowingController {
 
 	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
-	private Camera camera;
-	private Node rootNode;
 	private DaleStateDTO daleStateDTO;
 	private GameStateDTO gameStateDTO;
 	private AnimationController animationController;
 	private ObjectsHolderDTO objectsHolderDTO;
+	private GameApplication gameApplication;
 
-	public ThrowingController(Camera camera, Node rootNode,
-			ObjectsHolderDTO objectsHolderDTO, DaleStateDTO daleStateDTO, GameStateDTO gameStateDTO, AnimationController animationController) {
-		this.camera = camera;
-		this.rootNode = rootNode;
+	public ThrowingController(ObjectsHolderDTO objectsHolderDTO,
+			DaleStateDTO daleStateDTO, GameStateDTO gameStateDTO,
+			AnimationController animationController) {
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.daleStateDTO = daleStateDTO;
 		this.gameStateDTO = gameStateDTO;
 		this.animationController = animationController;
+		gameApplication = GameApplication.getInstance();
 	}
 
 	public void markThrowingDestination() {
@@ -47,7 +46,8 @@ public class ThrowingController {
 		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
 							  .getPhysicsLocation(), viewDir);
 		CollisionResults collisionResults = new CollisionResults();
-		for (Spatial spatial : rootNode.getChildren()) {
+		for (Spatial spatial : gameApplication.getRootNode()
+											  .getChildren()) {
 			if (spatial.equals(dale) || daleStateDTO.getCarriedObject()
 													.getObject()
 													.getParent() == spatial) {
@@ -59,7 +59,7 @@ public class ThrowingController {
 		if (collisionResults.size() > 0) {
 			Vector3f contactPoint = closestCollision.getContactPoint();
 			objectsHolderDTO.getMark()
-					   .setLocalTranslation(contactPoint);
+							.setLocalTranslation(contactPoint);
 		}
 	}
 
@@ -77,7 +77,8 @@ public class ThrowingController {
 				&& isCloseEnoughToAnyObject(collisionResults)) {
 
 			calculateArrowPosition(closestCollision);
-			rootNode.attachChild(objectsHolderDTO.getArrow());
+			gameApplication.getRootNode()
+						   .attachChild(objectsHolderDTO.getArrow());
 			gameStateDTO.setCursorShowingAt(closestCollision.getGeometry());
 		}
 
@@ -108,7 +109,8 @@ public class ThrowingController {
 				dale.getControl(PhysicsControls.DALE)
 					.getViewDirection());
 		CollisionResults collisionResults = new CollisionResults();
-		Spatial throwables = rootNode.getChild(NodeNames.THROWABLES);
+		Spatial throwables = gameApplication.getRootNode()
+											.getChild(NodeNames.THROWABLES);
 		for (Spatial spatial : ((Node) throwables).getChildren()) {
 			spatial.collideWith(ray, collisionResults);
 		}
@@ -120,7 +122,7 @@ public class ThrowingController {
 
 	private void hideCursor() {
 		gameStateDTO.setCursorNotShowing();
-		rootNode.detachChild(objectsHolderDTO.getArrow());
+		gameApplication.getRootNode().detachChild(objectsHolderDTO.getArrow());
 	}
 
 	private void calculateArrowPosition(CollisionResult closestCollision) {
@@ -180,8 +182,9 @@ public class ThrowingController {
 					.getObject()
 					.getParent()
 					.getControl(PhysicsControls.BOX)
-					.applyCentralForce(camera.getDirection()
-										  .mult(3f));
+					.applyCentralForce(gameApplication.getCamera()
+													  .getDirection()
+													  .mult(3f));
 		animationController.animateStanding();
 	}
 
@@ -196,8 +199,9 @@ public class ThrowingController {
 							   .setGravity(new Vector3f(0, -40f, 0));
 			PhysicsControls.BOX.cast(control)
 							   .setLinearVelocity(new Vector3f(
-									   camera.getDirection()
-											 .mult(80f)));
+									   gameApplication.getCamera()
+													  .getDirection()
+													  .mult(80f)));
 			animationController.animateStanding();
 		}
 

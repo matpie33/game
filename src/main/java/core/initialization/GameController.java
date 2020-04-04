@@ -1,19 +1,19 @@
-package core;
+package core.initialization;
 
-import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
+import core.GameApplication;
 import core.controllers.AnimationController;
 import core.controllers.ObjectsMovementController;
 import core.controllers.ThrowingController;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
-import core.initialization.*;
 
-public class GameSetUp extends SimpleApplication {
+public class GameController {
 
 	private ModelLoader modelLoader;
 	private ObjectsInitializer objectsInitializer;
@@ -26,64 +26,58 @@ public class GameSetUp extends SimpleApplication {
 	private SoundsInitializer soundsInitializer;
 	private TerrainCreator terrainCreator;
 	private ObjectsHolderDTO objectsHolderDTO = new ObjectsHolderDTO();
+	private GameApplication gameApplication;
 
-	private GameSetUp (){
-		if (Holder.INSTANCE != null){
-			throw new IllegalStateException("Instance of this class already "
-					+ "constructed");
-		}
+	public GameController(GameApplication gameApplication) {
+		this.gameApplication = gameApplication;
 	}
 
-	public static GameSetUp getInstance (){
-		return Holder.INSTANCE;
-	}
-
-	@Override
-	public void simpleInitApp() {
+	public void initialize() {
 		setUpModels();
 		setUpTerrain();
 		setUpObjects();
 		setUpMusic();
+		setUpAnimations();
 		gameStateDTO = new GameStateDTO();
-		animationController = new AnimationController(daleStateDTO,
-				objectsHolderDTO);
-		throwingController = new ThrowingController(cam, rootNode, objectsHolderDTO,
+		throwingController = new ThrowingController(objectsHolderDTO,
 				daleStateDTO, gameStateDTO, animationController);
 		setUpLight();
-		animationController.setUpAnimations(modelLoader);
 		setupKeys(daleStateDTO);
+	}
 
+	private void setUpAnimations() {
+		animationController = new AnimationController(daleStateDTO,
+				objectsHolderDTO);
+		animationController.setUpAnimations(modelLoader);
 	}
 
 	private void setUpMusic() {
-		soundsInitializer = new SoundsInitializer(rootNode, assetManager);
+		soundsInitializer = new SoundsInitializer();
 		soundsInitializer.addMusic();
 	}
 
 	private void setUpModels() {
 		modelLoader = new ModelLoader(objectsHolderDTO);
-		modelLoader.loadModels(assetManager);
+		modelLoader.loadModels();
 	}
 
 	private void setUpTerrain() {
-		terrainCreator = new TerrainCreator(assetManager, getStateManager(),
-				rootNode, getCamera(), objectsHolderDTO);
+		terrainCreator = new TerrainCreator(objectsHolderDTO);
 		terrainCreator.setupTerrain();
 	}
 
 	private void setupKeys(DaleStateDTO daleStateDTO) {
-		objectsMovementController = new ObjectsMovementController(animationController,
-				cam, daleStateDTO, objectsHolderDTO);
+		objectsMovementController = new ObjectsMovementController(
+				animationController, daleStateDTO, objectsHolderDTO);
 		keysSetup = new KeysSetup(daleStateDTO, objectsMovementController,
 				throwingController);
-		keysSetup.setupKeys(inputManager);
+		keysSetup.setupKeys();
 	}
 
 	private void setUpObjects() {
-		objectsInitializer = new ObjectsInitializer(assetManager, rootNode,
-				objectsHolderDTO, cam);
-		daleStateDTO = objectsInitializer.initializeObjects(stateManager);
-		objectsInitializer.addObjectsToScene(rootNode);
+		objectsInitializer = new ObjectsInitializer(objectsHolderDTO);
+		daleStateDTO = objectsInitializer.initializeObjects();
+		objectsInitializer.addObjectsToScene();
 	}
 
 	private void setUpLight() {
@@ -92,6 +86,7 @@ public class GameSetUp extends SimpleApplication {
 		directionalLight.setColor(ColorRGBA.White);
 		directionalLight.setDirection(
 				new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+		Node rootNode = gameApplication.getRootNode();
 		rootNode.addLight(directionalLight);
 
 		AmbientLight ambientLight = new AmbientLight();
@@ -100,17 +95,11 @@ public class GameSetUp extends SimpleApplication {
 
 	}
 
-	@Override
-	public void simpleUpdate(float tpf) {
+	public void update(float tpf) {
 		objectsMovementController.handleMovement(tpf);
 		throwingController.markThrowingDestination();
 		throwingController.markThrowableObject();
 		objectsMovementController.moveBoxAboveDale();
 	}
-
-	private static class Holder {
-		private static final GameSetUp INSTANCE = new GameSetUp();
-	}
-
 
 }

@@ -1,14 +1,14 @@
 import com.jme3.system.AppSettings;
-import core.GameSetUp;
+import core.GameApplication;
 
 public class GameRunner {
 
 	public static void main(String[] args) {
-		GameSetUp gameSetUp = GameSetUp.getInstance();
+		GameApplication gameApplication = GameApplication.getInstance();
 		AppSettings settings = new AppSettings(true);
 		settings.setFullscreen(true);
-		gameSetUp.setShowSettings(false);
-		gameSetUp.setSettings(settings);
-		gameSetUp.start();
+		gameApplication.setShowSettings(false);
+		gameApplication.setSettings(settings);
+		gameApplication.start();
 	}
 }
