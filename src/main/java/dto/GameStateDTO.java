@@ -1,31 +1,39 @@
 package dto;
 
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
-import dto.ThrowableObjectCursorDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameStateDTO {
 
-	private ThrowableObjectCursorDTO throwableObjectCursorDTO = new
-			ThrowableObjectCursorDTO();
+	private ThrowableObjectCursorDTO throwableObjectCursorDTO = new ThrowableObjectCursorDTO();
 
+	private List<DogMovementDTO> dogMovementDTOS = new ArrayList<>();
 
-	public void setCursorNotShowing (){
+	public List<DogMovementDTO> getDogMovementDTOS() {
+		return dogMovementDTOS;
+	}
+
+	public void setCursorNotShowing() {
 		throwableObjectCursorDTO.setShowing(false);
 		throwableObjectCursorDTO.setThrowableObject(null);
 	}
 
-	public void setCursorShowingAt(Geometry geometryToShowCursorAt){
+	public void setCursorShowingAt(Geometry geometryToShowCursorAt) {
 		throwableObjectCursorDTO.setThrowableObject(geometryToShowCursorAt);
 		throwableObjectCursorDTO.setShowing(true);
 	}
 
-	public boolean isCursorShowing (){
+	public boolean isCursorShowing() {
 		return throwableObjectCursorDTO.isShowing();
 	}
 
-	public Geometry getSpatialOnWhichCursorIsShowing(){
+	public Geometry getSpatialOnWhichCursorIsShowing() {
 		return throwableObjectCursorDTO.getThrowableObject();
 	}
 
+	public void addDogMovement(DogMovementDTO dogMovementDTO) {
+		dogMovementDTOS.add(dogMovementDTO);
+	}
 }

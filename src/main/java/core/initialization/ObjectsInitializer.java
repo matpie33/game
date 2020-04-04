@@ -20,7 +20,10 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionController;
 import dto.DaleStateDTO;
+import dto.DogMovementDTO;
+import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
+import enums.MovementDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +42,15 @@ public class ObjectsInitializer {
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private Camera camera;
+	private GameStateDTO gameStateDTO;
 
-	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO) {
+	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
+			GameStateDTO gameStateDTO) {
 		collisionController = new CollisionController(objectsHolderDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.camera = GameApplication.getInstance()
 									 .getCamera();
+		this.gameStateDTO = gameStateDTO;
 	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
@@ -68,8 +74,7 @@ public class ObjectsInitializer {
 						currentZCoordinate - 70));
 			}
 			if (i < numberOfDogs) {
-				dogsCoordinates.add(new Vector3f(currentZCoordinate, 260,
-						-30));
+				dogsCoordinates.add(new Vector3f(currentZCoordinate, 260, -30));
 			}
 			increaseXNow = !increaseXNow;
 		}
@@ -82,7 +87,8 @@ public class ObjectsInitializer {
 		initializeCoordinates(trees.size(), boxes.size(), dogs.size());
 
 		setObjectsCoordinates(trees, treesCoordinates, PhysicsControls.TREE);
-		setObjectsCoordinates(dogs, dogsCoordinates, PhysicsControls.DOG);
+		setObjectsCoordinatesForDogs(dogs, dogsCoordinates,
+				PhysicsControls.DOG);
 		setObjectsCoordinates(boxes, boxesCoordinates, PhysicsControls.BOX);
 		Node throwables = new Node(NodeNames.THROWABLES);
 		objectsHolderDTO.getBoxes()
@@ -102,13 +108,22 @@ public class ObjectsInitializer {
 		rootNode.attachChild(objectsHolderDTO.getTerrain());
 	}
 
-
 	private void setObjectsCoordinates(List<Spatial> objects,
 			List<Vector3f> coordinates,
 			Class<RigidBodyControl> physicsRigidBody) {
 		for (int i = 0; i < objects.size(); i++) {
 			Spatial object = objects.get(i);
 			object.getControl(physicsRigidBody)
+				  .setPhysicsLocation(coordinates.get(i));
+		}
+	}
+
+	private void setObjectsCoordinatesForDogs(List<Spatial> objects,
+			List<Vector3f> coordinates,
+			Class<CharacterControl> controlClass) {
+		for (int i = 0; i < objects.size(); i++) {
+			Spatial object = objects.get(i);
+			object.getControl(controlClass)
 				  .setPhysicsLocation(coordinates.get(i));
 		}
 	}
@@ -176,7 +191,6 @@ public class ObjectsInitializer {
 		AppStateManager stateManager = GameApplication.getInstance()
 													  .getStateManager();
 		BulletAppState bulletAppState = new BulletAppState();
-		bulletAppState.setDebugEnabled(true);
 		stateManager.attach(bulletAppState);
 		bulletAppState.getPhysicsSpace()
 					  .addCollisionListener(collisionController);
@@ -207,15 +221,23 @@ public class ObjectsInitializer {
 		for (Spatial model : objectsHolderDTO.getDogs()) {
 			float height = ((BoundingBox) model.getWorldBound()).getYExtent();
 			float width = ((BoundingBox) model.getWorldBound()).getXExtent();
-			CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(height,
-					width, 0);
+			CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(
+					height, width, 0);
 
-			RigidBodyControl control = new RigidBodyControl(capsuleShape);
+			CharacterControl control = new CharacterControl(capsuleShape,
+					0.05f);
 			control.setGravity(new Vector3f(0, -40f, 0));
 			model.addControl(control);
 
 			bulletAppState.getPhysicsSpace()
 						  .add(control);
+			DogMovementDTO dogMovementDTO = new DogMovementDTO(model);
+			dogMovementDTO.setMovementDirection(MovementDirection.FORWARD_X);
+			dogMovementDTO.setMaximumPixelMovementInSingleDirection(10);
+			dogMovementDTO.setPositionWhereMovementBegan(
+					model.getLocalTranslation()
+						 .getX());
+			gameStateDTO.addDogMovement(dogMovementDTO);
 
 		}
 	}

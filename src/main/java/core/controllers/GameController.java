@@ -1,4 +1,4 @@
-package core.initialization;
+package core.controllers;
 
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
@@ -6,9 +6,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import core.GameApplication;
-import core.controllers.AnimationController;
-import core.controllers.ObjectsMovementController;
-import core.controllers.ThrowingController;
+import core.initialization.*;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -27,18 +25,21 @@ public class GameController {
 	private TerrainCreator terrainCreator;
 	private ObjectsHolderDTO objectsHolderDTO = new ObjectsHolderDTO();
 	private GameApplication gameApplication;
+	private EnemyMovementController enemyMovementController;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
 	}
 
 	public void initialize() {
+
+		gameStateDTO = new GameStateDTO();
 		setUpModels();
 		setUpTerrain();
 		setUpObjects();
 		setUpMusic();
 		setUpAnimations();
-		gameStateDTO = new GameStateDTO();
+		enemyMovementController = new EnemyMovementController(gameStateDTO);
 		throwingController = new ThrowingController(objectsHolderDTO,
 				daleStateDTO, gameStateDTO, animationController);
 		setUpLight();
@@ -75,7 +76,7 @@ public class GameController {
 	}
 
 	private void setUpObjects() {
-		objectsInitializer = new ObjectsInitializer(objectsHolderDTO);
+		objectsInitializer = new ObjectsInitializer(objectsHolderDTO, gameStateDTO);
 		daleStateDTO = objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}
@@ -100,6 +101,7 @@ public class GameController {
 		throwingController.markThrowingDestination();
 		throwingController.markThrowableObject();
 		objectsMovementController.moveBoxAboveDale();
+		enemyMovementController.moveEnemies(tpf);
 	}
 
 }

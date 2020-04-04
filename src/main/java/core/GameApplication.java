@@ -1,7 +1,7 @@
 package core;
 
 import com.jme3.app.SimpleApplication;
-import core.initialization.GameController;
+import core.controllers.GameController;
 
 public class GameApplication extends SimpleApplication {
 
