@@ -11,6 +11,7 @@ public class ObjectsHolderDTO {
 
 	private List<Spatial> trees = new ArrayList<>();
 	private List<Spatial> boxes = new ArrayList<>();
+	private List<Spatial> dogs = new ArrayList<>();
 	private Spatial dale;
 	private Spatial scene;
 	private Spatial mark;
@@ -100,5 +101,13 @@ public class ObjectsHolderDTO {
 
 	public void setHeightMap(Texture heightMap) {
 		this.heightMap = heightMap;
+	}
+
+	public List<Spatial> getDogs() {
+		return dogs;
+	}
+
+	public void addDog(Spatial dog){
+		this.dogs.add(dog);
 	}
 }

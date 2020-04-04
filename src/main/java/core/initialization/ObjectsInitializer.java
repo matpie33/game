@@ -1,6 +1,7 @@
 package core.initialization;
 
 import com.jme3.app.state.AppStateManager;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
@@ -28,6 +29,7 @@ public class ObjectsInitializer {
 
 	private List<Vector3f> treesCoordinates = new ArrayList<>();
 	private List<Vector3f> boxesCoordinates = new ArrayList<>();
+	private List<Vector3f> dogsCoordinates = new ArrayList<>();
 	private static final int FIRST_COORDINATE_OF_TREE_Z = 0;
 	private static final int FIRST_COORDINATE_OF_TREE_X = 15;
 	private static final int INCREASE_X_BY = 20;
@@ -45,7 +47,8 @@ public class ObjectsInitializer {
 									 .getCamera();
 	}
 
-	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes) {
+	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
+			int numberOfDogs) {
 		boolean increaseXNow = true;
 		int currentXCoordinate = FIRST_COORDINATE_OF_TREE_X;
 		int currentZCoordinate;
@@ -64,6 +67,9 @@ public class ObjectsInitializer {
 				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 250,
 						currentZCoordinate - 70));
 			}
+			if (i < numberOfDogs) {
+				dogsCoordinates.add(new Vector3f(currentZCoordinate, 285, -20));
+			}
 			increaseXNow = !increaseXNow;
 		}
 	}
@@ -71,10 +77,12 @@ public class ObjectsInitializer {
 	public void addObjectsToScene() {
 		List<Spatial> trees = objectsHolderDTO.getTrees();
 		List<Spatial> boxes = objectsHolderDTO.getBoxes();
-		initializeCoordinates(trees.size(), boxes.size());
+		List<Spatial> dogs = objectsHolderDTO.getDogs();
+		initializeCoordinates(trees.size(), boxes.size(), dogs.size());
 
 		setObjectsCoordinates(trees, treesCoordinates, PhysicsControls.TREE);
 		setObjectsCoordinates(boxes, boxesCoordinates, PhysicsControls.BOX);
+		setDogsCoordinates();
 		Node throwables = new Node(NodeNames.THROWABLES);
 		objectsHolderDTO.getBoxes()
 						.forEach(throwables::attachChild);
@@ -82,6 +90,8 @@ public class ObjectsInitializer {
 									   .getRootNode();
 
 		trees.forEach(rootNode::attachChild);
+		objectsHolderDTO.getDogs()
+						.forEach(rootNode::attachChild);
 
 		rootNode.attachChild(objectsHolderDTO.getSky());
 		rootNode.attachChild(objectsHolderDTO.getMark());
@@ -91,20 +101,28 @@ public class ObjectsInitializer {
 		rootNode.attachChild(objectsHolderDTO.getTerrain());
 	}
 
+	private void setDogsCoordinates() {
+		List<Spatial> dogs = objectsHolderDTO.getDogs();
+		for (int i = 0; i < dogsCoordinates.size(); i++) {
+			dogs.get(i)
+				.getControl(CharacterControl.class)
+				.setPhysicsLocation(dogsCoordinates.get(i));
+		}
+	}
+
 	private void setObjectsCoordinates(List<Spatial> objects,
 			List<Vector3f> coordinates,
 			Class<RigidBodyControl> physicsRigidBody) {
 		for (int i = 0; i < objects.size(); i++) {
 			Spatial object = objects.get(i);
-			Vector3f currentCoordinate = coordinates.get(i);
 			object.getControl(physicsRigidBody)
-				  .setPhysicsLocation(new Vector3f(currentCoordinate.getX(),
-						  currentCoordinate.getY(), currentCoordinate.getZ()));
+				  .setPhysicsLocation(coordinates.get(i));
 		}
 	}
 
 	public DaleStateDTO initializeObjects() {
 		BulletAppState bulletAppState = initializeBulletAppState();
+		initializeDogs(bulletAppState);
 		//		initializeScene( bulletAppState);
 		initializeTerrain(bulletAppState);
 		initializeDale(bulletAppState);
@@ -173,9 +191,11 @@ public class ObjectsInitializer {
 
 	private void initializeDale(BulletAppState bulletAppState) {
 		Spatial model = objectsHolderDTO.getDale();
+		float height = ((BoundingBox) model.getWorldBound()).getYExtent();
+		float width = ((BoundingBox) model.getWorldBound()).getXExtent();
 		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
-		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(2f, 2f,
-				1);
+		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(width,
+				height, 1);
 		daleStateDTO = new DaleStateDTO();
 		daleStateDTO.setCarryingThrowableObject(false);
 
@@ -187,6 +207,23 @@ public class ObjectsInitializer {
 
 		bulletAppState.getPhysicsSpace()
 					  .add(daleControl);
+	}
+
+	private void initializeDogs(BulletAppState bulletAppState) {
+		for (Spatial model : objectsHolderDTO.getDogs()) {
+			float height = ((BoundingBox) model.getWorldBound()).getYExtent();
+			CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(2f,
+					height, 1);
+
+			CharacterControl control = new CharacterControl(capsuleShape,
+					0.05f);
+			control.setGravity(new Vector3f(0, -40f, 0));
+			model.addControl(control);
+
+			bulletAppState.getPhysicsSpace()
+						  .add(control);
+
+		}
 	}
 
 	private void initializeScene(BulletAppState bulletAppState) {
