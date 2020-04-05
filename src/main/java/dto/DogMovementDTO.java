@@ -1,14 +1,28 @@
 package dto;
 
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import enums.MovementDirection;
 
 public class DogMovementDTO {
 
-	private int maximumPixelMovementInSingleDirection;
+	private float numberOfPixelsToMoveInGivenDirection;
 	private float positionWhereMovementBegan;
 	private MovementDirection movementDirection;
 	private final Spatial dog;
+	private final Vector3f startOfSquareWhereTheDogMoves;
+	private final int squareWidth;
+
+	public DogMovementDTO(Spatial dog, Vector3f startOfSquareWhereTheDogMoves,
+			int squareWidth) {
+		this.dog = dog;
+		this.startOfSquareWhereTheDogMoves = startOfSquareWhereTheDogMoves;
+		this.squareWidth = squareWidth;
+	}
+
+	public int getSquareWidth() {
+		return squareWidth;
+	}
 
 	public MovementDirection getMovementDirection() {
 		return movementDirection;
@@ -18,25 +32,21 @@ public class DogMovementDTO {
 		this.movementDirection = movementDirection;
 	}
 
-	public DogMovementDTO(Spatial dog) {
-		this.dog = dog;
+	public float getNumberOfPixelsToMoveInGivenDirection() {
+		return numberOfPixelsToMoveInGivenDirection;
 	}
 
-	public int getMaximumPixelMovementInSingleDirection() {
-		return maximumPixelMovementInSingleDirection;
-	}
-
-	public void setMaximumPixelMovementInSingleDirection(
-			int maximumPixelMovementInSingleDirection) {
-		this.maximumPixelMovementInSingleDirection = maximumPixelMovementInSingleDirection;
+	public void setNumberOfPixelsToMoveInGivenDirection(
+			float numberOfPixelsToMoveInGivenDirection) {
+		this.numberOfPixelsToMoveInGivenDirection = numberOfPixelsToMoveInGivenDirection;
 	}
 
 	public float getPositionWhereMovementBegan() {
 		return positionWhereMovementBegan;
 	}
 
-	public void setPositionWhereMovementBegan(float
-			positionWhereMovementBegan) {
+	public void setPositionWhereMovementBegan(
+			float positionWhereMovementBegan) {
 		this.positionWhereMovementBegan = positionWhereMovementBegan;
 	}
 
@@ -44,4 +54,7 @@ public class DogMovementDTO {
 		return dog;
 	}
 
+	public Vector3f getStartOfSquareWhereTheDogMoves() {
+		return startOfSquareWhereTheDogMoves;
+	}
 }

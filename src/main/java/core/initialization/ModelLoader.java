@@ -11,7 +11,7 @@ public class ModelLoader {
 
 	private static final int NUMBER_OF_TREES = 20;
 	private static final int NUMBER_OF_BOXES = 15;
-	private static final int NUMBER_OF_DOGS = 3;
+	private static final int NUMBER_OF_DOGS = 5;
 	private static final String MODELS_DIRECTORY = "models/";
 	private static final String TEXTURES_DIRECTORY = "textures/";
 	private static final String SCENE_DIRECTORY = "scene/";

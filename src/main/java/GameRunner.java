@@ -10,7 +10,7 @@ public class GameRunner {
 		AppSettings settings = new AppSettings(true);
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension screenSize = tk.getScreenSize();
-		settings.setResolution(screenSize.width, screenSize.height);
+//		settings.setResolution(screenSize.width, screenSize.height);
 		gameApplication.setShowSettings(false);
 		gameApplication.setSettings(settings);
 		gameApplication.start();

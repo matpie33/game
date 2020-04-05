@@ -76,7 +76,8 @@ public class GameController {
 	}
 
 	private void setUpObjects() {
-		objectsInitializer = new ObjectsInitializer(objectsHolderDTO, gameStateDTO);
+		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
+				gameStateDTO);
 		daleStateDTO = objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}

@@ -1,7 +1,6 @@
 package core.controllers;
 
 import com.jme3.bounding.BoundingBox;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
@@ -36,7 +35,7 @@ public class ObjectsMovementController {
 
 	private void handleDaleMovement(float tpf) {
 		modifiableWalkDirectionVector.set(0, 0, 0);
-		handleMovementByKeys(modifiableWalkDirectionVector, tpf);
+		handleMovementByKeys(tpf);
 
 	}
 
@@ -73,19 +72,19 @@ public class ObjectsMovementController {
 		return dalePosition.subtract(viewDirectionScaled);
 	}
 
-	private void handleMovementByKeys(Vector3f walkDirection, float tpf) {
+	private void handleMovementByKeys(float tpf) {
 		Vector3f camDir = camera.getDirection()
 								.clone()
 								.multLocal(0.5f);
 		camDir.y = 0;
 		if (daleStateDTO.isMovingForward()) {
 			setDaleViewDirectionToCameraDirection();
-			walkDirection.addLocal(camDir);
+			modifiableWalkDirectionVector.addLocal(camDir);
 			animationController.animateMovingForward();
 		}
 		if (daleStateDTO.isMovingBackward()) {
 			setDaleViewDirectionToCameraDirection();
-			walkDirection.addLocal(camDir.negate()
+			modifiableWalkDirectionVector.addLocal(camDir.negate()
 										 .mult(0.5f));
 			animationController.animateMovingBackward();
 		}

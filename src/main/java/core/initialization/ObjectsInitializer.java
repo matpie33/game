@@ -66,14 +66,14 @@ public class ObjectsInitializer {
 				currentZCoordinate = FIRST_COORDINATE_OF_TREE_Z + INCREASE_Z_BY;
 			}
 			treesCoordinates.add(
-					new Vector3f(currentXCoordinate, 250, currentZCoordinate));
+					new Vector3f(currentXCoordinate, 260, currentZCoordinate));
 			if (i < numberOfBoxes) {
-				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 250,
+				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90,
+						245,
 						currentZCoordinate - 70));
 			}
 			if (i < numberOfDogs) {
-				dogsCoordinates.add(
-						new Vector3f(currentZCoordinate - 150, 260, -30));
+				dogsCoordinates.add(new Vector3f(40 * i, 245, -30));
 			}
 			increaseXNow = !increaseXNow;
 		}
@@ -121,8 +121,9 @@ public class ObjectsInitializer {
 			List<Vector3f> coordinates, Class<CharacterControl> controlClass) {
 		for (int i = 0; i < objects.size(); i++) {
 			Spatial object = objects.get(i);
-			object.getControl(controlClass)
-				  .setPhysicsLocation(coordinates.get(i));
+			CharacterControl control = object.getControl(controlClass);
+			control.setPhysicsLocation(coordinates.get(i));
+			addDogMovement(object, control);
 		}
 	}
 
@@ -159,7 +160,7 @@ public class ObjectsInitializer {
 
 			RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
 					0.5f);
-			rigidBodyControl.setGravity(new Vector3f(0, 5f, 0));
+			rigidBodyControl.setGravity(new Vector3f(0, -10f, 0));
 			box.addControl(rigidBodyControl);
 			bulletAppState.getPhysicsSpace()
 						  .add(rigidBodyControl);
@@ -229,15 +230,18 @@ public class ObjectsInitializer {
 
 			bulletAppState.getPhysicsSpace()
 						  .add(control);
-			DogMovementDTO dogMovementDTO = new DogMovementDTO(model);
-			dogMovementDTO.setMovementDirection(MovementDirection.FORWARD_X);
-			dogMovementDTO.setMaximumPixelMovementInSingleDirection(10);
-			dogMovementDTO.setPositionWhereMovementBegan(
-					model.getLocalTranslation()
-						 .getX());
-			gameStateDTO.addDogMovement(dogMovementDTO);
 
 		}
+	}
+
+	private void addDogMovement(Spatial model, CharacterControl control) {
+		Vector3f physicsLocation = control.getPhysicsLocation();
+		DogMovementDTO dogMovementDTO = new DogMovementDTO(model,
+				physicsLocation, 20);
+		dogMovementDTO.setMovementDirection(MovementDirection.FORWARD_X);
+		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(10);
+		dogMovementDTO.setPositionWhereMovementBegan(physicsLocation.getX());
+		gameStateDTO.addDogMovement(dogMovementDTO);
 	}
 
 	private void initializeScene(BulletAppState bulletAppState) {
