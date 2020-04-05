@@ -1,6 +1,9 @@
 package core.controllers;
 
 import com.jme3.bounding.BoundingBox;
+import com.jme3.bullet.control.CharacterControl;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
@@ -85,13 +88,29 @@ public class ObjectsMovementController {
 		if (daleStateDTO.isMovingBackward()) {
 			setDaleViewDirectionToCameraDirection();
 			modifiableWalkDirectionVector.addLocal(camDir.negate()
-										 .mult(0.5f));
+														 .mult(0.5f));
 			animationController.animateMovingBackward();
 		}
 		if (daleStateDTO.isMovingLeft()) {
+			rotateCharacterAndCamera(tpf, true);
+		}
+		if (daleStateDTO.isMovingRight()) {
+			rotateCharacterAndCamera(tpf, false);
 		}
 		setMovementDirection();
 
+	}
+
+	private void rotateCharacterAndCamera(float tpf, boolean left) {
+		Quaternion quaternion = new Quaternion();
+		int multiplier = left ? 1 : -1;
+		quaternion.fromAngleAxis(FastMath.DEG_TO_RAD * 90 * multiplier * tpf,
+				Vector3f.UNIT_Y);
+		CharacterControl control = objectsHolderDTO.getDale()
+												   .getControl(
+														   PhysicsControls.DALE);
+		control.setViewDirection(quaternion.mult(control.getViewDirection()));
+		camera.setRotation(quaternion.mult(camera.getRotation()));
 	}
 
 	private void setDaleViewDirectionToCameraDirection() {

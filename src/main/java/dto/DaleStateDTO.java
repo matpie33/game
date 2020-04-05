@@ -35,6 +35,10 @@ public class DaleStateDTO {
 		return isMovingLeft;
 	}
 
+	public boolean isMovingRight() {
+		return isMovingRight;
+	}
+
 	public void setMovingLeft(boolean movingLeft) {
 		isMovingLeft = movingLeft;
 	}
