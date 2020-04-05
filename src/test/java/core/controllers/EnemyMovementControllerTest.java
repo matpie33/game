@@ -22,7 +22,7 @@ public class EnemyMovementControllerTest {
 	private Vector3f characterPosition = Vector3f.ZERO;
 
 	@Test
-	public void should() {
+	public void shouldTestThatEnemiesStayInSquare() {
 
 		//given
 		Spatial dog = Mockito.mock(Spatial.class);
@@ -47,12 +47,12 @@ public class EnemyMovementControllerTest {
 				positionOfSquare, 20);
 		dogMovementDTO.setPositionWhereMovementBegan(150);
 		dogMovementDTO.setMovementDirection(MovementDirection.FORWARD_X);
-		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(10);
+		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(20);
 		gameStateDTO.getDogMovementDTOS()
 					.add(dogMovementDTO);
 
 		//when, then
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 10000; i++) {
 			enemyMovementController.moveEnemies(0.3f);
 			Assertions.assertThat(characterPosition.getX() >= 130
 					&& characterPosition.getX() <= 170

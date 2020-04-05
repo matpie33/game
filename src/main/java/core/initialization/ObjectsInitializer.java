@@ -68,9 +68,8 @@ public class ObjectsInitializer {
 			treesCoordinates.add(
 					new Vector3f(currentXCoordinate, 260, currentZCoordinate));
 			if (i < numberOfBoxes) {
-				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90,
-						245,
-						currentZCoordinate - 70));
+				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 245,
+						currentZCoordinate + 200));
 			}
 			if (i < numberOfDogs) {
 				dogsCoordinates.add(new Vector3f(40 * i, 245, -30));

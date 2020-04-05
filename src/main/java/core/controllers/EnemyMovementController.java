@@ -15,7 +15,7 @@ public class EnemyMovementController {
 
 	public static final int NUMBER_OF_POSSIBLE_DIRECTIONS = 4;
 	public static final int DIRECTION_MINIMUM_VALUE = 1;
-	public static final int MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION = 10;
+	public static final float MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION = 10.000000f;
 	public static final float MOVEMENT_SPEED = 0.1f;
 	private GameStateDTO gameStateDTO;
 
@@ -65,7 +65,7 @@ public class EnemyMovementController {
 		float maximumPixelsToMoveInDirection = calculateMaximumMovementInGivenDirection(
 				dogMovementDTO, newDirection);
 		generateRandomPixelsToMove(dogMovementDTO,
-				(int) maximumPixelsToMoveInDirection);
+				maximumPixelsToMoveInDirection);
 		setMovementData(dogMovementDTO);
 
 	}
@@ -82,11 +82,12 @@ public class EnemyMovementController {
 	}
 
 	private void generateRandomPixelsToMove(DogMovementDTO dogMovementDTO,
-			int maximumPixelsToMoveInDirection) {
+			float maximumPixelsToMoveInDirection) {
 		Random random = new Random();
-		int numberOfPixelsToMove = random.nextInt(maximumPixelsToMoveInDirection
-				- MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION + 1)
-				+ MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION;
+		float numberOfPixelsToMove =
+				random.nextFloat() * (maximumPixelsToMoveInDirection
+						- MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION)
+						+ MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION;
 		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(
 				numberOfPixelsToMove);
 	}
