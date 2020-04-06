@@ -6,6 +6,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import core.GameApplication;
+import core.gui.HUDCreator;
 import core.initialization.*;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
@@ -26,6 +27,7 @@ public class GameController {
 	private ObjectsHolderDTO objectsHolderDTO = new ObjectsHolderDTO();
 	private GameApplication gameApplication;
 	private EnemyMovementController enemyMovementController;
+	private HUDCreator hudCreator;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -33,6 +35,7 @@ public class GameController {
 
 	public void initialize() {
 
+		createGui();
 		gameStateDTO = new GameStateDTO();
 		setUpModels();
 		setUpTerrain();
@@ -44,6 +47,11 @@ public class GameController {
 				daleStateDTO, gameStateDTO, animationController);
 		setUpLight();
 		setupKeys(daleStateDTO);
+	}
+
+	private void createGui() {
+		hudCreator = new HUDCreator();
+		hudCreator.createHUD();
 	}
 
 	private void setUpAnimations() {
