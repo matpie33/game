@@ -10,6 +10,7 @@ import core.GameApplication;
 import dto.DaleStateDTO;
 import core.controllers.ObjectsMovementController;
 import core.controllers.ThrowingController;
+import dto.GameStateDTO;
 
 public class KeysSetup implements ActionListener {
 
@@ -21,14 +22,14 @@ public class KeysSetup implements ActionListener {
 	public static final String PICK_THROWABLE_OBJECT = "pickThrowableObject";
 	public static final String THROW_OBJECT = "throwObject";
 
-	private DaleStateDTO daleStateDTO;
+	private GameStateDTO gameStateDTO;
 	private ObjectsMovementController objectsMovementController;
 	private ThrowingController throwingController;
 
-	public KeysSetup(DaleStateDTO daleStateDTO,
+	public KeysSetup(GameStateDTO gameStateDTO,
 			ObjectsMovementController objectsMovementController,
 			ThrowingController throwingController) {
-		this.daleStateDTO = daleStateDTO;
+		this.gameStateDTO = gameStateDTO;
 		this.objectsMovementController = objectsMovementController;
 		this.throwingController = throwingController;
 	}
@@ -51,6 +52,7 @@ public class KeysSetup implements ActionListener {
 
 	@Override
 	public void onAction(String name, boolean isPressed, float tpf) {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (MOVE_LEFT.equals(name)) {
 			daleStateDTO.setMovingLeft(isPressed);
 		}

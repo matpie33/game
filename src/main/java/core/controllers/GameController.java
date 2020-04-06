@@ -8,7 +8,6 @@ import com.jme3.scene.Node;
 import core.GameApplication;
 import core.gui.HUDCreator;
 import core.initialization.*;
-import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 
@@ -20,7 +19,6 @@ public class GameController {
 	private KeysSetup keysSetup;
 	private ObjectsMovementController objectsMovementController;
 	private ThrowingController throwingController;
-	private DaleStateDTO daleStateDTO;
 	private GameStateDTO gameStateDTO;
 	private SoundsInitializer soundsInitializer;
 	private TerrainCreator terrainCreator;
@@ -39,14 +37,17 @@ public class GameController {
 		gameStateDTO = new GameStateDTO();
 		setUpModels();
 		setUpTerrain();
-		setUpObjects();
+
 		setUpMusic();
 		setUpAnimations();
+		objectsMovementController = new ObjectsMovementController(
+				animationController, gameStateDTO, objectsHolderDTO);
+		setUpObjects();
 		enemyMovementController = new EnemyMovementController(gameStateDTO);
 		throwingController = new ThrowingController(objectsHolderDTO,
-				daleStateDTO, gameStateDTO, animationController);
+				gameStateDTO, animationController);
 		setUpLight();
-		setupKeys(daleStateDTO);
+		setupKeys();
 	}
 
 	private void createGui() {
@@ -55,7 +56,7 @@ public class GameController {
 	}
 
 	private void setUpAnimations() {
-		animationController = new AnimationController(daleStateDTO,
+		animationController = new AnimationController(gameStateDTO,
 				objectsHolderDTO);
 		animationController.setUpAnimations(modelLoader);
 	}
@@ -75,18 +76,18 @@ public class GameController {
 		terrainCreator.setupTerrain();
 	}
 
-	private void setupKeys(DaleStateDTO daleStateDTO) {
-		objectsMovementController = new ObjectsMovementController(
-				animationController, daleStateDTO, objectsHolderDTO);
-		keysSetup = new KeysSetup(daleStateDTO, objectsMovementController,
+	private void setupKeys() {
+
+
+		keysSetup = new KeysSetup(gameStateDTO, objectsMovementController,
 				throwingController);
 		keysSetup.setupKeys();
 	}
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
-				gameStateDTO);
-		daleStateDTO = objectsInitializer.initializeObjects();
+				gameStateDTO, objectsMovementController, hudCreator);
+		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}
 

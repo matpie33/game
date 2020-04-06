@@ -10,6 +10,15 @@ public class DaleStateDTO {
 	private boolean isMovingLeft;
 	private boolean isMovingRight;
 	private ThrowableObjectDTO carriedObject = new ThrowableObjectDTO();
+	private int hp;
+
+	public int getHp() {
+		return hp;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
 
 	public ThrowableObjectDTO getCarriedObject() {
 		return carriedObject;

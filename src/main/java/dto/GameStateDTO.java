@@ -8,8 +8,16 @@ import java.util.List;
 public class GameStateDTO {
 
 	private ThrowableObjectCursorDTO throwableObjectCursorDTO = new ThrowableObjectCursorDTO();
-
 	private List<DogMovementDTO> dogMovementDTOS = new ArrayList<>();
+	private DaleStateDTO daleStateDTO;
+
+	public DaleStateDTO getDaleStateDTO() {
+		return daleStateDTO;
+	}
+
+	public void setDaleStateDTO(DaleStateDTO daleStateDTO) {
+		this.daleStateDTO = daleStateDTO;
+	}
 
 	public List<DogMovementDTO> getDogMovementDTOS() {
 		return dogMovementDTOS;

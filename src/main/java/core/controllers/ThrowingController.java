@@ -19,23 +19,22 @@ import dto.ObjectsHolderDTO;
 public class ThrowingController {
 
 	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
-	private DaleStateDTO daleStateDTO;
 	private GameStateDTO gameStateDTO;
 	private AnimationController animationController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameApplication gameApplication;
 
 	public ThrowingController(ObjectsHolderDTO objectsHolderDTO,
-			DaleStateDTO daleStateDTO, GameStateDTO gameStateDTO,
+			GameStateDTO gameStateDTO,
 			AnimationController animationController) {
 		this.objectsHolderDTO = objectsHolderDTO;
-		this.daleStateDTO = daleStateDTO;
 		this.gameStateDTO = gameStateDTO;
 		this.animationController = animationController;
 		gameApplication = GameApplication.getInstance();
 	}
 
 	public void markThrowingDestination() {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (!daleStateDTO.isCarryingThrowableObject()) {
 			return;
 		}
@@ -64,6 +63,7 @@ public class ThrowingController {
 	}
 
 	public void markThrowableObject() {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isCarryingThrowableObject()) {
 			return;
 		}
@@ -147,6 +147,7 @@ public class ThrowingController {
 	}
 
 	public void tryToPickObject() {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isCarryingThrowableObject()) {
 			putAsideObject();
 		}
@@ -156,6 +157,7 @@ public class ThrowingController {
 	}
 
 	private void pickupObject() {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		CollisionResults collisionResults = getDistanceToObjects();
 		if (isCloseToThrowableObject()) {
 			Geometry geometry = collisionResults.getClosestCollision()
@@ -177,6 +179,7 @@ public class ThrowingController {
 	}
 
 	private void putAsideObject() {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		daleStateDTO.setCarryingThrowableObject(false);
 		daleStateDTO.getCarriedObject()
 					.getObject()
@@ -189,6 +192,7 @@ public class ThrowingController {
 	}
 
 	public void tryToThrowObject() {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isCarryingThrowableObject()) {
 			daleStateDTO.setCarryingThrowableObject(false);
 			Object control = daleStateDTO.getCarriedObject()

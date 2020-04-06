@@ -11,20 +11,21 @@ import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
+import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 
 public class ObjectsMovementController {
 
 	private AnimationController animationController;
-	private DaleStateDTO daleStateDTO;
+	private GameStateDTO gameStateDTO;
 	private Vector3f modifiableWalkDirectionVector = new Vector3f(0, 0, 0);
 	private ObjectsHolderDTO objectsHolderDTO;
 	private Camera camera;
 
 	public ObjectsMovementController(AnimationController animationController,
-			DaleStateDTO daleStateDTO, ObjectsHolderDTO objectsHolderDTO) {
+			GameStateDTO gameStateDTO, ObjectsHolderDTO objectsHolderDTO) {
 		this.animationController = animationController;
-		this.daleStateDTO = daleStateDTO;
+		this.gameStateDTO = gameStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
 		GameApplication gameApplication = GameApplication.getInstance();
 		camera = gameApplication.getCamera();
@@ -34,6 +35,16 @@ public class ObjectsMovementController {
 		handleDaleMovement(tpf);
 		handleCameraMovement();
 
+	}
+
+	public void moveDaleBack() {
+		CharacterControl control = objectsHolderDTO.getDale()
+												   .getControl(
+														   PhysicsControls.DALE);
+		Vector3f direction = camera.getDirection();
+		Vector3f multiplied = direction.mult(new Vector3f(30f, 1, 30f));
+		control.setPhysicsLocation(control.getPhysicsLocation()
+										  .subtract(multiplied));
 	}
 
 	private void handleDaleMovement(float tpf) {
@@ -59,6 +70,7 @@ public class ObjectsMovementController {
 
 	private void adjustCameraYPosition(
 			Vector3f dalePositionMinusViewDirection) {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		float distanceAboveHead = 3;
 		if (daleStateDTO.isCarryingThrowableObject()) {
 			distanceAboveHead = 10;
@@ -80,6 +92,7 @@ public class ObjectsMovementController {
 								.clone()
 								.multLocal(0.5f);
 		camDir.y = 0;
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isMovingForward()) {
 			setDaleViewDirectionToCameraDirection();
 			modifiableWalkDirectionVector.addLocal(camDir);
@@ -132,6 +145,7 @@ public class ObjectsMovementController {
 	}
 
 	public void moveBoxAboveDale() {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (!daleStateDTO.isCarryingThrowableObject()) {
 			return;
 		}

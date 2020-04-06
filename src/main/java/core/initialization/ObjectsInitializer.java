@@ -6,17 +6,19 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionController;
+import core.controllers.ObjectsMovementController;
+import core.gui.HUDCreator;
 import dto.DaleStateDTO;
 import dto.DogMovementDTO;
 import dto.GameStateDTO;
@@ -28,6 +30,7 @@ import java.util.List;
 
 public class ObjectsInitializer {
 
+	public static final int INITIAL_HP_OF_DALE = 100;
 	private List<Vector3f> treesCoordinates = new ArrayList<>();
 	private List<Vector3f> boxesCoordinates = new ArrayList<>();
 	private List<Vector3f> dogsCoordinates = new ArrayList<>();
@@ -36,18 +39,17 @@ public class ObjectsInitializer {
 	private static final int INCREASE_X_BY = 20;
 	private static final int INCREASE_Z_BY = 40;
 
-	private DaleStateDTO daleStateDTO;
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
-	private Camera camera;
 	private GameStateDTO gameStateDTO;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO) {
-		collisionController = new CollisionController(objectsHolderDTO);
+			GameStateDTO gameStateDTO,
+			ObjectsMovementController objectsMovementController,
+			HUDCreator hudCreator) {
+		collisionController = new CollisionController(objectsHolderDTO,
+				gameStateDTO, objectsMovementController, hudCreator);
 		this.objectsHolderDTO = objectsHolderDTO;
-		this.camera = GameApplication.getInstance()
-									 .getCamera();
 		this.gameStateDTO = gameStateDTO;
 	}
 
@@ -126,7 +128,7 @@ public class ObjectsInitializer {
 		}
 	}
 
-	public DaleStateDTO initializeObjects() {
+	public void initializeObjects() {
 		BulletAppState bulletAppState = initializeBulletAppState();
 		initializeDogs(bulletAppState);
 		initializeScene(bulletAppState);
@@ -135,7 +137,6 @@ public class ObjectsInitializer {
 		initializeTrees(bulletAppState);
 		initializeMark();
 		initializeBoxes(bulletAppState);
-		return daleStateDTO;
 	}
 
 	private void initializeTerrain(BulletAppState state) {
@@ -202,8 +203,15 @@ public class ObjectsInitializer {
 		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
 		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(width,
 				height, 1);
-		daleStateDTO = new DaleStateDTO();
+		DaleStateDTO daleStateDTO = new DaleStateDTO();
+		daleStateDTO.setHp(INITIAL_HP_OF_DALE);
 		daleStateDTO.setCarryingThrowableObject(false);
+		gameStateDTO.setDaleStateDTO(daleStateDTO);
+
+		GhostControl ghostControl = new GhostControl(capsuleShape);
+		bulletAppState.getPhysicsSpace()
+					  .add(ghostControl);
+		model.addControl(ghostControl);
 
 		CharacterControl daleControl = new CharacterControl(capsuleShape,
 				0.05f);
@@ -222,13 +230,17 @@ public class ObjectsInitializer {
 			CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(
 					height, width, 0);
 
+			GhostControl ghostControl = new GhostControl(capsuleShape);
 			CharacterControl control = new CharacterControl(capsuleShape,
 					0.05f);
 			control.setGravity(new Vector3f(0, -40f, 0));
 			model.addControl(control);
+			model.addControl(ghostControl);
 
 			bulletAppState.getPhysicsSpace()
 						  .add(control);
+			bulletAppState.getPhysicsSpace()
+						  .add(ghostControl);
 
 		}
 	}

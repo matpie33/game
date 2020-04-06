@@ -5,6 +5,7 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
 import dto.DaleStateDTO;
+import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 import core.initialization.ModelLoader;
 
@@ -15,12 +16,12 @@ public class AnimationController implements AnimEventListener {
 	public static final String WALK_BACK_ANIMATION = "walk_back";
 	public static final String HOLDING_OBJECT = "hold_object";
 	private AnimChannel channel;
-	private DaleStateDTO daleStateDTO;
+	private GameStateDTO gameStateDTO;
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public AnimationController(DaleStateDTO daleStateDTO,
+	public AnimationController(GameStateDTO gameStateDTO,
 			ObjectsHolderDTO objectsHolderDTO) {
-		this.daleStateDTO = daleStateDTO;
+		this.gameStateDTO = gameStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
@@ -34,6 +35,7 @@ public class AnimationController implements AnimEventListener {
 	@Override
 	public void onAnimCycleDone(AnimControl animControl,
 			AnimChannel animChannel, String previousAnimation) {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isMovingForward()) {
 			animChannel.setAnim(RUN_ANIMATION);
 		}
