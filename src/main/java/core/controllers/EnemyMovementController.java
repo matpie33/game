@@ -1,9 +1,11 @@
 package core.controllers;
 
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import dto.DebugData;
 import dto.DogMovementDTO;
 import dto.GameStateDTO;
 import enums.MovementDirection;
@@ -35,7 +37,26 @@ public class EnemyMovementController {
 				continue;
 			}
 			if (enemyMovedEnoughInCurrentDirection(dogMovementDTO, tpf)) {
-				setNewRandomDirectionAndMaximumPixels(dogMovementDTO);
+				CharacterControl control = dogMovementDTO.getDog()
+														 .getControl(
+																 PhysicsControls.DOG);
+				Vector3f physicsLocation = control.getPhysicsLocation();
+				control.setWalkDirection(Vector3f.ZERO);
+				DebugData previousMovementData = dogMovementDTO.getLastMovementData();
+				if (previousMovementData != null) {
+					float endPos = previousMovementData.isPositionX() ?
+							physicsLocation.getX() :
+							physicsLocation.getZ();
+					previousMovementData.setPositionEnd(endPos);
+
+				}
+				DebugData newMovementData = new DebugData();
+				setNewRandomDirectionAndMaximumPixels(dogMovementDTO,
+						newMovementData);
+				dogMovementDTO.addDebugData(newMovementData);
+				System.out.println(dogMovementDTO.getDebugData()
+												 .size());
+
 			}
 			else {
 				moveEnemy(dogMovementDTO, tpf);
@@ -59,14 +80,25 @@ public class EnemyMovementController {
 	}
 
 	private void setNewRandomDirectionAndMaximumPixels(
-			DogMovementDTO dogMovementDTO) {
+			DogMovementDTO dogMovementDTO, DebugData newMovementData) {
 
 		int newDirection = generateNewDirection(dogMovementDTO);
 		float maximumPixelsToMoveInDirection = calculateMaximumMovementInGivenDirection(
 				dogMovementDTO, newDirection);
-		generateRandomPixelsToMove(dogMovementDTO,
+		MovementDirection movementDirection = dogMovementDTO.getMovementDirection();
+		newMovementData.setMovementDirection(movementDirection);
+		newMovementData.setPositionX(isXMovement(movementDirection));
+		newMovementData.setMaximumPossibleMovement(
 				maximumPixelsToMoveInDirection);
+		generateRandomPixelsToMove(dogMovementDTO,
+				maximumPixelsToMoveInDirection, newMovementData);
+
 		setMovementData(dogMovementDTO);
+		newMovementData.setPositionStart(
+				dogMovementDTO.getPositionWhereMovementBegan());
+		newMovementData.setSquarePosition(
+				dogMovementDTO.getStartOfSquareWhereTheDogMoves());
+		newMovementData.setSquareWidth(dogMovementDTO.getSquareWidth());
 
 	}
 
@@ -82,14 +114,18 @@ public class EnemyMovementController {
 	}
 
 	private void generateRandomPixelsToMove(DogMovementDTO dogMovementDTO,
-			float maximumPixelsToMoveInDirection) {
-		Random random = new Random();
-		float numberOfPixelsToMove =
-				random.nextFloat() * (maximumPixelsToMoveInDirection
-						- MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION)
-						+ MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION;
-		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(
-				numberOfPixelsToMove);
+			float maximumPixelsToMoveInDirection, DebugData newMovementData) {
+		int floor = (int) Math.floor(
+				maximumPixelsToMoveInDirection / MOVEMENT_SPEED);
+		int stepsToMove = FastMath.nextRandomInt(
+				(int) (MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION * MOVEMENT_SPEED),
+				floor);
+		float pixelsToMove = stepsToMove * MOVEMENT_SPEED;
+		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(pixelsToMove);
+		newMovementData.setGeneratedSmallerMovement(pixelsToMove);
+		System.out.println(
+				"possible max pixels: " + maximumPixelsToMoveInDirection);
+		System.out.println("generated pixels: " + pixelsToMove);
 	}
 
 	private int generateNewDirection(DogMovementDTO dogMovementDTO) {
@@ -142,6 +178,9 @@ public class EnemyMovementController {
 					"Unknown direction: " + "" + movementDirection);
 		}
 		if (maximumPixelsToMoveInDirection < 0) {
+			System.out.println(dogMovementDTO.getDebugData());
+			System.out.println("now position: " + location);
+			System.out.println("movement direction: " + movementDirection);
 			throw new IllegalArgumentException(
 					"Negative pixels to move" + maximumPixelsToMoveInDirection);
 		}

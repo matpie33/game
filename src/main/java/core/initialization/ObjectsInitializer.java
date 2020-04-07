@@ -74,7 +74,7 @@ public class ObjectsInitializer {
 						currentZCoordinate + 200));
 			}
 			if (i < numberOfDogs) {
-				dogsCoordinates.add(new Vector3f(40 * i, 245, -30));
+				dogsCoordinates.add(new Vector3f(10 * i, 245, -30));
 			}
 			increaseXNow = !increaseXNow;
 		}
