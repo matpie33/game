@@ -1,7 +1,6 @@
 package dto;
 
 import com.jme3.scene.Geometry;
-import dto.ThrowableObjectDTO;
 
 public class DaleStateDTO {
 
@@ -13,6 +12,25 @@ public class DaleStateDTO {
 	private ThrowableObjectDTO carriedObject = new ThrowableObjectDTO();
 	private int hp;
 	private boolean isJumping;
+	private boolean isThrowingObject;
+	private boolean isPickingObject;
+	private boolean isPuttingAsideObject;
+
+	public boolean isPickingObject() {
+		return isPickingObject;
+	}
+
+	public void setPickingObject(boolean pickingObject) {
+		isPickingObject = pickingObject;
+	}
+
+	public boolean isPuttingAsideObject() {
+		return isPuttingAsideObject;
+	}
+
+	public void setPuttingAsideObject(boolean puttingAsideObject) {
+		isPuttingAsideObject = puttingAsideObject;
+	}
 
 	public DaleStateDTO() {
 		alive = true;
@@ -88,5 +106,13 @@ public class DaleStateDTO {
 
 	public void setJumping(boolean jumping) {
 		isJumping = jumping;
+	}
+
+	public void setThrowingObject(boolean throwingObject) {
+		this.isThrowingObject = throwingObject;
+	}
+
+	public boolean isThrowingObject() {
+		return isThrowingObject;
 	}
 }

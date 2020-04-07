@@ -81,8 +81,7 @@ public class GameController {
 
 	private void setupKeys() {
 
-		keysSetup = new KeysSetup(gameStateDTO, objectsMovementController,
-				throwingController);
+		keysSetup = new KeysSetup(gameStateDTO);
 		keysSetup.setupKeys();
 	}
 
@@ -112,7 +111,7 @@ public class GameController {
 		objectsStateController.handleObjectsState();
 		animationController.handleAnimationsStop();
 		objectsMovementController.handleMovement(tpf);
-		throwingController.handleThrowing();
+		throwingController.handleThrowingAndPicking();
 		enemyMovementController.moveEnemies(tpf);
 	}
 

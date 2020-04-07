@@ -7,9 +7,9 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import core.GameApplication;
-import dto.DaleStateDTO;
 import core.controllers.ObjectsMovementController;
 import core.controllers.ThrowingController;
+import dto.DaleStateDTO;
 import dto.GameStateDTO;
 
 public class KeysSetup implements ActionListener {
@@ -23,15 +23,9 @@ public class KeysSetup implements ActionListener {
 	public static final String THROW_OBJECT = "throwObject";
 
 	private GameStateDTO gameStateDTO;
-	private ObjectsMovementController objectsMovementController;
-	private ThrowingController throwingController;
 
-	public KeysSetup(GameStateDTO gameStateDTO,
-			ObjectsMovementController objectsMovementController,
-			ThrowingController throwingController) {
+	public KeysSetup(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
-		this.objectsMovementController = objectsMovementController;
-		this.throwingController = throwingController;
 	}
 
 	public void setupKeys() {
@@ -65,14 +59,17 @@ public class KeysSetup implements ActionListener {
 		if (MOVE_BACKWARD.equals(name)) {
 			daleStateDTO.setMovingBackward(isPressed);
 		}
-		if (JUMP.equals(name) ) {
+		if (JUMP.equals(name)) {
 			daleStateDTO.setJumping(isPressed);
 		}
-		if (PICK_THROWABLE_OBJECT.equals(name) && isPressed) {
-			throwingController.tryToPickObject();
+		if (PICK_THROWABLE_OBJECT.equals(name)) {
+			daleStateDTO.setPickingObject(
+					isPressed && !daleStateDTO.isCarryingThrowableObject());
+			daleStateDTO.setPuttingAsideObject(
+					isPressed && daleStateDTO.isCarryingThrowableObject());
 		}
-		if (THROW_OBJECT.equals(name) && isPressed) {
-			throwingController.tryToThrowObject();
+		if (THROW_OBJECT.equals(name)) {
+			daleStateDTO.setThrowingObject(isPressed);
 		}
 
 	}

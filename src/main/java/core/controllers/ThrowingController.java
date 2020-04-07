@@ -33,7 +33,9 @@ public class ThrowingController {
 		gameApplication = GameApplication.getInstance();
 	}
 
-	public void handleThrowing (){
+	public void handleThrowingAndPicking(){
+		handlePickingObject();
+		handleThrowingObject();
 		markThrowingDestination();
 		markThrowableObject();
 	}
@@ -151,12 +153,12 @@ public class ThrowingController {
 		return isCloseEnoughToAnyObject(collisionResults);
 	}
 
-	public void tryToPickObject() {
+	public void handlePickingObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isCarryingThrowableObject()) {
+		if (daleStateDTO.isPuttingAsideObject()) {
 			putAsideObject();
 		}
-		else {
+		if (daleStateDTO.isPickingObject()){
 			pickupObject();
 		}
 	}
@@ -196,9 +198,9 @@ public class ThrowingController {
 		animationController.animateStanding();
 	}
 
-	public void tryToThrowObject() {
+	public void handleThrowingObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isCarryingThrowableObject()) {
+		if (daleStateDTO.isThrowingObject()) {
 			daleStateDTO.setCarryingThrowableObject(false);
 			Object control = daleStateDTO.getCarriedObject()
 										 .getObject()
