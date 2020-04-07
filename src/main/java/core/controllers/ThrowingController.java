@@ -147,13 +147,13 @@ public class ThrowingController {
 				objectPos.getZ() - zDimensionCollisionObject);
 	}
 
-	public boolean isCloseToThrowableObject() {
+	private boolean isCloseToThrowableObject() {
 
 		CollisionResults collisionResults = getDistanceToObjects();
 		return isCloseEnoughToAnyObject(collisionResults);
 	}
 
-	public void handlePickingObject() {
+	private void handlePickingObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isPuttingAsideObject()) {
 			putAsideObject();
@@ -198,7 +198,7 @@ public class ThrowingController {
 		animationController.animateStanding();
 	}
 
-	public void handleThrowingObject() {
+	private void handleThrowingObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isThrowingObject()) {
 			daleStateDTO.setCarryingThrowableObject(false);
