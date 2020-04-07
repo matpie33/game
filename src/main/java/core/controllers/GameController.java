@@ -26,6 +26,7 @@ public class GameController {
 	private GameApplication gameApplication;
 	private EnemyMovementController enemyMovementController;
 	private HUDCreator hudCreator;
+	private ObjectsStateController objectsStateController;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -35,6 +36,7 @@ public class GameController {
 
 		createGui();
 		gameStateDTO = new GameStateDTO();
+		objectsStateController = new ObjectsStateController(gameStateDTO);
 		setUpModels();
 		setUpTerrain();
 
@@ -48,6 +50,7 @@ public class GameController {
 				gameStateDTO, animationController);
 		setUpLight();
 		setupKeys();
+
 	}
 
 	private void createGui() {
@@ -58,7 +61,7 @@ public class GameController {
 	private void setUpAnimations() {
 		animationController = new AnimationController(gameStateDTO,
 				objectsHolderDTO);
-		animationController.setUpAnimations(modelLoader);
+		animationController.setUpAnimations();
 	}
 
 	private void setUpMusic() {
@@ -77,7 +80,6 @@ public class GameController {
 	}
 
 	private void setupKeys() {
-
 
 		keysSetup = new KeysSetup(gameStateDTO, objectsMovementController,
 				throwingController);
@@ -107,10 +109,10 @@ public class GameController {
 	}
 
 	public void update(float tpf) {
+		objectsStateController.handleObjectsState();
+		animationController.handleAnimationsStop();
 		objectsMovementController.handleMovement(tpf);
-		throwingController.markThrowingDestination();
-		throwingController.markThrowableObject();
-		objectsMovementController.moveBoxAboveDale();
+		throwingController.handleThrowing();
 		enemyMovementController.moveEnemies(tpf);
 	}
 

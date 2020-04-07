@@ -33,7 +33,12 @@ public class ThrowingController {
 		gameApplication = GameApplication.getInstance();
 	}
 
-	public void markThrowingDestination() {
+	public void handleThrowing (){
+		markThrowingDestination();
+		markThrowableObject();
+	}
+
+	private void markThrowingDestination() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (!daleStateDTO.isCarryingThrowableObject()) {
 			return;
@@ -62,7 +67,7 @@ public class ThrowingController {
 		}
 	}
 
-	public void markThrowableObject() {
+	private void markThrowableObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isCarryingThrowableObject()) {
 			return;

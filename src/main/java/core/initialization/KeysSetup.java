@@ -65,8 +65,8 @@ public class KeysSetup implements ActionListener {
 		if (MOVE_BACKWARD.equals(name)) {
 			daleStateDTO.setMovingBackward(isPressed);
 		}
-		if (JUMP.equals(name)) {
-			objectsMovementController.daleJump();
+		if (JUMP.equals(name) ) {
+			daleStateDTO.setJumping(isPressed);
 		}
 		if (PICK_THROWABLE_OBJECT.equals(name) && isPressed) {
 			throwingController.tryToPickObject();

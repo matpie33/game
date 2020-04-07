@@ -9,8 +9,22 @@ public class DaleStateDTO {
 	private boolean isMovingBackward;
 	private boolean isMovingLeft;
 	private boolean isMovingRight;
+	private boolean alive;
 	private ThrowableObjectDTO carriedObject = new ThrowableObjectDTO();
 	private int hp;
+	private boolean isJumping;
+
+	public DaleStateDTO() {
+		alive = true;
+	}
+
+	public boolean isAlive() {
+		return alive;
+	}
+
+	public void setAlive(boolean alive) {
+		this.alive = alive;
+	}
 
 	public int getHp() {
 		return hp;
@@ -66,5 +80,13 @@ public class DaleStateDTO {
 
 	public void setCarriedObject(Geometry geometry) {
 		carriedObject.setObject(geometry);
+	}
+
+	public boolean isJumping() {
+		return isJumping;
+	}
+
+	public void setJumping(boolean jumping) {
+		isJumping = jumping;
 	}
 }

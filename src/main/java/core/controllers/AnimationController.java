@@ -25,7 +25,7 @@ public class AnimationController implements AnimEventListener {
 		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
-	public void setUpAnimations(ModelLoader modelLoader) {
+	public void setUpAnimations() {
 		AnimControl control = objectsHolderDTO.getDale()
 											  .getControl(AnimControl.class);
 		control.addListener(this);
@@ -81,5 +81,11 @@ public class AnimationController implements AnimEventListener {
 
 	public void animateHoldingObject() {
 		channel.setAnim(HOLDING_OBJECT);
+	}
+
+	public void handleAnimationsStop() {
+		if (!gameStateDTO.getDaleStateDTO().isAlive()){
+			channel.getControl().clearChannels();
+		}
 	}
 }

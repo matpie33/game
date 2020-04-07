@@ -8,6 +8,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.CameraControl;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
@@ -33,6 +34,7 @@ public class ObjectsMovementController {
 
 	public void handleMovement(float tpf) {
 		handleDaleMovement(tpf);
+		handleCarriedBoxMovement();
 		handleCameraMovement();
 
 	}
@@ -48,9 +50,22 @@ public class ObjectsMovementController {
 	}
 
 	private void handleDaleMovement(float tpf) {
+		if (!gameStateDTO.getDaleStateDTO()
+						 .isAlive()) {
+			handleDeadDale();
+			return;
+
+		}
 		modifiableWalkDirectionVector.set(0, 0, 0);
 		handleMovementByKeys(tpf);
 
+	}
+
+	private void handleDeadDale() {
+		Spatial dale = objectsHolderDTO.getDale();
+		CharacterControl control = dale.getControl(PhysicsControls.DALE);
+		control.setWalkDirection(Vector3f.ZERO);
+		modifiableWalkDirectionVector.set(0, 0, 0);
 	}
 
 	private void setMovementDirection() {
@@ -93,6 +108,9 @@ public class ObjectsMovementController {
 								.multLocal(0.5f);
 		camDir.y = 0;
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
+		if (daleStateDTO.isJumping ()){
+			daleJump();
+		}
 		if (daleStateDTO.isMovingForward()) {
 			setDaleViewDirectionToCameraDirection();
 			modifiableWalkDirectionVector.addLocal(camDir);
@@ -144,7 +162,7 @@ public class ObjectsMovementController {
 		}
 	}
 
-	public void moveBoxAboveDale() {
+	public void handleCarriedBoxMovement() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (!daleStateDTO.isCarryingThrowableObject()) {
 			return;
