@@ -1,6 +1,7 @@
 package core.controllers;
 
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
@@ -35,7 +36,12 @@ public class EnemyMovementController {
 				continue;
 			}
 			if (enemyMovedEnoughInCurrentDirection(dogMovementDTO, tpf)) {
+				CharacterControl control = dogMovementDTO.getDog()
+														 .getControl(
+																 PhysicsControls.DOG);
+				control.setWalkDirection(Vector3f.ZERO);
 				setNewRandomDirectionAndMaximumPixels(dogMovementDTO);
+
 			}
 			else {
 				moveEnemy(dogMovementDTO, tpf);
@@ -83,13 +89,13 @@ public class EnemyMovementController {
 
 	private void generateRandomPixelsToMove(DogMovementDTO dogMovementDTO,
 			float maximumPixelsToMoveInDirection) {
-		Random random = new Random();
-		float numberOfPixelsToMove =
-				random.nextFloat() * (maximumPixelsToMoveInDirection
-						- MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION)
-						+ MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION;
-		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(
-				numberOfPixelsToMove);
+		int maximumNumberOfSteps = (int) Math.floor(
+				maximumPixelsToMoveInDirection / MOVEMENT_SPEED);
+		int stepsToMove = FastMath.nextRandomInt(
+				(int) (MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION * MOVEMENT_SPEED),
+				maximumNumberOfSteps);
+		float pixelsToMove = stepsToMove * MOVEMENT_SPEED;
+		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(pixelsToMove);
 	}
 
 	private int generateNewDirection(DogMovementDTO dogMovementDTO) {
@@ -142,8 +148,8 @@ public class EnemyMovementController {
 					"Unknown direction: " + "" + movementDirection);
 		}
 		if (maximumPixelsToMoveInDirection < 0) {
-			throw new IllegalArgumentException(
-					"Negative pixels to move" + maximumPixelsToMoveInDirection);
+			maximumPixelsToMoveInDirection = -maximumPixelsToMoveInDirection;
+			//TODO temporary fix
 		}
 		if (maximumPixelsToMoveInDirection
 				< MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION) {
