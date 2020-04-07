@@ -7,7 +7,6 @@ import com.jme3.animation.LoopMode;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
-import core.initialization.ModelLoader;
 
 public class AnimationController implements AnimEventListener {
 
@@ -15,6 +14,7 @@ public class AnimationController implements AnimEventListener {
 	public static final String RUN_ANIMATION = "run";
 	public static final String WALK_BACK_ANIMATION = "walk_back";
 	public static final String HOLDING_OBJECT = "hold_object";
+	private static final String DEAD_ANIMATION = "dead";
 	private AnimChannel channel;
 	private GameStateDTO gameStateDTO;
 	private ObjectsHolderDTO objectsHolderDTO;
@@ -36,18 +36,28 @@ public class AnimationController implements AnimEventListener {
 	public void onAnimCycleDone(AnimControl animControl,
 			AnimChannel animChannel, String previousAnimation) {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isMovingForward()) {
-			animChannel.setAnim(RUN_ANIMATION);
+		if (previousAnimation.equals(
+				DEAD_ANIMATION)){
+			return;
 		}
-		else if (daleStateDTO.isMovingBackward()) {
-			animChannel.setAnim(WALK_BACK_ANIMATION);
+		if (!daleStateDTO.isAlive() ) {
+			animChannel.setAnim(DEAD_ANIMATION);
+			animChannel.setLoopMode(LoopMode.DontLoop);
 		}
 		else {
-			if (daleStateDTO.isCarryingThrowableObject()) {
-				animChannel.setAnim(HOLDING_OBJECT);
+			if (daleStateDTO.isMovingForward()) {
+				animChannel.setAnim(RUN_ANIMATION);
+			}
+			else if (daleStateDTO.isMovingBackward()) {
+				animChannel.setAnim(WALK_BACK_ANIMATION);
 			}
 			else {
-				animChannel.setAnim(STAND_ANIMATION);
+				if (daleStateDTO.isCarryingThrowableObject()) {
+					animChannel.setAnim(HOLDING_OBJECT);
+				}
+				else {
+					animChannel.setAnim(STAND_ANIMATION);
+				}
 			}
 		}
 
@@ -84,8 +94,10 @@ public class AnimationController implements AnimEventListener {
 	}
 
 	public void handleAnimationsStop() {
-		if (!gameStateDTO.getDaleStateDTO().isAlive()){
-			channel.getControl().clearChannels();
+		if (!gameStateDTO.getDaleStateDTO()
+						 .isAlive()) {
+			channel.getControl()
+				   .clearChannels();
 		}
 	}
 }

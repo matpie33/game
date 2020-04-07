@@ -109,7 +109,6 @@ public class GameController {
 
 	public void update(float tpf) {
 		objectsStateController.handleObjectsState();
-		animationController.handleAnimationsStop();
 		objectsMovementController.handleMovement(tpf);
 		throwingController.handleThrowingAndPicking();
 		enemyMovementController.moveEnemies(tpf);

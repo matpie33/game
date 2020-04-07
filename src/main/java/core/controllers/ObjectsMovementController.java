@@ -40,6 +40,9 @@ public class ObjectsMovementController {
 	}
 
 	public void moveDaleBack() {
+		if (!gameStateDTO.getDaleStateDTO().isAlive()){
+			return;
+		}
 		CharacterControl control = objectsHolderDTO.getDale()
 												   .getControl(
 														   PhysicsControls.DALE);
