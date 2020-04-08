@@ -20,7 +20,7 @@ import core.controllers.CollisionController;
 import core.controllers.ObjectsMovementController;
 import core.gui.HUDCreator;
 import dto.DaleStateDTO;
-import dto.DogMovementDTO;
+import dto.DogDataDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
@@ -247,12 +247,12 @@ public class ObjectsInitializer {
 
 	private void addDogMovement(Spatial model, CharacterControl control) {
 		Vector3f physicsLocation = control.getPhysicsLocation();
-		DogMovementDTO dogMovementDTO = new DogMovementDTO(model,
+		DogDataDTO dogDataDTO = new DogDataDTO(model,
 				physicsLocation, 20);
-		dogMovementDTO.setMovementDirection(MovementDirection.FORWARD_X);
-		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(10);
-		dogMovementDTO.setPositionWhereMovementBegan(physicsLocation.getX());
-		gameStateDTO.addDogMovement(dogMovementDTO);
+		dogDataDTO.setMovementDirection(MovementDirection.FORWARD_X);
+		dogDataDTO.setNumberOfPixelsToMoveInGivenDirection(10);
+		dogDataDTO.setPositionWhereMovementBegan(physicsLocation.getX());
+		gameStateDTO.addDogMovement(dogDataDTO);
 	}
 
 	private void initializeScene(BulletAppState bulletAppState) {

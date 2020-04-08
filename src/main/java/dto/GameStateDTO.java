@@ -8,7 +8,7 @@ import java.util.List;
 public class GameStateDTO {
 
 	private ThrowableObjectCursorDTO throwableObjectCursorDTO = new ThrowableObjectCursorDTO();
-	private List<DogMovementDTO> dogMovementDTOS = new ArrayList<>();
+	private List<DogDataDTO> dogDataDTOS = new ArrayList<>();
 	private DaleStateDTO daleStateDTO;
 
 	public DaleStateDTO getDaleStateDTO() {
@@ -19,8 +19,8 @@ public class GameStateDTO {
 		this.daleStateDTO = daleStateDTO;
 	}
 
-	public List<DogMovementDTO> getDogMovementDTOS() {
-		return dogMovementDTOS;
+	public List<DogDataDTO> getDogDataDTOS() {
+		return dogDataDTOS;
 	}
 
 	public void setCursorNotShowing() {
@@ -41,7 +41,7 @@ public class GameStateDTO {
 		return throwableObjectCursorDTO.getThrowableObject();
 	}
 
-	public void addDogMovement(DogMovementDTO dogMovementDTO) {
-		dogMovementDTOS.add(dogMovementDTO);
+	public void addDogMovement(DogDataDTO dogDataDTO) {
+		dogDataDTOS.add(dogDataDTO);
 	}
 }

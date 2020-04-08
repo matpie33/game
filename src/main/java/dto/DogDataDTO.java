@@ -4,7 +4,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import enums.MovementDirection;
 
-public class DogMovementDTO {
+public class DogDataDTO {
 
 	private float numberOfPixelsToMoveInGivenDirection;
 	private float positionWhereMovementBegan;
@@ -13,7 +13,7 @@ public class DogMovementDTO {
 	private final Vector3f startOfSquareWhereTheDogMoves;
 	private final int squareWidth;
 
-	public DogMovementDTO(Spatial dog, Vector3f startOfSquareWhereTheDogMoves,
+	public DogDataDTO(Spatial dog, Vector3f startOfSquareWhereTheDogMoves,
 			int squareWidth) {
 		this.dog = dog;
 		this.startOfSquareWhereTheDogMoves = startOfSquareWhereTheDogMoves;

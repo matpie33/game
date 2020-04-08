@@ -5,7 +5,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
-import dto.DogMovementDTO;
+import dto.DogDataDTO;
 import dto.GameStateDTO;
 import enums.MovementDirection;
 
@@ -25,37 +25,37 @@ public class EnemyMovementController {
 	}
 
 	public void moveEnemies(float tpf) {
-		List<DogMovementDTO> dogMovementDTOS = gameStateDTO.getDogMovementDTOS();
-		for (DogMovementDTO dogMovementDTO : dogMovementDTOS) {
-			if (!dogMovementDTO.getDog()
-							   .getControl(PhysicsControls.DOG)
-							   .onGround()) {
-				dogMovementDTO.getDog()
-							  .getControl(PhysicsControls.DOG)
-							  .setWalkDirection(Vector3f.ZERO);
+		List<DogDataDTO> dogDataDTOS = gameStateDTO.getDogDataDTOS();
+		for (DogDataDTO dogDataDTO : dogDataDTOS) {
+			if (!dogDataDTO.getDog()
+						   .getControl(PhysicsControls.DOG)
+						   .onGround()) {
+				dogDataDTO.getDog()
+						  .getControl(PhysicsControls.DOG)
+						  .setWalkDirection(Vector3f.ZERO);
 				continue;
 			}
-			if (enemyMovedEnoughInCurrentDirection(dogMovementDTO, tpf)) {
-				CharacterControl control = dogMovementDTO.getDog()
-														 .getControl(
+			if (enemyMovedEnoughInCurrentDirection(dogDataDTO, tpf)) {
+				CharacterControl control = dogDataDTO.getDog()
+													 .getControl(
 																 PhysicsControls.DOG);
 				control.setWalkDirection(Vector3f.ZERO);
-				setNewRandomDirectionAndMaximumPixels(dogMovementDTO);
+				setNewRandomDirectionAndMaximumPixels(dogDataDTO);
 
 			}
 			else {
-				moveEnemy(dogMovementDTO, tpf);
+				moveEnemy(dogDataDTO, tpf);
 			}
 		}
 	}
 
-	private void moveEnemy(DogMovementDTO dogMovementDTO, float tpf) {
-		Spatial dog = dogMovementDTO.getDog();
+	private void moveEnemy(DogDataDTO dogDataDTO, float tpf) {
+		Spatial dog = dogDataDTO.getDog();
 		boolean isXMovement = isXMovement(
-				dogMovementDTO.getMovementDirection());
+				dogDataDTO.getMovementDirection());
 		float movementSpeed =
-				MOVEMENT_SPEED * dogMovementDTO.getMovementDirection()
-											   .getDirectionModifier();
+				MOVEMENT_SPEED * dogDataDTO.getMovementDirection()
+										   .getDirectionModifier();
 		float xMovement = isXMovement ? movementSpeed : 0;
 		float zMovement = isXMovement ? 0 : movementSpeed;
 		CharacterControl control = dog.getControl(PhysicsControls.DOG);
@@ -65,29 +65,29 @@ public class EnemyMovementController {
 	}
 
 	private void setNewRandomDirectionAndMaximumPixels(
-			DogMovementDTO dogMovementDTO) {
+			DogDataDTO dogDataDTO) {
 
-		int newDirection = generateNewDirection(dogMovementDTO);
+		int newDirection = generateNewDirection(dogDataDTO);
 		float maximumPixelsToMoveInDirection = calculateMaximumMovementInGivenDirection(
-				dogMovementDTO, newDirection);
-		generateRandomPixelsToMove(dogMovementDTO,
+				dogDataDTO, newDirection);
+		generateRandomPixelsToMove(dogDataDTO,
 				maximumPixelsToMoveInDirection);
-		setMovementData(dogMovementDTO);
+		setMovementData(dogDataDTO);
 
 	}
 
-	private void setMovementData(DogMovementDTO dogMovementDTO) {
-		Vector3f position = dogMovementDTO.getDog()
-										  .getControl(PhysicsControls.DOG)
-										  .getPhysicsLocation();
+	private void setMovementData(DogDataDTO dogDataDTO) {
+		Vector3f position = dogDataDTO.getDog()
+									  .getControl(PhysicsControls.DOG)
+									  .getPhysicsLocation();
 		float positionStart = isXMovement(
-				dogMovementDTO.getMovementDirection()) ?
+				dogDataDTO.getMovementDirection()) ?
 				position.getX() :
 				position.getZ();
-		dogMovementDTO.setPositionWhereMovementBegan(positionStart);
+		dogDataDTO.setPositionWhereMovementBegan(positionStart);
 	}
 
-	private void generateRandomPixelsToMove(DogMovementDTO dogMovementDTO,
+	private void generateRandomPixelsToMove(DogDataDTO dogDataDTO,
 			float maximumPixelsToMoveInDirection) {
 		int maximumNumberOfSteps = (int) Math.floor(
 				maximumPixelsToMoveInDirection / MOVEMENT_SPEED);
@@ -95,12 +95,12 @@ public class EnemyMovementController {
 				(int) (MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION * MOVEMENT_SPEED),
 				maximumNumberOfSteps);
 		float pixelsToMove = stepsToMove * MOVEMENT_SPEED;
-		dogMovementDTO.setNumberOfPixelsToMoveInGivenDirection(pixelsToMove);
+		dogDataDTO.setNumberOfPixelsToMoveInGivenDirection(pixelsToMove);
 	}
 
-	private int generateNewDirection(DogMovementDTO dogMovementDTO) {
-		int oldDirection = dogMovementDTO.getMovementDirection()
-										 .getCodeValue();
+	private int generateNewDirection(DogDataDTO dogDataDTO) {
+		int oldDirection = dogDataDTO.getMovementDirection()
+									 .getCodeValue();
 		int newDirection = oldDirection;
 		Random random = new Random();
 		while (newDirection == oldDirection) {
@@ -111,37 +111,37 @@ public class EnemyMovementController {
 	}
 
 	private float calculateMaximumMovementInGivenDirection(
-			DogMovementDTO dogMovementDTO, int newDirection) {
+			DogDataDTO dogDataDTO, int newDirection) {
 		MovementDirection movementDirection = MovementDirection.fromInt(
 				newDirection);
-		Vector3f location = dogMovementDTO.getDog()
-										  .getControl(PhysicsControls.DOG)
-										  .getPhysicsLocation();
+		Vector3f location = dogDataDTO.getDog()
+									  .getControl(PhysicsControls.DOG)
+									  .getPhysicsLocation();
 		float maximumPixelsToMoveInDirection;
 		switch (movementDirection) {
 		case FORWARD_X:
 			maximumPixelsToMoveInDirection =
-					dogMovementDTO.getStartOfSquareWhereTheDogMoves()
-								  .getX() + dogMovementDTO.getSquareWidth()
+					dogDataDTO.getStartOfSquareWhereTheDogMoves()
+							  .getX() + dogDataDTO.getSquareWidth()
 							- location.getX();
 			break;
 
 		case BACKWARD_X:
 			maximumPixelsToMoveInDirection = location.getX()
-					- dogMovementDTO.getStartOfSquareWhereTheDogMoves()
-									.getX();
+					- dogDataDTO.getStartOfSquareWhereTheDogMoves()
+								.getX();
 			break;
 
 		case FORWARD_Z:
 			maximumPixelsToMoveInDirection =
-					dogMovementDTO.getStartOfSquareWhereTheDogMoves()
-								  .getZ() + dogMovementDTO.getSquareWidth()
+					dogDataDTO.getStartOfSquareWhereTheDogMoves()
+							  .getZ() + dogDataDTO.getSquareWidth()
 							- location.getZ();
 			break;
 		case BACKWARD_Z:
 			maximumPixelsToMoveInDirection = location.getZ()
-					- dogMovementDTO.getStartOfSquareWhereTheDogMoves()
-									.getZ();
+					- dogDataDTO.getStartOfSquareWhereTheDogMoves()
+								.getZ();
 			break;
 		default:
 			throw new IllegalArgumentException(
@@ -154,21 +154,21 @@ public class EnemyMovementController {
 		if (maximumPixelsToMoveInDirection
 				< MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION) {
 			movementDirection = movementDirection.getCounterDirection();
-			maximumPixelsToMoveInDirection = dogMovementDTO.getSquareWidth()
+			maximumPixelsToMoveInDirection = dogDataDTO.getSquareWidth()
 					- maximumPixelsToMoveInDirection;
 		}
-		dogMovementDTO.setMovementDirection(movementDirection);
+		dogDataDTO.setMovementDirection(movementDirection);
 		return maximumPixelsToMoveInDirection;
 	}
 
 	private boolean enemyMovedEnoughInCurrentDirection(
-			DogMovementDTO dogMovementDTO, float tpf) {
-		Spatial dog = dogMovementDTO.getDog();
+			DogDataDTO dogDataDTO, float tpf) {
+		Spatial dog = dogDataDTO.getDog();
 		Vector3f physicsLocation = dog.getControl(PhysicsControls.DOG)
 									  .getPhysicsLocation();
-		MovementDirection movementDirection = dogMovementDTO.getMovementDirection();
-		float maximumPixelsToMove = dogMovementDTO.getNumberOfPixelsToMoveInGivenDirection();
-		float startPixel = dogMovementDTO.getPositionWhereMovementBegan();
+		MovementDirection movementDirection = dogDataDTO.getMovementDirection();
+		float maximumPixelsToMove = dogDataDTO.getNumberOfPixelsToMoveInGivenDirection();
+		float startPixel = dogDataDTO.getPositionWhereMovementBegan();
 		float currentPixel = isXMovement(movementDirection) ?
 				physicsLocation.getX() :
 				physicsLocation.getZ();
