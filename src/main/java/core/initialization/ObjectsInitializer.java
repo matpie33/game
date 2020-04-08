@@ -17,6 +17,7 @@ import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionController;
+import core.controllers.EffectsController;
 import core.controllers.ObjectsMovementController;
 import core.gui.HUDCreator;
 import dto.DaleStateDTO;
@@ -42,15 +43,17 @@ public class ObjectsInitializer {
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
+	private EffectsController effectsController;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
 			GameStateDTO gameStateDTO,
 			ObjectsMovementController objectsMovementController,
-			HUDCreator hudCreator) {
+			HUDCreator hudCreator, EffectsController effectsController) {
 		collisionController = new CollisionController(objectsHolderDTO,
-				gameStateDTO, objectsMovementController, hudCreator);
+				gameStateDTO, objectsMovementController, hudCreator, effectsController);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
+		this.effectsController = effectsController;
 	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
@@ -70,8 +73,9 @@ public class ObjectsInitializer {
 			treesCoordinates.add(
 					new Vector3f(currentXCoordinate, 260, currentZCoordinate));
 			if (i < numberOfBoxes) {
-				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 245,
-						currentZCoordinate + 50));
+				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90,
+						235,
+						currentZCoordinate + 10));
 			}
 			if (i < numberOfDogs) {
 				dogsCoordinates.add(new Vector3f(10 * i, 245, -30));
@@ -233,6 +237,7 @@ public class ObjectsInitializer {
 			GhostControl ghostControl = new GhostControl(capsuleShape);
 			CharacterControl control = new CharacterControl(capsuleShape,
 					0.05f);
+
 			control.setGravity(new Vector3f(0, -40f, 0));
 			model.addControl(control);
 			model.addControl(ghostControl);

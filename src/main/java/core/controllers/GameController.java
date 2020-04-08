@@ -28,6 +28,7 @@ public class GameController {
 	private HUDCreator hudCreator;
 	private ObjectsStateController objectsStateController;
 	private ObjectsRemovingController objectsRemovingController;
+	private EffectsController effectsController;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -35,6 +36,7 @@ public class GameController {
 
 	public void initialize() {
 
+		effectsController = new EffectsController();
 		gameStateDTO = new GameStateDTO();
 		objectsRemovingController = new ObjectsRemovingController(gameStateDTO);
 		createGui();
@@ -89,7 +91,8 @@ public class GameController {
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
-				gameStateDTO, objectsMovementController, hudCreator);
+				gameStateDTO, objectsMovementController, hudCreator,
+				effectsController);
 		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}
