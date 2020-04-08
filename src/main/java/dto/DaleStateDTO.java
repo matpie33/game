@@ -15,6 +15,15 @@ public class DaleStateDTO {
 	private boolean isThrowingObject;
 	private boolean isPickingObject;
 	private boolean isPuttingAsideObject;
+	private boolean isCollidingWithEnemy;
+
+	public boolean isCollidingWithEnemy() {
+		return isCollidingWithEnemy;
+	}
+
+	public void setCollidingWithEnemy(boolean collidingWithEnemy) {
+		isCollidingWithEnemy = collidingWithEnemy;
+	}
 
 	public boolean isPickingObject() {
 		return isPickingObject;

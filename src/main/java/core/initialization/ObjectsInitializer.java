@@ -18,8 +18,6 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionController;
 import core.controllers.EffectsController;
-import core.controllers.ObjectsMovementController;
-import core.gui.HUDCreator;
 import dto.DaleStateDTO;
 import dto.DogDataDTO;
 import dto.GameStateDTO;
@@ -46,11 +44,9 @@ public class ObjectsInitializer {
 	private EffectsController effectsController;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO,
-			ObjectsMovementController objectsMovementController,
-			HUDCreator hudCreator, EffectsController effectsController) {
+			GameStateDTO gameStateDTO, EffectsController effectsController) {
 		collisionController = new CollisionController(objectsHolderDTO,
-				gameStateDTO, objectsMovementController, hudCreator, effectsController);
+				gameStateDTO, effectsController);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
 		this.effectsController = effectsController;

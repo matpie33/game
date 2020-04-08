@@ -15,21 +15,15 @@ public class CollisionController implements PhysicsCollisionListener {
 
 	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 4;
 
-	public static final int HP_DECREASE_VALUE = 20;
+
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
-	private ObjectsMovementController objectsMovementController;
-	private HUDCreator hudCreator;
 	private EffectsController effectsController;
 
 	public CollisionController(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO,
-			ObjectsMovementController objectsMovementController,
-			HUDCreator hudCreator, EffectsController effectsController) {
+			GameStateDTO gameStateDTO, EffectsController effectsController) {
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.objectsMovementController = objectsMovementController;
-		this.hudCreator = hudCreator;
 		this.effectsController = effectsController;
 	}
 
@@ -56,9 +50,8 @@ public class CollisionController implements PhysicsCollisionListener {
 		}
 		if (isDogWithDaleCollision(nodeAType, nodeBType)) {
 			DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-			daleStateDTO.setHp(daleStateDTO.getHp() - HP_DECREASE_VALUE);
-			objectsMovementController.moveDaleBack();
-			hudCreator.setHp(daleStateDTO.getHp());
+			daleStateDTO.setCollidingWithEnemy(true);
+
 		}
 		if (isDogWithBoxCollision(nodeAType, nodeBType)) {
 			clearNode(nodeA, isABox);

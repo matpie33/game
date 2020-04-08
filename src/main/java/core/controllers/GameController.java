@@ -40,7 +40,7 @@ public class GameController {
 		gameStateDTO = new GameStateDTO();
 		objectsRemovingController = new ObjectsRemovingController(gameStateDTO);
 		createGui();
-		objectsStateController = new ObjectsStateController(gameStateDTO);
+
 		setUpModels();
 		setUpTerrain();
 
@@ -52,6 +52,8 @@ public class GameController {
 		enemyMovementController = new EnemyMovementController(gameStateDTO);
 		throwingController = new ThrowingController(objectsHolderDTO,
 				gameStateDTO, animationController);
+		objectsStateController = new ObjectsStateController(gameStateDTO,
+				objectsMovementController, hudCreator);
 		setUpLight();
 		setupKeys();
 
@@ -91,8 +93,7 @@ public class GameController {
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
-				gameStateDTO, objectsMovementController, hudCreator,
-				effectsController);
+				gameStateDTO, effectsController);
 		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}
@@ -114,7 +115,7 @@ public class GameController {
 
 	public void update(float tpf) {
 		objectsRemovingController.handleObjectsRemoved();
-		objectsStateController.handleObjectsState();
+		objectsStateController.handleObjectsState(tpf);
 		objectsMovementController.handleMovement(tpf);
 		throwingController.handleThrowingAndPicking();
 		enemyMovementController.moveEnemies(tpf);
