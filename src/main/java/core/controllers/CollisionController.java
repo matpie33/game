@@ -5,7 +5,6 @@ import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
-import core.gui.HUDCreator;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -15,16 +14,13 @@ public class CollisionController implements PhysicsCollisionListener {
 
 	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 4;
 
-
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
-	private EffectsController effectsController;
 
 	public CollisionController(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO, EffectsController effectsController) {
+			GameStateDTO gameStateDTO) {
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.effectsController = effectsController;
 	}
 
 	@Override
@@ -40,13 +36,10 @@ public class CollisionController implements PhysicsCollisionListener {
 		boolean isABox = ObjectsTypes.BOX.equals(nodeAType);
 		boolean isBBox = ObjectsTypes.BOX.equals(nodeBType);
 
-
-
 		if ((isABox || isBBox)
 				&& event.getAppliedImpulse() > MINIMUM_IMPULSE_TO_DESTROY_BOX) {
-			clearNode(nodeA, isABox);
-			clearNode(nodeB, isBBox);
-			effectsController.createBoxDestroyEffect(isABox ? nodeA : nodeB);
+			gameStateDTO.getObjectsToRemove()
+						.add(isABox ? nodeA : nodeB);
 		}
 		if (isDogWithDaleCollision(nodeAType, nodeBType)) {
 			DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
@@ -54,11 +47,12 @@ public class CollisionController implements PhysicsCollisionListener {
 
 		}
 		if (isDogWithBoxCollision(nodeAType, nodeBType)) {
-			clearNode(nodeA, isABox);
-			clearNode(nodeB, isBBox);
+			gameStateDTO.getObjectsToRemove()
+						.add(isABox ? nodeA : nodeB);
+			//TODO why applied impulse is zero here? adding boxes to remove
+			// here is redundant, use strategies maybe
 			markDogNotAlive(nodeAType, nodeA, nodeB);
 		}
-
 
 	}
 
@@ -120,14 +114,6 @@ public class CollisionController implements PhysicsCollisionListener {
 		return null;
 	}
 
-	private void clearNode(Spatial node, boolean isBox) {
-		if (isBox && node.getParent() != null) {
-			RigidBodyControl control = node.getControl(PhysicsControls.BOX);
-			control.getPhysicsSpace()
-				   .remove(control);
-			node.getParent()
-				.detachChild(node);
-		}
-	}
+
 
 }

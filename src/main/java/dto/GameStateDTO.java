@@ -1,6 +1,7 @@
 package dto;
 
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,11 @@ public class GameStateDTO {
 	private ThrowableObjectCursorDTO throwableObjectCursorDTO = new ThrowableObjectCursorDTO();
 	private List<DogDataDTO> dogDataDTOS = new ArrayList<>();
 	private DaleStateDTO daleStateDTO;
+	private List<Spatial> objectsToRemove = new ArrayList<>();
+
+	public List<Spatial> getObjectsToRemove() {
+		return objectsToRemove;
+	}
 
 	public DaleStateDTO getDaleStateDTO() {
 		return daleStateDTO;

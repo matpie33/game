@@ -38,7 +38,8 @@ public class GameController {
 
 		effectsController = new EffectsController();
 		gameStateDTO = new GameStateDTO();
-		objectsRemovingController = new ObjectsRemovingController(gameStateDTO);
+		objectsRemovingController = new ObjectsRemovingController
+				(gameStateDTO, effectsController);
 		createGui();
 
 		setUpModels();
@@ -93,7 +94,7 @@ public class GameController {
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
-				gameStateDTO, effectsController);
+				gameStateDTO);
 		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}

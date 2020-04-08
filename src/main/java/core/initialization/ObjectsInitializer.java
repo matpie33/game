@@ -17,7 +17,6 @@ import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionController;
-import core.controllers.EffectsController;
 import dto.DaleStateDTO;
 import dto.DogDataDTO;
 import dto.GameStateDTO;
@@ -41,15 +40,13 @@ public class ObjectsInitializer {
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
-	private EffectsController effectsController;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO, EffectsController effectsController) {
+			GameStateDTO gameStateDTO) {
 		collisionController = new CollisionController(objectsHolderDTO,
-				gameStateDTO, effectsController);
+				gameStateDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.effectsController = effectsController;
 	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
@@ -69,8 +66,7 @@ public class ObjectsInitializer {
 			treesCoordinates.add(
 					new Vector3f(currentXCoordinate, 260, currentZCoordinate));
 			if (i < numberOfBoxes) {
-				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90,
-						235,
+				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 235,
 						currentZCoordinate + 10));
 			}
 			if (i < numberOfDogs) {
