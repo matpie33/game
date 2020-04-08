@@ -12,12 +12,22 @@ public class DogDataDTO {
 	private final Spatial dog;
 	private final Vector3f startOfSquareWhereTheDogMoves;
 	private final int squareWidth;
+	private boolean isAlive;
 
 	public DogDataDTO(Spatial dog, Vector3f startOfSquareWhereTheDogMoves,
 			int squareWidth) {
 		this.dog = dog;
 		this.startOfSquareWhereTheDogMoves = startOfSquareWhereTheDogMoves;
 		this.squareWidth = squareWidth;
+		isAlive = true;
+	}
+
+	public boolean isAlive() {
+		return isAlive;
+	}
+
+	public void setAlive(boolean alive) {
+		isAlive = alive;
 	}
 
 	public int getSquareWidth() {

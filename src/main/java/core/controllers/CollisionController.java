@@ -21,7 +21,7 @@ import enums.ObjectsTypes;
 
 public class CollisionController implements PhysicsCollisionListener {
 
-	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 9;
+	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 4;
 	public static final float STARTING_SIZE = 1.5f;
 	public static final float ENDING_SIZE = 0.4f;
 	public static final int NUMBER_OF_TIMES_TO_REPEAT = 0;
@@ -111,7 +111,41 @@ public class CollisionController implements PhysicsCollisionListener {
 			objectsMovementController.moveDaleBack();
 			hudCreator.setHp(daleStateDTO.getHp());
 		}
+		if (isDogWithBoxCollision(nodeAType, nodeBType)
+				&& event.getAppliedImpulse() > MINIMUM_IMPULSE_TO_DESTROY_BOX) {
+			markDogNotAlive(nodeAType, nodeBType, nodeA, nodeB);
+		}
 
+	}
+
+	private void markDogNotAlive(ObjectsTypes nodeAType, ObjectsTypes nodeBType,
+			Spatial nodeA, Spatial nodeB) {
+
+		Spatial dog;
+		if (ObjectsTypes.DOG.equals(nodeAType)) {
+			dog = nodeA;
+		}
+		else {
+			dog = nodeB;
+		}
+		gameStateDTO.getDogDataDTOS()
+					.stream()
+					.filter(dogData -> dogData.getDog()
+											  .equals(dog))
+					.findFirst()
+					.ifPresent(dogData -> dogData.setAlive(false));
+
+	}
+
+	private boolean isDogWithBoxCollision(ObjectsTypes nodeA,
+			ObjectsTypes nodeB) {
+		boolean isAnyNodeDale =
+				ObjectsTypes.BOX.equals(nodeA) || ObjectsTypes.BOX.equals(
+						nodeB);
+		boolean isAnyNodeDog =
+				ObjectsTypes.DOG.equals(nodeA) || ObjectsTypes.DOG.equals(
+						nodeB);
+		return isAnyNodeDale && isAnyNodeDog;
 	}
 
 	private boolean isDogWithDaleCollision(ObjectsTypes nodeA,

@@ -27,6 +27,7 @@ public class GameController {
 	private EnemyMovementController enemyMovementController;
 	private HUDCreator hudCreator;
 	private ObjectsStateController objectsStateController;
+	private ObjectsRemovingController objectsRemovingController;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -34,8 +35,9 @@ public class GameController {
 
 	public void initialize() {
 
-		createGui();
 		gameStateDTO = new GameStateDTO();
+		objectsRemovingController = new ObjectsRemovingController(gameStateDTO);
+		createGui();
 		objectsStateController = new ObjectsStateController(gameStateDTO);
 		setUpModels();
 		setUpTerrain();
@@ -108,6 +110,7 @@ public class GameController {
 	}
 
 	public void update(float tpf) {
+		objectsRemovingController.handleObjectsRemoved();
 		objectsStateController.handleObjectsState();
 		objectsMovementController.handleMovement(tpf);
 		throwingController.handleThrowingAndPicking();

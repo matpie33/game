@@ -71,7 +71,7 @@ public class ObjectsInitializer {
 					new Vector3f(currentXCoordinate, 260, currentZCoordinate));
 			if (i < numberOfBoxes) {
 				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 245,
-						currentZCoordinate + 200));
+						currentZCoordinate + 50));
 			}
 			if (i < numberOfDogs) {
 				dogsCoordinates.add(new Vector3f(10 * i, 245, -30));
@@ -247,8 +247,7 @@ public class ObjectsInitializer {
 
 	private void addDogMovement(Spatial model, CharacterControl control) {
 		Vector3f physicsLocation = control.getPhysicsLocation();
-		DogDataDTO dogDataDTO = new DogDataDTO(model,
-				physicsLocation, 20);
+		DogDataDTO dogDataDTO = new DogDataDTO(model, physicsLocation, 20);
 		dogDataDTO.setMovementDirection(MovementDirection.FORWARD_X);
 		dogDataDTO.setNumberOfPixelsToMoveInGivenDirection(10);
 		dogDataDTO.setPositionWhereMovementBegan(physicsLocation.getX());
