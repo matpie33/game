@@ -6,7 +6,7 @@
 
     <groupId>Game</groupId>
     <artifactId>Game</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <properties>
         <jme3_groupId>org.jmonkeyengine</jme3_groupId>
@@ -77,11 +77,26 @@
             <scope>test</scope>
         </dependency>
 
-
-
-
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>GameRunner</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

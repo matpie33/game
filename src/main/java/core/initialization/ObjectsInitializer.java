@@ -64,13 +64,13 @@ public class ObjectsInitializer {
 				currentZCoordinate = FIRST_COORDINATE_OF_TREE_Z + INCREASE_Z_BY;
 			}
 			treesCoordinates.add(
-					new Vector3f(currentXCoordinate, 260, currentZCoordinate));
+					new Vector3f(currentXCoordinate, 230, currentZCoordinate));
 			if (i < numberOfBoxes) {
 				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 235,
 						currentZCoordinate + 10));
 			}
 			if (i < numberOfDogs) {
-				dogsCoordinates.add(new Vector3f(10 * i, 245, -30));
+				dogsCoordinates.add(new Vector3f(50 * i, 245, -30*i));
 			}
 			increaseXNow = !increaseXNow;
 		}
