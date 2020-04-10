@@ -2,8 +2,10 @@ package core.controllers;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -33,7 +35,7 @@ public class ThrowingController {
 		gameApplication = GameApplication.getInstance();
 	}
 
-	public void handleThrowingAndPicking(){
+	public void handleThrowingAndPicking() {
 		handlePickingObject();
 		handleThrowingObject();
 		markThrowingDestination();
@@ -129,7 +131,8 @@ public class ThrowingController {
 
 	private void hideCursor() {
 		gameStateDTO.setCursorNotShowing();
-		gameApplication.getRootNode().detachChild(objectsHolderDTO.getArrow());
+		gameApplication.getRootNode()
+					   .detachChild(objectsHolderDTO.getArrow());
 	}
 
 	private void calculateArrowPosition(CollisionResult closestCollision) {
@@ -158,7 +161,7 @@ public class ThrowingController {
 		if (daleStateDTO.isPuttingAsideObject()) {
 			putAsideObject();
 		}
-		if (daleStateDTO.isPickingObject()){
+		if (daleStateDTO.isPickingObject()) {
 			pickupObject();
 		}
 	}
@@ -169,15 +172,6 @@ public class ThrowingController {
 		if (isCloseToThrowableObject()) {
 			Geometry geometry = collisionResults.getClosestCollision()
 												.getGeometry();
-			Object control = geometry.getParent()
-									 .getControl(
-
-											 PhysicsControls.BOX);
-
-			PhysicsControls.BOX.cast(control)
-							   .clearForces();
-			PhysicsControls.BOX.cast(control)
-							   .applyCentralForce(new Vector3f(0, 9f, 0));
 			daleStateDTO.setCarryingThrowableObject(true);
 			daleStateDTO.setCarriedObject(geometry);
 			hideCursor();
@@ -188,13 +182,16 @@ public class ThrowingController {
 	private void putAsideObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		daleStateDTO.setCarryingThrowableObject(false);
-		daleStateDTO.getCarriedObject()
-					.getObject()
-					.getParent()
-					.getControl(PhysicsControls.BOX)
-					.applyCentralForce(gameApplication.getCamera()
-													  .getDirection()
-													  .mult(3f));
+		RigidBodyControl control = daleStateDTO.getCarriedObject()
+											   .getObject()
+											   .getParent()
+											   .getControl(PhysicsControls.BOX);
+		control.setKinematicSpatial(false);
+		control.setKinematic(false);
+		control.applyCentralForce(gameApplication.getCamera()
+												 .getDirection()
+												 .mult(-10f));
+
 		animationController.animateStanding();
 	}
 
@@ -207,7 +204,9 @@ public class ThrowingController {
 										 .getParent()
 										 .getControl(PhysicsControls.BOX);
 			PhysicsControls.BOX.cast(control)
-							   .setGravity(new Vector3f(0, -40f, 0));
+							   .setKinematic(false);
+			PhysicsControls.BOX.cast(control)
+							   .setKinematicSpatial(false);
 			PhysicsControls.BOX.cast(control)
 							   .setLinearVelocity(new Vector3f(
 									   gameApplication.getCamera()
