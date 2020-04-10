@@ -1,14 +1,10 @@
 package core.controllers;
 
-import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.control.CharacterControl;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
@@ -29,8 +25,15 @@ public class ObjectsMovementController {
 		camera = gameApplication.getCamera();
 	}
 
-	public void handleMovement() {
-		handleCarriedBoxMovement();
+	public void handleMovement(float tpf) {
+		if (gameStateDTO.getDaleStateDTO()
+						.isMovingLeft()) {
+			rotateCharacterAndCamera(tpf, true);
+		}
+		if (gameStateDTO.getDaleStateDTO()
+						.isMovingRight()) {
+			rotateCharacterAndCamera(tpf, false);
+		}
 		handleCameraMovement();
 
 	}
@@ -85,26 +88,4 @@ public class ObjectsMovementController {
 		camera.setRotation(quaternion.mult(camera.getRotation()));
 	}
 
-	public void handleCarriedBoxMovement() {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (!daleStateDTO.isCarryingThrowableObject()) {
-			return;
-		}
-		Geometry carriedObject = daleStateDTO.getCarriedObject()
-											 .getObject();
-		Vector3f dalePosition = objectsHolderDTO.getDale()
-												.getLocalTranslation();
-		float carriedObjectHeight = ((BoundingBox) objectsHolderDTO.getDale()
-																   .getWorldBound()).getYExtent();
-		float boxHeight = ((BoundingBox) carriedObject.getWorldBound()).getYExtent();
-		RigidBodyControl control = carriedObject.getParent()
-												.getControl(
-														PhysicsControls.BOX);
-		control.setKinematic(true);
-		control.setKinematicSpatial(true);
-		((Node) control.getUserObject()).setLocalTranslation(
-				new Vector3f(dalePosition.getX(),
-						dalePosition.getY() + carriedObjectHeight + boxHeight
-								+ 1f, dalePosition.getZ()));
-	}
 }

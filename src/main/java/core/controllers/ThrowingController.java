@@ -2,13 +2,10 @@ package core.controllers;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import constants.NodeNames;
@@ -22,22 +19,17 @@ public class ThrowingController {
 
 	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
 	private GameStateDTO gameStateDTO;
-	private AnimationController animationController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameApplication gameApplication;
 
 	public ThrowingController(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO,
-			AnimationController animationController) {
+			GameStateDTO gameStateDTO) {
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.animationController = animationController;
 		gameApplication = GameApplication.getInstance();
 	}
 
 	public void handleThrowingAndPicking() {
-		handlePickingObject();
-		handleThrowingObject();
 		markThrowingDestination();
 		markThrowableObject();
 	}
@@ -71,6 +63,34 @@ public class ThrowingController {
 		}
 	}
 
+	private boolean isCloseEnoughToAnyObject(
+			CollisionResults collisionResults) {
+		if (collisionResults == null)
+			return false;
+		CollisionResult closestCollision = collisionResults.getClosestCollision();
+		return collisionResults.size() > 0 && closestCollision.getDistance()
+				< MINIMAL_DISTANCE_TO_PICK_OBJECT;
+
+	}
+
+	private CollisionResults getDistanceToObjects() {
+		Spatial dale = objectsHolderDTO.getDale();
+		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
+							  .getPhysicsLocation(),
+				dale.getControl(PhysicsControls.DALE)
+					.getViewDirection());
+		CollisionResults collisionResults = new CollisionResults();
+		Spatial throwables = gameApplication.getRootNode()
+											.getChild(NodeNames.THROWABLES);
+		for (Spatial spatial : ((Node) throwables).getChildren()) {
+			spatial.collideWith(ray, collisionResults);
+		}
+		if (collisionResults.size() == 0) {
+			return null;
+		}
+		return collisionResults;
+	}
+
 	private void markThrowableObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isCarryingThrowableObject()) {
@@ -101,34 +121,6 @@ public class ThrowingController {
 
 	}
 
-	private boolean isCloseEnoughToAnyObject(
-			CollisionResults collisionResults) {
-		if (collisionResults == null)
-			return false;
-		CollisionResult closestCollision = collisionResults.getClosestCollision();
-		return collisionResults.size() > 0 && closestCollision.getDistance()
-				< MINIMAL_DISTANCE_TO_PICK_OBJECT;
-
-	}
-
-	private CollisionResults getDistanceToObjects() {
-		Spatial dale = objectsHolderDTO.getDale();
-		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
-							  .getPhysicsLocation(),
-				dale.getControl(PhysicsControls.DALE)
-					.getViewDirection());
-		CollisionResults collisionResults = new CollisionResults();
-		Spatial throwables = gameApplication.getRootNode()
-											.getChild(NodeNames.THROWABLES);
-		for (Spatial spatial : ((Node) throwables).getChildren()) {
-			spatial.collideWith(ray, collisionResults);
-		}
-		if (collisionResults.size() == 0) {
-			return null;
-		}
-		return collisionResults;
-	}
-
 	private void hideCursor() {
 		gameStateDTO.setCursorNotShowing();
 		gameApplication.getRootNode()
@@ -150,70 +142,5 @@ public class ThrowingController {
 				objectPos.getZ() - zDimensionCollisionObject);
 	}
 
-	private boolean isCloseToThrowableObject() {
 
-		CollisionResults collisionResults = getDistanceToObjects();
-		return isCloseEnoughToAnyObject(collisionResults);
-	}
-
-	private void handlePickingObject() {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isPuttingAsideObject()) {
-			putAsideObject();
-		}
-		if (daleStateDTO.isPickingObject()) {
-			pickupObject();
-		}
-	}
-
-	private void pickupObject() {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		CollisionResults collisionResults = getDistanceToObjects();
-		if (isCloseToThrowableObject()) {
-			Geometry geometry = collisionResults.getClosestCollision()
-												.getGeometry();
-			daleStateDTO.setCarryingThrowableObject(true);
-			daleStateDTO.setCarriedObject(geometry);
-			hideCursor();
-			animationController.animateHoldingObject();
-		}
-	}
-
-	private void putAsideObject() {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		daleStateDTO.setCarryingThrowableObject(false);
-		RigidBodyControl control = daleStateDTO.getCarriedObject()
-											   .getObject()
-											   .getParent()
-											   .getControl(PhysicsControls.BOX);
-		control.setKinematicSpatial(false);
-		control.setKinematic(false);
-		control.applyCentralForce(gameApplication.getCamera()
-												 .getDirection()
-												 .mult(-10f));
-
-		animationController.animateStanding();
-	}
-
-	private void handleThrowingObject() {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isThrowingObject()) {
-			daleStateDTO.setCarryingThrowableObject(false);
-			Object control = daleStateDTO.getCarriedObject()
-										 .getObject()
-										 .getParent()
-										 .getControl(PhysicsControls.BOX);
-			PhysicsControls.BOX.cast(control)
-							   .setKinematic(false);
-			PhysicsControls.BOX.cast(control)
-							   .setKinematicSpatial(false);
-			PhysicsControls.BOX.cast(control)
-							   .setLinearVelocity(new Vector3f(
-									   gameApplication.getCamera()
-													  .getDirection()
-													  .mult(80f)));
-			animationController.animateStanding();
-		}
-
-	}
 }

@@ -52,7 +52,7 @@ public class GameController {
 		setUpObjects();
 		enemyMovementController = new EnemyMovementController(gameStateDTO);
 		throwingController = new ThrowingController(objectsHolderDTO,
-				gameStateDTO, animationController);
+				gameStateDTO);
 		objectsStateController = new ObjectsStateController(gameStateDTO,
 				objectsMovementController, hudCreator);
 		setUpLight();
@@ -117,7 +117,7 @@ public class GameController {
 	public void update(float tpf) {
 		objectsRemovingController.handleObjectsRemoved();
 		objectsStateController.handleObjectsState(tpf);
-		objectsMovementController.handleMovement();
+		objectsMovementController.handleMovement(tpf);
 		throwingController.handleThrowingAndPicking();
 		enemyMovementController.moveEnemies(tpf);
 	}

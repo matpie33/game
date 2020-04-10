@@ -18,13 +18,13 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.AnimationController;
 import core.controllers.CollisionController;
+import core.controls.CarriedObjectControl;
 import core.controls.DaleMovingControl;
 import dto.DaleStateDTO;
 import dto.DogDataDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
-import javafx.animation.Animation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,8 @@ public class ObjectsInitializer {
 	private AnimationController animationController;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO, AnimationController animationController) {
+			GameStateDTO gameStateDTO,
+			AnimationController animationController) {
 		collisionController = new CollisionController(objectsHolderDTO,
 				gameStateDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
@@ -75,7 +76,7 @@ public class ObjectsInitializer {
 						currentZCoordinate + 10));
 			}
 			if (i < numberOfDogs) {
-				dogsCoordinates.add(new Vector3f(50 * i, 245, -30*i));
+				dogsCoordinates.add(new Vector3f(50 * i, 245, -30 * i));
 			}
 			increaseXNow = !increaseXNow;
 		}
@@ -209,8 +210,8 @@ public class ObjectsInitializer {
 		daleStateDTO.setCarryingThrowableObject(false);
 		gameStateDTO.setDaleStateDTO(daleStateDTO);
 
-		DaleMovingControl daleMovingControl = new DaleMovingControl
-				(gameStateDTO, animationController);
+		DaleMovingControl daleMovingControl = new DaleMovingControl(
+				gameStateDTO, animationController);
 
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		bulletAppState.getPhysicsSpace()
@@ -239,9 +240,13 @@ public class ObjectsInitializer {
 			CharacterControl control = new CharacterControl(capsuleShape,
 					0.05f);
 
+			CarriedObjectControl carriedObjectControl = new CarriedObjectControl(
+					gameStateDTO, objectsHolderDTO, animationController);
+
 			control.setGravity(new Vector3f(0, -40f, 0));
 			model.addControl(control);
 			model.addControl(ghostControl);
+			model.addControl(carriedObjectControl);
 
 			bulletAppState.getPhysicsSpace()
 						  .add(control);
