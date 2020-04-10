@@ -94,7 +94,7 @@ public class GameController {
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
-				gameStateDTO);
+				gameStateDTO, animationController);
 		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}
@@ -117,7 +117,7 @@ public class GameController {
 	public void update(float tpf) {
 		objectsRemovingController.handleObjectsRemoved();
 		objectsStateController.handleObjectsState(tpf);
-		objectsMovementController.handleMovement(tpf);
+		objectsMovementController.handleMovement();
 		throwingController.handleThrowingAndPicking();
 		enemyMovementController.moveEnemies(tpf);
 	}

@@ -9,7 +9,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
@@ -18,23 +17,19 @@ import dto.ObjectsHolderDTO;
 
 public class ObjectsMovementController {
 
-	private AnimationController animationController;
 	private GameStateDTO gameStateDTO;
-	private Vector3f modifiableWalkDirectionVector = new Vector3f(0, 0, 0);
 	private ObjectsHolderDTO objectsHolderDTO;
 	private Camera camera;
 
 	public ObjectsMovementController(AnimationController animationController,
 			GameStateDTO gameStateDTO, ObjectsHolderDTO objectsHolderDTO) {
-		this.animationController = animationController;
 		this.gameStateDTO = gameStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
 		GameApplication gameApplication = GameApplication.getInstance();
 		camera = gameApplication.getCamera();
 	}
 
-	public void handleMovement(float tpf) {
-		handleDaleMovement(tpf);
+	public void handleMovement() {
 		handleCarriedBoxMovement();
 		handleCameraMovement();
 
@@ -52,31 +47,6 @@ public class ObjectsMovementController {
 		Vector3f multiplied = direction.mult(new Vector3f(30f, 1, 30f));
 		control.setPhysicsLocation(control.getPhysicsLocation()
 										  .subtract(multiplied));
-	}
-
-	private void handleDaleMovement(float tpf) {
-		if (!gameStateDTO.getDaleStateDTO()
-						 .isAlive()) {
-			handleDeadDale();
-			return;
-
-		}
-		modifiableWalkDirectionVector.set(0, 0, 0);
-		handleMovementByKeys(tpf);
-
-	}
-
-	private void handleDeadDale() {
-		Spatial dale = objectsHolderDTO.getDale();
-		CharacterControl control = dale.getControl(PhysicsControls.DALE);
-		control.setWalkDirection(Vector3f.ZERO);
-		modifiableWalkDirectionVector.set(0, 0, 0);
-	}
-
-	private void setMovementDirection() {
-		Spatial dale = objectsHolderDTO.getDale();
-		dale.getControl(PhysicsControls.DALE)
-			.setWalkDirection(modifiableWalkDirectionVector);
 	}
 
 	private void handleCameraMovement() {
@@ -107,64 +77,12 @@ public class ObjectsMovementController {
 		return dalePosition.subtract(viewDirectionScaled);
 	}
 
-	private void handleMovementByKeys(float tpf) {
-		Vector3f camDir = camera.getDirection()
-								.clone()
-								.multLocal(0.5f);
-		camDir.y = 0;
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isJumping()) {
-			daleJump();
-		}
-		if (daleStateDTO.isMovingForward()) {
-			setDaleViewDirectionToCameraDirection();
-			modifiableWalkDirectionVector.addLocal(camDir);
-			animationController.animateMovingForward();
-		}
-		if (daleStateDTO.isMovingBackward()) {
-			setDaleViewDirectionToCameraDirection();
-			modifiableWalkDirectionVector.addLocal(camDir.negate()
-														 .mult(0.5f));
-			animationController.animateMovingBackward();
-		}
-		if (daleStateDTO.isMovingLeft()) {
-			rotateCharacterAndCamera(tpf, true);
-		}
-		if (daleStateDTO.isMovingRight()) {
-			rotateCharacterAndCamera(tpf, false);
-		}
-		setMovementDirection();
-
-	}
-
 	private void rotateCharacterAndCamera(float tpf, boolean left) {
 		Quaternion quaternion = new Quaternion();
 		int multiplier = left ? 1 : -1;
 		quaternion.fromAngleAxis(FastMath.DEG_TO_RAD * 90 * multiplier * tpf,
 				Vector3f.UNIT_Y);
-		CharacterControl control = objectsHolderDTO.getDale()
-												   .getControl(
-														   PhysicsControls.DALE);
-		control.setViewDirection(quaternion.mult(control.getViewDirection()));
 		camera.setRotation(quaternion.mult(camera.getRotation()));
-	}
-
-	private void setDaleViewDirectionToCameraDirection() {
-		Vector3f direction = camera.getDirection();
-		objectsHolderDTO.getDale()
-						.getControl(PhysicsControls.DALE)
-						.setViewDirection(new Vector3f(direction.getX(), 0,
-								direction.getZ()));
-	}
-
-	public void daleJump() {
-		if (objectsHolderDTO.getDale()
-							.getControl(PhysicsControls.DALE)
-							.onGround()) {
-			objectsHolderDTO.getDale()
-							.getControl(PhysicsControls.DALE)
-							.jump(new Vector3f(0, 30f, 0));
-		}
 	}
 
 	public void handleCarriedBoxMovement() {

@@ -16,12 +16,15 @@ import com.jme3.scene.Spatial;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
+import core.controllers.AnimationController;
 import core.controllers.CollisionController;
+import core.controls.DaleMovingControl;
 import dto.DaleStateDTO;
 import dto.DogDataDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
+import javafx.animation.Animation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +43,15 @@ public class ObjectsInitializer {
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
+	private AnimationController animationController;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO) {
+			GameStateDTO gameStateDTO, AnimationController animationController) {
 		collisionController = new CollisionController(objectsHolderDTO,
 				gameStateDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
+		this.animationController = animationController;
 	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
@@ -204,6 +209,9 @@ public class ObjectsInitializer {
 		daleStateDTO.setCarryingThrowableObject(false);
 		gameStateDTO.setDaleStateDTO(daleStateDTO);
 
+		DaleMovingControl daleMovingControl = new DaleMovingControl
+				(gameStateDTO, animationController);
+
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		bulletAppState.getPhysicsSpace()
 					  .add(ghostControl);
@@ -211,6 +219,7 @@ public class ObjectsInitializer {
 
 		CharacterControl daleControl = new CharacterControl(capsuleShape,
 				0.05f);
+		model.addControl(daleMovingControl);
 		daleControl.setGravity(new Vector3f(0, -40f, 0));
 		model.addControl(daleControl);
 		daleControl.setPhysicsLocation(new Vector3f(0, 255, -20));
