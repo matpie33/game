@@ -15,7 +15,6 @@ public class GameController {
 
 	private ModelLoader modelLoader;
 	private ObjectsInitializer objectsInitializer;
-	private AnimationController animationController;
 	private KeysSetup keysSetup;
 	private ObjectsMovementController objectsMovementController;
 	private ThrowingController throwingController;
@@ -29,6 +28,7 @@ public class GameController {
 	private ObjectsStateController objectsStateController;
 	private ObjectsRemovingController objectsRemovingController;
 	private EffectsController effectsController;
+	private AnimationsController animationsController;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -48,7 +48,8 @@ public class GameController {
 		setUpMusic();
 		setUpAnimations();
 		objectsMovementController = new ObjectsMovementController(
-				animationController, gameStateDTO, objectsHolderDTO);
+				animationsController.getDaleAnimationListener(), gameStateDTO,
+				objectsHolderDTO);
 		setUpObjects();
 		enemyMovementController = new EnemyMovementController(gameStateDTO);
 		throwingController = new ThrowingController(objectsHolderDTO,
@@ -66,9 +67,10 @@ public class GameController {
 	}
 
 	private void setUpAnimations() {
-		animationController = new AnimationController(gameStateDTO,
+
+		animationsController = new AnimationsController(gameStateDTO,
 				objectsHolderDTO);
-		animationController.setUpAnimations();
+		animationsController.setUp();
 	}
 
 	private void setUpMusic() {
@@ -94,7 +96,7 @@ public class GameController {
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
-				gameStateDTO, animationController);
+				gameStateDTO, animationsController.getDaleAnimationListener());
 		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}

@@ -9,7 +9,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import core.GameApplication;
-import core.controllers.AnimationController;
+import core.animationEventListeners.DaleAnimationListener;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 
@@ -18,13 +18,13 @@ public class DaleMovingControl extends AbstractControl {
 	private GameStateDTO gameStateDTO;
 	private Vector3f modifiableWalkDirectionVector = new Vector3f(0, 0, 0);
 	private GameApplication gameApplication;
-	private AnimationController animationController;
+	private DaleAnimationListener daleAnimationListener;
 
 	public DaleMovingControl(GameStateDTO gameStateDTO,
-			AnimationController animationController) {
+			DaleAnimationListener daleAnimationListener) {
 		this.gameStateDTO = gameStateDTO;
 		gameApplication = GameApplication.getInstance();
-		this.animationController = animationController;
+		this.daleAnimationListener = daleAnimationListener;
 	}
 
 	@Override
@@ -48,13 +48,13 @@ public class DaleMovingControl extends AbstractControl {
 		if (daleStateDTO.isMovingForward()) {
 			setDaleViewDirectionToCameraDirection();
 			modifiableWalkDirectionVector.addLocal(camDir);
-			animationController.animateMovingForward();
+			daleAnimationListener.animateMovingForward();
 		}
 		if (daleStateDTO.isMovingBackward()) {
 			setDaleViewDirectionToCameraDirection();
 			modifiableWalkDirectionVector.addLocal(camDir.negate()
 														 .mult(0.5f));
-			animationController.animateMovingBackward();
+			daleAnimationListener.animateMovingBackward();
 		}
 		if (daleStateDTO.isMovingLeft()) {
 			rotateCharacter(tpf, true);

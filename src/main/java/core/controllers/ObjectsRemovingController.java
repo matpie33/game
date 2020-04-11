@@ -1,11 +1,10 @@
 package core.controllers;
 
 import com.jme3.bullet.control.CharacterControl;
-import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
-import dto.DogDataDTO;
+import dto.DogStateDTO;
 import dto.GameStateDTO;
 
 import java.util.ArrayList;
@@ -23,20 +22,20 @@ public class ObjectsRemovingController {
 	}
 
 	public void handleObjectsRemoved() {
-		List<DogDataDTO> removedDogs = new ArrayList<>();
-		for (DogDataDTO dogDataDTO : gameStateDTO.getDogDataDTOS()) {
-			if (!dogDataDTO.isAlive()) {
-				Spatial dog = dogDataDTO.getDog();
+		List<DogStateDTO> removedDogs = new ArrayList<>();
+		for (DogStateDTO dogStateDTO : gameStateDTO.getDogStateDTOS()) {
+			if (!dogStateDTO.isAlive()) {
+				Spatial dog = dogStateDTO.getDog();
 
 				CharacterControl characterControl = dog.getControl(
 						PhysicsControls.DOG);
 				characterControl.getPhysicsSpace()
 								.remove(dog);
 				dog.removeFromParent();
-				removedDogs.add(dogDataDTO);
+				removedDogs.add(dogStateDTO);
 			}
 		}
-		removedDogs.forEach(gameStateDTO.getDogDataDTOS()::remove);
+		removedDogs.forEach(gameStateDTO.getDogStateDTOS()::remove);
 		for (Spatial objectToRemove : gameStateDTO.getObjectsToRemove()) {
 			if (objectToRemove.getParent() == null) {
 				continue;

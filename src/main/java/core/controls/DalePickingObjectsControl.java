@@ -11,7 +11,7 @@ import com.jme3.scene.control.AbstractControl;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
-import core.controllers.AnimationController;
+import core.animationEventListeners.DaleAnimationListener;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -21,16 +21,16 @@ public class DalePickingObjectsControl extends AbstractControl {
 	private GameStateDTO gameStateDTO;
 	private GameApplication gameApplication;
 	private ObjectsHolderDTO objectsHolderDTO;
-	private AnimationController animationController;
+	private DaleAnimationListener daleAnimationListener;
 	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
 
 	public DalePickingObjectsControl(GameStateDTO gameStateDTO,
 			ObjectsHolderDTO objectsHolderDTO,
-			AnimationController animationController) {
+			DaleAnimationListener daleAnimationListener) {
 		this.gameStateDTO = gameStateDTO;
 		this.gameApplication = GameApplication.getInstance();
 		this.objectsHolderDTO = objectsHolderDTO;
-		this.animationController = animationController;
+		this.daleAnimationListener = daleAnimationListener;
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class DalePickingObjectsControl extends AbstractControl {
 				daleStateDTO.setCarriedObject(closestCollision.getGeometry()
 															  .getParent());
 				gameStateDTO.setCursorNotShowing();
-				animationController.animateHoldingObject();
+				daleAnimationListener.animateHoldingObject();
 			}
 
 		}

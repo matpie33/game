@@ -16,14 +16,14 @@ import com.jme3.scene.Spatial;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
-import core.controllers.AnimationController;
+import core.animationEventListeners.DaleAnimationListener;
 import core.controllers.CollisionController;
 import core.controls.CarriedObjectControl;
 import core.controls.DaleMovingControl;
 import core.controls.DalePickingObjectsControl;
 import core.util.CoordinatesUtil;
 import dto.DaleStateDTO;
-import dto.DogDataDTO;
+import dto.DogStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
@@ -45,16 +45,16 @@ public class ObjectsInitializer {
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
-	private AnimationController animationController;
+	private DaleAnimationListener daleAnimationListener;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
 			GameStateDTO gameStateDTO,
-			AnimationController animationController) {
+			DaleAnimationListener daleAnimationListener) {
 		collisionController = new CollisionController(objectsHolderDTO,
 				gameStateDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.animationController = animationController;
+		this.daleAnimationListener = daleAnimationListener;
 	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
@@ -88,12 +88,7 @@ public class ObjectsInitializer {
 		List<Spatial> trees = objectsHolderDTO.getTrees();
 		List<Spatial> boxes = objectsHolderDTO.getBoxes();
 		List<Spatial> dogs = objectsHolderDTO.getDogs();
-		initializeCoordinates(trees.size(), boxes.size(), dogs.size());
-
-		setObjectsCoordinates(trees, treesCoordinates, PhysicsControls.TREE);
-		setObjectsCoordinatesForDogs(dogs, dogsCoordinates,
-				PhysicsControls.DOG);
-		setObjectsCoordinates(boxes, boxesCoordinates, PhysicsControls.BOX);
+		initializeAndSetCoordinates(trees, boxes, dogs);
 		Node throwables = new Node(NodeNames.THROWABLES);
 		objectsHolderDTO.getBoxes()
 						.forEach(throwables::attachChild);
@@ -110,6 +105,16 @@ public class ObjectsInitializer {
 		rootNode.attachChild(objectsHolderDTO.getScene());
 		rootNode.attachChild(throwables);
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
+	}
+
+	private void initializeAndSetCoordinates(List<Spatial> trees, List<Spatial> boxes,
+			List<Spatial> dogs) {
+		initializeCoordinates(trees.size(), boxes.size(), dogs.size());
+
+		setObjectsCoordinates(trees, treesCoordinates, PhysicsControls.TREE);
+		setObjectsCoordinatesForDogs(dogs, dogsCoordinates,
+				PhysicsControls.DOG);
+		setObjectsCoordinates(boxes, boxesCoordinates, PhysicsControls.BOX);
 	}
 
 	private void setObjectsCoordinates(List<Spatial> objects,
@@ -163,7 +168,7 @@ public class ObjectsInitializer {
 			CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
 
 			CarriedObjectControl carriedObjectControl = new CarriedObjectControl(
-					gameStateDTO, objectsHolderDTO, animationController);
+					gameStateDTO, objectsHolderDTO, daleAnimationListener);
 			RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
 					0.5f);
 			rigidBodyControl.setGravity(new Vector3f(0, -10f, 0));
@@ -214,9 +219,9 @@ public class ObjectsInitializer {
 	private void initializeDaleControls(BulletAppState bulletAppState,
 			Spatial model, CapsuleCollisionShape capsuleShape) {
 		DaleMovingControl daleMovingControl = new DaleMovingControl(
-				gameStateDTO, animationController);
+				gameStateDTO, daleAnimationListener);
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
-				gameStateDTO, objectsHolderDTO, animationController);
+				gameStateDTO, objectsHolderDTO, daleAnimationListener);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		initializeDaleCharacterControl(bulletAppState, model, capsuleShape);
 
@@ -287,11 +292,11 @@ public class ObjectsInitializer {
 
 	private void addDogMovement(Spatial model, CharacterControl control) {
 		Vector3f physicsLocation = control.getPhysicsLocation();
-		DogDataDTO dogDataDTO = new DogDataDTO(model, physicsLocation, 20);
-		dogDataDTO.setMovementDirection(MovementDirection.FORWARD_X);
-		dogDataDTO.setNumberOfPixelsToMoveInGivenDirection(10);
-		dogDataDTO.setPositionWhereMovementBegan(physicsLocation.getX());
-		gameStateDTO.addDogMovement(dogDataDTO);
+		DogStateDTO dogStateDTO = new DogStateDTO(model, physicsLocation, 20);
+		dogStateDTO.setMovementDirection(MovementDirection.FORWARD_X);
+		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(10);
+		dogStateDTO.setPositionWhereMovementBegan(physicsLocation.getX());
+		gameStateDTO.addDogMovement(dogStateDTO);
 	}
 
 	private void initializeScene(BulletAppState bulletAppState) {

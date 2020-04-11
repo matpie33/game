@@ -2,9 +2,7 @@ package core.controllers;
 
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
-import constants.PhysicsControls;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -66,7 +64,7 @@ public class CollisionController implements PhysicsCollisionListener {
 		else {
 			dog = nodeB;
 		}
-		gameStateDTO.getDogDataDTOS()
+		gameStateDTO.getDogStateDTOS()
 					.stream()
 					.filter(dogData -> dogData.getDog()
 											  .equals(dog))
