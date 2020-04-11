@@ -20,6 +20,7 @@ import core.controllers.AnimationController;
 import core.controllers.CollisionController;
 import core.controls.CarriedObjectControl;
 import core.controls.DaleMovingControl;
+import core.controls.DalePickingObjectsControl;
 import dto.DaleStateDTO;
 import dto.DogDataDTO;
 import dto.GameStateDTO;
@@ -160,10 +161,13 @@ public class ObjectsInitializer {
 		for (Spatial box : objectsHolderDTO.getBoxes()) {
 			CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
 
+			CarriedObjectControl carriedObjectControl = new CarriedObjectControl(
+					gameStateDTO, objectsHolderDTO, animationController);
 			RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
 					0.5f);
 			rigidBodyControl.setGravity(new Vector3f(0, -10f, 0));
 			box.addControl(rigidBodyControl);
+			box.addControl(carriedObjectControl);
 			bulletAppState.getPhysicsSpace()
 						  .add(rigidBodyControl);
 		}
@@ -213,10 +217,14 @@ public class ObjectsInitializer {
 		DaleMovingControl daleMovingControl = new DaleMovingControl(
 				gameStateDTO, animationController);
 
+		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
+				gameStateDTO, objectsHolderDTO, animationController);
+
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		bulletAppState.getPhysicsSpace()
 					  .add(ghostControl);
 		model.addControl(ghostControl);
+		model.addControl(dalePickingObjectsControl);
 
 		CharacterControl daleControl = new CharacterControl(capsuleShape,
 				0.05f);
@@ -240,13 +248,9 @@ public class ObjectsInitializer {
 			CharacterControl control = new CharacterControl(capsuleShape,
 					0.05f);
 
-			CarriedObjectControl carriedObjectControl = new CarriedObjectControl(
-					gameStateDTO, objectsHolderDTO, animationController);
-
 			control.setGravity(new Vector3f(0, -40f, 0));
 			model.addControl(control);
 			model.addControl(ghostControl);
-			model.addControl(carriedObjectControl);
 
 			bulletAppState.getPhysicsSpace()
 						  .add(control);

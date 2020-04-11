@@ -17,7 +17,7 @@ import dto.ObjectsHolderDTO;
 
 public class ThrowingController {
 
-	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
+
 	private GameStateDTO gameStateDTO;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameApplication gameApplication;
@@ -31,7 +31,6 @@ public class ThrowingController {
 
 	public void handleThrowingAndPicking() {
 		markThrowingDestination();
-		markThrowableObject();
 	}
 
 	private void markThrowingDestination() {
@@ -63,84 +62,10 @@ public class ThrowingController {
 		}
 	}
 
-	private boolean isCloseEnoughToAnyObject(
-			CollisionResults collisionResults) {
-		if (collisionResults == null)
-			return false;
-		CollisionResult closestCollision = collisionResults.getClosestCollision();
-		return collisionResults.size() > 0 && closestCollision.getDistance()
-				< MINIMAL_DISTANCE_TO_PICK_OBJECT;
 
-	}
 
-	private CollisionResults getDistanceToObjects() {
-		Spatial dale = objectsHolderDTO.getDale();
-		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
-							  .getPhysicsLocation(),
-				dale.getControl(PhysicsControls.DALE)
-					.getViewDirection());
-		CollisionResults collisionResults = new CollisionResults();
-		Spatial throwables = gameApplication.getRootNode()
-											.getChild(NodeNames.THROWABLES);
-		for (Spatial spatial : ((Node) throwables).getChildren()) {
-			spatial.collideWith(ray, collisionResults);
-		}
-		if (collisionResults.size() == 0) {
-			return null;
-		}
-		return collisionResults;
-	}
 
-	private void markThrowableObject() {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isCarryingThrowableObject()) {
-			return;
-		}
-		CollisionResults collisionResults = getDistanceToObjects();
-		if (collisionResults == null) {
-			return;
-		}
-		CollisionResult closestCollision = collisionResults.getClosestCollision();
-		if (!gameStateDTO.isCursorShowing()
-				&& !daleStateDTO.isCarryingThrowableObject()
-				&& isCloseEnoughToAnyObject(collisionResults)) {
 
-			calculateArrowPosition(closestCollision);
-			gameApplication.getRootNode()
-						   .attachChild(objectsHolderDTO.getArrow());
-			gameStateDTO.setCursorShowingAt(closestCollision.getGeometry());
-		}
-
-		if (gameStateDTO.isCursorShowing() && (closestCollision.getGeometry()
-				!= gameStateDTO.getSpatialOnWhichCursorIsShowing()
-				|| closestCollision.getDistance()
-				> MINIMAL_DISTANCE_TO_PICK_OBJECT)) {
-
-			hideCursor();
-		}
-
-	}
-
-	private void hideCursor() {
-		gameStateDTO.setCursorNotShowing();
-		gameApplication.getRootNode()
-					   .detachChild(objectsHolderDTO.getArrow());
-	}
-
-	private void calculateArrowPosition(CollisionResult closestCollision) {
-		Spatial arrow = objectsHolderDTO.getArrow();
-		BoundingVolume collisionObjectBounds = closestCollision.getGeometry()
-															   .getWorldBound();
-		float yDimensionArrow = ((BoundingBox) arrow.getWorldBound()).getYExtent();
-		float yDimensionCollisionObject = ((BoundingBox) collisionObjectBounds).getYExtent();
-		float xDimensionCollisionObject = ((BoundingBox) collisionObjectBounds).getXExtent();
-		float zDimensionCollisionObject = ((BoundingBox) collisionObjectBounds).getZExtent();
-		Vector3f objectPos = closestCollision.getGeometry()
-											 .getWorldTranslation();
-		arrow.setLocalTranslation(objectPos.getX() + xDimensionCollisionObject,
-				objectPos.getY() + yDimensionArrow + yDimensionCollisionObject,
-				objectPos.getZ() - zDimensionCollisionObject);
-	}
 
 
 }

@@ -1,11 +1,11 @@
 package dto;
 
-import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 
 public class ThrowableObjectDTO {
 
 	private boolean isCarried;
-	private Geometry object;
+	private Spatial object;
 
 	public boolean isCarried() {
 		return isCarried;
@@ -15,11 +15,11 @@ public class ThrowableObjectDTO {
 		isCarried = carried;
 	}
 
-	public Geometry getObject() {
+	public Spatial getObject() {
 		return object;
 	}
 
-	public void setObject(Geometry object) {
+	public void setObject(Spatial object) {
 		this.object = object;
 	}
 }

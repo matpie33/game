@@ -1,6 +1,7 @@
 package dto;
 
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 
 public class DaleStateDTO {
 
@@ -105,7 +106,7 @@ public class DaleStateDTO {
 		carriedObject.setCarried(carrying);
 	}
 
-	public void setCarriedObject(Geometry geometry) {
+	public void setCarriedObject(Spatial geometry) {
 		carriedObject.setObject(geometry);
 	}
 
