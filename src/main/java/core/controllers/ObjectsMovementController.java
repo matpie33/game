@@ -7,7 +7,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import constants.PhysicsControls;
 import core.GameApplication;
-import core.animationEventListeners.DaleAnimationListener;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -18,8 +17,7 @@ public class ObjectsMovementController {
 	private ObjectsHolderDTO objectsHolderDTO;
 	private Camera camera;
 
-	public ObjectsMovementController(DaleAnimationListener daleAnimationListener,
-			GameStateDTO gameStateDTO, ObjectsHolderDTO objectsHolderDTO) {
+	public ObjectsMovementController(GameStateDTO gameStateDTO, ObjectsHolderDTO objectsHolderDTO) {
 		this.gameStateDTO = gameStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
 		GameApplication gameApplication = GameApplication.getInstance();

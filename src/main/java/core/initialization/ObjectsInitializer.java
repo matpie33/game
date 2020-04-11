@@ -16,7 +16,6 @@ import com.jme3.scene.Spatial;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
-import core.animationEventListeners.DaleAnimationListener;
 import core.controllers.CollisionController;
 import core.controls.CarriedObjectControl;
 import core.controls.DaleMovingControl;
@@ -45,16 +44,13 @@ public class ObjectsInitializer {
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
-	private DaleAnimationListener daleAnimationListener;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO,
-			DaleAnimationListener daleAnimationListener) {
+			GameStateDTO gameStateDTO) {
 		collisionController = new CollisionController(objectsHolderDTO,
 				gameStateDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.daleAnimationListener = daleAnimationListener;
 	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
@@ -168,7 +164,7 @@ public class ObjectsInitializer {
 			CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
 
 			CarriedObjectControl carriedObjectControl = new CarriedObjectControl(
-					gameStateDTO, objectsHolderDTO, daleAnimationListener);
+					gameStateDTO, objectsHolderDTO);
 			RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
 					0.5f);
 			rigidBodyControl.setGravity(new Vector3f(0, -10f, 0));
@@ -219,9 +215,9 @@ public class ObjectsInitializer {
 	private void initializeDaleControls(BulletAppState bulletAppState,
 			Spatial model, CapsuleCollisionShape capsuleShape) {
 		DaleMovingControl daleMovingControl = new DaleMovingControl(
-				gameStateDTO, daleAnimationListener);
+				gameStateDTO);
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
-				gameStateDTO, objectsHolderDTO, daleAnimationListener);
+				gameStateDTO, objectsHolderDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		initializeDaleCharacterControl(bulletAppState, model, capsuleShape);
 
@@ -296,7 +292,7 @@ public class ObjectsInitializer {
 		dogStateDTO.setMovementDirection(MovementDirection.FORWARD_X);
 		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(10);
 		dogStateDTO.setPositionWhereMovementBegan(physicsLocation.getX());
-		gameStateDTO.addDogMovement(dogStateDTO);
+		gameStateDTO.addDogState(dogStateDTO);
 	}
 
 	private void initializeScene(BulletAppState bulletAppState) {

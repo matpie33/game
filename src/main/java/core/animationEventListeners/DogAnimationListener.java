@@ -4,20 +4,21 @@ import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
-import com.jme3.scene.Spatial;
+import dto.DogStateDTO;
 
 public class DogAnimationListener implements AnimEventListener {
 
 	public static final String WALK = "Walk";
 
-	private Spatial dogStateDTO;
+	private DogStateDTO dogStateDTO;
 
-	public DogAnimationListener(Spatial dogStateDTO) {
+	public DogAnimationListener(DogStateDTO dogStateDTO) {
 		this.dogStateDTO = dogStateDTO;
 	}
 
 	public void setUpAnimations() {
-		AnimControl control = dogStateDTO.getControl(AnimControl.class);
+		AnimControl control = dogStateDTO.getDog()
+										 .getControl(AnimControl.class);
 		control.addListener(this);
 		AnimChannel channel = control.createChannel();
 		channel.setAnim(WALK);
@@ -36,6 +37,10 @@ public class DogAnimationListener implements AnimEventListener {
 	@Override
 	public void onAnimChange(AnimControl control, AnimChannel channel,
 			String animName) {
+
+	}
+
+	public void handleAnimation(DogStateDTO stateDTO) {
 
 	}
 }

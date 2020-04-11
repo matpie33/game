@@ -46,11 +46,10 @@ public class GameController {
 		setUpTerrain();
 
 		setUpMusic();
-		setUpAnimations();
-		objectsMovementController = new ObjectsMovementController(
-				animationsController.getDaleAnimationListener(), gameStateDTO,
+		objectsMovementController = new ObjectsMovementController(gameStateDTO,
 				objectsHolderDTO);
 		setUpObjects();
+		setUpAnimations();
 		enemyMovementController = new EnemyMovementController(gameStateDTO);
 		throwingController = new ThrowingController(objectsHolderDTO,
 				gameStateDTO);
@@ -96,7 +95,7 @@ public class GameController {
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
-				gameStateDTO, animationsController.getDaleAnimationListener());
+				gameStateDTO);
 		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}
@@ -117,6 +116,7 @@ public class GameController {
 	}
 
 	public void update(float tpf) {
+		animationsController.handleAnimations();
 		objectsRemovingController.handleObjectsRemoved();
 		objectsStateController.handleObjectsState(tpf);
 		objectsMovementController.handleMovement(tpf);

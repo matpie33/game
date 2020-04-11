@@ -47,7 +47,7 @@ public class GameStateDTO {
 		return throwableObjectCursorDTO.getThrowableObject();
 	}
 
-	public void addDogMovement(DogStateDTO dogStateDTO) {
+	public void addDogState(DogStateDTO dogStateDTO) {
 		dogStateDTOS.add(dogStateDTO);
 	}
 }

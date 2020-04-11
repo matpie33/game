@@ -9,7 +9,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import core.GameApplication;
-import core.animationEventListeners.DaleAnimationListener;
 import core.util.CoordinatesUtil;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
@@ -20,15 +19,12 @@ public class CarriedObjectControl extends AbstractControl {
 	private GameStateDTO gameStateDTO;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameApplication gameApplication;
-	private DaleAnimationListener daleAnimationListener;
 
 	public CarriedObjectControl(GameStateDTO gameStateDTO,
-			ObjectsHolderDTO objectsHolderDTO,
-			DaleAnimationListener daleAnimationListener) {
+			ObjectsHolderDTO objectsHolderDTO) {
 		this.gameStateDTO = gameStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
 		gameApplication = GameApplication.getInstance();
-		this.daleAnimationListener = daleAnimationListener;
 	}
 
 	@Override
@@ -57,7 +53,6 @@ public class CarriedObjectControl extends AbstractControl {
 												 .getDirection()
 												 .mult(-0.5f));
 
-		daleAnimationListener.animateStanding();
 	}
 
 	private void handleThrowingObject() {
@@ -76,7 +71,6 @@ public class CarriedObjectControl extends AbstractControl {
 									   gameApplication.getCamera()
 													  .getDirection()
 													  .mult(80f)));
-			daleAnimationListener.animateStanding();
 		}
 
 	}

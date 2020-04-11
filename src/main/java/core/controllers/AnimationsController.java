@@ -1,8 +1,8 @@
 package core.controllers;
 
-import com.jme3.scene.Spatial;
 import core.animationEventListeners.DaleAnimationListener;
 import core.animationEventListeners.DogAnimationListener;
+import dto.DogStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 
@@ -26,7 +26,7 @@ public class AnimationsController {
 		daleAnimationListener = new DaleAnimationListener(gameStateDTO,
 				objectsHolderDTO);
 		daleAnimationListener.setUpAnimations();
-		for (Spatial dog : objectsHolderDTO.getDogs()) {
+		for (DogStateDTO dog : gameStateDTO.getDogStateDTOS()) {
 			DogAnimationListener dogAnimationListener = new DogAnimationListener(
 					dog);
 			dogAnimationListeners.add(dogAnimationListener);
@@ -34,7 +34,9 @@ public class AnimationsController {
 		}
 	}
 
-	public DaleAnimationListener getDaleAnimationListener() {
-		return daleAnimationListener;
+	public void handleAnimations() {
+		daleAnimationListener.handleAnimation();
+
 	}
+
 }

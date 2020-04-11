@@ -30,35 +30,22 @@ public class DaleAnimationListener implements AnimEventListener {
 											  .getControl(AnimControl.class);
 		control.addListener(this);
 		channel = control.createChannel();
+
 	}
 
 	@Override
 	public void onAnimCycleDone(AnimControl animControl,
 			AnimChannel animChannel, String previousAnimation) {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (previousAnimation.equals(
-				DEAD_ANIMATION)){
+		if (previousAnimation.equals(DEAD_ANIMATION)) {
 			return;
 		}
-		if (!daleStateDTO.isAlive() ) {
-			animChannel.setAnim(DEAD_ANIMATION);
-			animChannel.setLoopMode(LoopMode.DontLoop);
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
+		if (!daleStateDTO.isAlive()) {
+			setAnimation(DEAD_ANIMATION);
+			channel.setLoopMode(LoopMode.DontLoop);
 		}
 		else {
-			if (daleStateDTO.isMovingForward()) {
-				animChannel.setAnim(RUN_ANIMATION);
-			}
-			else if (daleStateDTO.isMovingBackward()) {
-				animChannel.setAnim(WALK_BACK_ANIMATION);
-			}
-			else {
-				if (daleStateDTO.isCarryingThrowableObject()) {
-					animChannel.setAnim(HOLDING_OBJECT);
-				}
-				else {
-					animChannel.setAnim(STAND_ANIMATION);
-				}
-			}
+			handleAnimation();
 		}
 
 	}
@@ -69,35 +56,31 @@ public class DaleAnimationListener implements AnimEventListener {
 
 	}
 
-	public void animateMovingForward() {
+	public void handleAnimation() {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
+		if (!daleStateDTO.isAlive()){
+			return;
+		}
 
-		if (!RUN_ANIMATION.equals(channel.getAnimationName())) {
-			channel.setAnim(RUN_ANIMATION);
-			channel.setLoopMode(LoopMode.DontLoop);
+		if (daleStateDTO.isMovingForward()) {
+			setAnimation(RUN_ANIMATION);
+		}
+		else if (daleStateDTO.isMovingBackward()) {
+			setAnimation(WALK_BACK_ANIMATION);
+		}
+		else {
+			if (daleStateDTO.isCarryingThrowableObject()) {
+				setAnimation(HOLDING_OBJECT);
+			}
+			else {
+				setAnimation(STAND_ANIMATION);
+			}
 		}
 	}
 
-	public void animateMovingBackward() {
-
-		if (!WALK_BACK_ANIMATION.equals(channel.getAnimationName())) {
-			channel.setAnim(WALK_BACK_ANIMATION);
-			channel.setLoopMode(LoopMode.DontLoop);
-		}
-	}
-
-	public void animateStanding() {
-		channel.setAnim(STAND_ANIMATION);
-	}
-
-	public void animateHoldingObject() {
-		channel.setAnim(HOLDING_OBJECT);
-	}
-
-	public void handleAnimationsStop() {
-		if (!gameStateDTO.getDaleStateDTO()
-						 .isAlive()) {
-			channel.getControl()
-				   .clearChannels();
+	public void setAnimation(String animation) {
+		if (!animation.equals(channel.getAnimationName())) {
+			channel.setAnim(animation);
 		}
 	}
 }
