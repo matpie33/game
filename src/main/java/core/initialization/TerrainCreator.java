@@ -13,7 +13,6 @@ import external.HeightBasedAlphaMapGenerator;
 
 public class TerrainCreator {
 
-	private AssetManager assetManager;
 	private HeightBasedAlphaMapGenerator heightBasedAlphaMapGenerator;
 	private ObjectsHolderDTO objectsHolderDTO;
 
