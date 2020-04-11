@@ -119,7 +119,6 @@ public class GameController {
 		animationsController.handleAnimations();
 		objectsRemovingController.handleObjectsRemoved();
 		objectsStateController.handleObjectsState(tpf);
-		objectsMovementController.handleMovement(tpf);
 		throwingController.handleThrowingAndPicking();
 		enemyMovementController.moveEnemies(tpf);
 	}

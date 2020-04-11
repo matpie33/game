@@ -11,12 +11,16 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
+import com.jme3.scene.CameraNode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.CameraControl;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionController;
+import core.controls.DaleFollowingCameraControl;
 import core.controls.CarriedObjectControl;
 import core.controls.DaleMovingControl;
 import core.controls.DalePickingObjectsControl;
@@ -44,6 +48,7 @@ public class ObjectsInitializer {
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
+	private CameraNode cameraNode;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
 			GameStateDTO gameStateDTO) {
@@ -100,11 +105,12 @@ public class ObjectsInitializer {
 		rootNode.attachChild(objectsHolderDTO.getDale());
 		rootNode.attachChild(objectsHolderDTO.getScene());
 		rootNode.attachChild(throwables);
+		rootNode.attachChild(cameraNode);
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
 	}
 
-	private void initializeAndSetCoordinates(List<Spatial> trees, List<Spatial> boxes,
-			List<Spatial> dogs) {
+	private void initializeAndSetCoordinates(List<Spatial> trees,
+			List<Spatial> boxes, List<Spatial> dogs) {
 		initializeCoordinates(trees.size(), boxes.size(), dogs.size());
 
 		setObjectsCoordinates(trees, treesCoordinates, PhysicsControls.TREE);
@@ -142,6 +148,18 @@ public class ObjectsInitializer {
 		initializeTrees(bulletAppState);
 		initializeMark();
 		initializeBoxes(bulletAppState);
+		initializeCamera();
+	}
+
+	private void initializeCamera() {
+		Camera camera = GameApplication.getInstance()
+									   .getCamera();
+		cameraNode = new CameraNode("Main camera", camera);
+		cameraNode.addControl(
+				new DaleFollowingCameraControl(gameStateDTO, camera, objectsHolderDTO));
+		cameraNode.removeControl(CameraControl.class);
+
+
 	}
 
 	private void initializeTerrain(BulletAppState state) {
@@ -262,7 +280,6 @@ public class ObjectsInitializer {
 			initializeDogControls(bulletAppState, model, capsuleShape);
 		}
 	}
-
 
 	private void initializeDogControls(BulletAppState bulletAppState,
 			Spatial model, CapsuleCollisionShape capsuleShape) {

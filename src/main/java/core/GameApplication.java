@@ -1,6 +1,7 @@
 package core;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.scene.CameraNode;
 import core.controllers.GameController;
 
 public class GameApplication extends SimpleApplication {
