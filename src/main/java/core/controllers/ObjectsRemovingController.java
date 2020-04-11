@@ -30,15 +30,8 @@ public class ObjectsRemovingController {
 
 				CharacterControl characterControl = dog.getControl(
 						PhysicsControls.DOG);
-				GhostControl ghostControl = dog.getControl(GhostControl.class);
 				characterControl.getPhysicsSpace()
-								.remove(characterControl);
-				ghostControl.getPhysicsSpace()
-							.remove(ghostControl);
-				for (int i = 0; i < dog.getNumControls(); i++) {
-					dog.removeControl(dog.getControl(i));
-
-				}
+								.remove(dog);
 				dog.removeFromParent();
 				removedDogs.add(dogDataDTO);
 			}
@@ -51,7 +44,7 @@ public class ObjectsRemovingController {
 			RigidBodyControl control = objectToRemove.getControl(
 					PhysicsControls.BOX);
 			control.getPhysicsSpace()
-				   .remove(control);
+				   .remove(objectToRemove);
 			objectToRemove.getParent()
 						  .detachChild(objectToRemove);
 			effectsController.createBoxDestroyEffect(objectToRemove);
