@@ -10,6 +10,7 @@ import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.AnimationController;
+import core.util.CoordinatesUtil;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -89,9 +90,12 @@ public class CarriedObjectControl extends AbstractControl {
 											.getObject();
 		Vector3f dalePosition = objectsHolderDTO.getDale()
 												.getLocalTranslation();
-		float daleHeight = ((BoundingBox) objectsHolderDTO.getDale()
-														  .getWorldBound()).getYExtent();
-		float boxHeight = ((BoundingBox) carriedObject.getWorldBound()).getYExtent();
+		BoundingBox daleSize = CoordinatesUtil.getSizeOfSpatial(
+				objectsHolderDTO.getDale());
+		BoundingBox carriedObjectSize = CoordinatesUtil.getSizeOfSpatial(
+				carriedObject);
+		float daleHeight = daleSize.getYExtent();
+		float boxHeight = carriedObjectSize.getYExtent();
 		RigidBodyControl boxControl = carriedObject.getControl(
 				PhysicsControls.BOX);
 		boxControl.setKinematic(true);

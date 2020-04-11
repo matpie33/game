@@ -1,14 +1,10 @@
 package core.controllers;
 
-import com.jme3.bounding.BoundingBox;
-import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
@@ -16,7 +12,6 @@ import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 
 public class ThrowingController {
-
 
 	private GameStateDTO gameStateDTO;
 	private ObjectsHolderDTO objectsHolderDTO;
@@ -61,11 +56,5 @@ public class ThrowingController {
 							.setLocalTranslation(contactPoint);
 		}
 	}
-
-
-
-
-
-
 
 }

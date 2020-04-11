@@ -21,6 +21,7 @@ import core.controllers.CollisionController;
 import core.controls.CarriedObjectControl;
 import core.controls.DaleMovingControl;
 import core.controls.DalePickingObjectsControl;
+import core.util.CoordinatesUtil;
 import dto.DaleStateDTO;
 import dto.DogDataDTO;
 import dto.GameStateDTO;
@@ -204,60 +205,80 @@ public class ObjectsInitializer {
 
 	private void initializeDale(BulletAppState bulletAppState) {
 		Spatial model = objectsHolderDTO.getDale();
-		float height = ((BoundingBox) model.getWorldBound()).getYExtent();
-		float width = ((BoundingBox) model.getWorldBound()).getXExtent();
-		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
-		CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(width,
-				height, 1);
+		CapsuleCollisionShape capsuleShape = initializeDaleShape(model);
+		initializeDaleState();
+		initializeDaleControls(bulletAppState, model, capsuleShape);
+
+	}
+
+	private void initializeDaleControls(BulletAppState bulletAppState,
+			Spatial model, CapsuleCollisionShape capsuleShape) {
+		DaleMovingControl daleMovingControl = new DaleMovingControl(
+				gameStateDTO, animationController);
+		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
+				gameStateDTO, objectsHolderDTO, animationController);
+		GhostControl ghostControl = new GhostControl(capsuleShape);
+
+		CharacterControl characterControl = new CharacterControl(capsuleShape,
+				0.05f);
+		characterControl.setGravity(new Vector3f(0, -40f, 0));
+		characterControl.setPhysicsLocation(new Vector3f(0, 255, -20));
+
+		bulletAppState.getPhysicsSpace()
+					  .add(ghostControl);
+		bulletAppState.getPhysicsSpace()
+					  .add(characterControl);
+
+		model.addControl(ghostControl);
+		model.addControl(dalePickingObjectsControl);
+		model.addControl(daleMovingControl);
+		model.addControl(characterControl);
+	}
+
+	private void initializeDaleState() {
 		DaleStateDTO daleStateDTO = new DaleStateDTO();
 		daleStateDTO.setHp(INITIAL_HP_OF_DALE);
 		daleStateDTO.setCarryingThrowableObject(false);
 		gameStateDTO.setDaleStateDTO(daleStateDTO);
+	}
 
-		DaleMovingControl daleMovingControl = new DaleMovingControl(
-				gameStateDTO, animationController);
-
-		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
-				gameStateDTO, objectsHolderDTO, animationController);
-
-		GhostControl ghostControl = new GhostControl(capsuleShape);
-		bulletAppState.getPhysicsSpace()
-					  .add(ghostControl);
-		model.addControl(ghostControl);
-		model.addControl(dalePickingObjectsControl);
-
-		CharacterControl daleControl = new CharacterControl(capsuleShape,
-				0.05f);
-		model.addControl(daleMovingControl);
-		daleControl.setGravity(new Vector3f(0, -40f, 0));
-		model.addControl(daleControl);
-		daleControl.setPhysicsLocation(new Vector3f(0, 255, -20));
-
-		bulletAppState.getPhysicsSpace()
-					  .add(daleControl);
+	private CapsuleCollisionShape initializeDaleShape(Spatial model) {
+		BoundingBox sizeOfDale = CoordinatesUtil.getSizeOfSpatial(model);
+		float height = sizeOfDale.getYExtent();
+		float width = sizeOfDale.getXExtent();
+		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
+		return new CapsuleCollisionShape(width, height, 1);
 	}
 
 	private void initializeDogs(BulletAppState bulletAppState) {
 		for (Spatial model : objectsHolderDTO.getDogs()) {
-			float height = ((BoundingBox) model.getWorldBound()).getYExtent();
-			float width = ((BoundingBox) model.getWorldBound()).getXExtent();
-			CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(
-					height, width, 0);
-
-			GhostControl ghostControl = new GhostControl(capsuleShape);
-			CharacterControl control = new CharacterControl(capsuleShape,
-					0.05f);
-
-			control.setGravity(new Vector3f(0, -40f, 0));
-			model.addControl(control);
-			model.addControl(ghostControl);
-
-			bulletAppState.getPhysicsSpace()
-						  .add(control);
-			bulletAppState.getPhysicsSpace()
-						  .add(ghostControl);
-
+			CapsuleCollisionShape capsuleShape = initializeDogShape(model);
+			initializeDogControls(bulletAppState, model, capsuleShape);
 		}
+	}
+
+	private void initializeDogControls(BulletAppState bulletAppState,
+			Spatial model, CapsuleCollisionShape capsuleShape) {
+		GhostControl ghostControl = new GhostControl(capsuleShape);
+		CharacterControl control = new CharacterControl(capsuleShape,
+				0.05f);
+
+		control.setGravity(new Vector3f(0, -40f, 0));
+		model.addControl(control);
+		model.addControl(ghostControl);
+
+		bulletAppState.getPhysicsSpace()
+					  .add(control);
+		bulletAppState.getPhysicsSpace()
+					  .add(ghostControl);
+	}
+
+	private CapsuleCollisionShape initializeDogShape(Spatial model) {
+		BoundingBox dogSize = CoordinatesUtil.getSizeOfSpatial(model);
+		float height = dogSize.getYExtent();
+		float width = dogSize.getXExtent();
+		return new CapsuleCollisionShape(
+				height, width, 0);
 	}
 
 	private void addDogMovement(Spatial model, CharacterControl control) {

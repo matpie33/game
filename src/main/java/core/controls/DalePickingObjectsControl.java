@@ -14,6 +14,7 @@ import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.AnimationController;
+import core.util.CoordinatesUtil;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -120,17 +121,20 @@ public class DalePickingObjectsControl extends AbstractControl {
 
 	private void calculateArrowPosition(CollisionResult closestCollision) {
 		Spatial arrow = objectsHolderDTO.getArrow();
-		BoundingBox collisionObjectBounds = (BoundingBox) closestCollision.getGeometry()
-																		  .getWorldBound();
-		float yDimensionArrow = ((BoundingBox) arrow.getWorldBound()).getYExtent();
-		float yDimensionCollisionObject = collisionObjectBounds.getYExtent();
-		float xDimensionCollisionObject = collisionObjectBounds.getXExtent();
-		float zDimensionCollisionObject = collisionObjectBounds.getZExtent();
-		Vector3f objectPos = closestCollision.getGeometry()
-											 .getWorldTranslation();
-		arrow.setLocalTranslation(objectPos.getX() + xDimensionCollisionObject,
-				objectPos.getY() + yDimensionArrow + yDimensionCollisionObject,
-				objectPos.getZ() - zDimensionCollisionObject);
+		BoundingBox closestObjectSize = CoordinatesUtil.getSizeOfSpatial(
+				closestCollision.getGeometry());
+		float yDimensionArrow = CoordinatesUtil.getSizeOfSpatial(arrow)
+											   .getYExtent();
+		float xDimensionCollisionObject = closestObjectSize.getXExtent();
+		float yDimensionCollisionObject = closestObjectSize.getYExtent();
+		float zDimensionCollisionObject = closestObjectSize.getZExtent();
+		Vector3f objectPosition = closestCollision.getGeometry()
+												  .getWorldTranslation();
+		arrow.setLocalTranslation(
+				objectPosition.getX() + xDimensionCollisionObject,
+				objectPosition.getY() + yDimensionArrow
+						+ yDimensionCollisionObject,
+				objectPosition.getZ() - zDimensionCollisionObject);
 	}
 
 }
