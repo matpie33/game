@@ -218,21 +218,26 @@ public class ObjectsInitializer {
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
 				gameStateDTO, objectsHolderDTO, animationController);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
-
-		CharacterControl characterControl = new CharacterControl(capsuleShape,
-				0.05f);
-		characterControl.setGravity(new Vector3f(0, -40f, 0));
-		characterControl.setPhysicsLocation(new Vector3f(0, 255, -20));
+		initializeDaleCharacterControl(bulletAppState, model, capsuleShape);
 
 		bulletAppState.getPhysicsSpace()
 					  .add(ghostControl);
-		bulletAppState.getPhysicsSpace()
-					  .add(characterControl);
 
 		model.addControl(ghostControl);
 		model.addControl(dalePickingObjectsControl);
 		model.addControl(daleMovingControl);
+	}
+
+	private void initializeDaleCharacterControl(BulletAppState bulletAppState,
+			Spatial model, CapsuleCollisionShape capsuleShape) {
+		CharacterControl characterControl = new CharacterControl(capsuleShape,
+				0.05f);
+		bulletAppState.getPhysicsSpace()
+					  .add(characterControl);
 		model.addControl(characterControl);
+
+		characterControl.setGravity(new Vector3f(0, -40f, 0));
+		characterControl.setPhysicsLocation(new Vector3f(0, 255, -20));
 	}
 
 	private void initializeDaleState() {
@@ -257,11 +262,11 @@ public class ObjectsInitializer {
 		}
 	}
 
+
 	private void initializeDogControls(BulletAppState bulletAppState,
 			Spatial model, CapsuleCollisionShape capsuleShape) {
 		GhostControl ghostControl = new GhostControl(capsuleShape);
-		CharacterControl control = new CharacterControl(capsuleShape,
-				0.05f);
+		CharacterControl control = new CharacterControl(capsuleShape, 0.05f);
 
 		control.setGravity(new Vector3f(0, -40f, 0));
 		model.addControl(control);
@@ -277,8 +282,7 @@ public class ObjectsInitializer {
 		BoundingBox dogSize = CoordinatesUtil.getSizeOfSpatial(model);
 		float height = dogSize.getYExtent();
 		float width = dogSize.getXExtent();
-		return new CapsuleCollisionShape(
-				height, width, 0);
+		return new CapsuleCollisionShape(height, width, 0);
 	}
 
 	private void addDogMovement(Spatial model, CharacterControl control) {

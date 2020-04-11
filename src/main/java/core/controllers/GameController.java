@@ -38,8 +38,8 @@ public class GameController {
 
 		effectsController = new EffectsController();
 		gameStateDTO = new GameStateDTO();
-		objectsRemovingController = new ObjectsRemovingController
-				(gameStateDTO, effectsController);
+		objectsRemovingController = new ObjectsRemovingController(gameStateDTO,
+				effectsController);
 		createGui();
 
 		setUpModels();
@@ -54,7 +54,7 @@ public class GameController {
 		throwingController = new ThrowingController(objectsHolderDTO,
 				gameStateDTO);
 		objectsStateController = new ObjectsStateController(gameStateDTO,
-				objectsMovementController, hudCreator);
+				objectsMovementController, hudCreator, objectsHolderDTO);
 		setUpLight();
 		setupKeys();
 

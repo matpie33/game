@@ -1,7 +1,6 @@
 package dto;
 
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
 
 public class ThrowableObjectCursorDTO {
 
