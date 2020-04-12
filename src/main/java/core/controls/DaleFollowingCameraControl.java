@@ -7,7 +7,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.control.AbstractControl;
-import core.initialization.MouseSetup;
+import core.initialization.IdleTimeChecker;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -17,14 +17,14 @@ public class DaleFollowingCameraControl extends AbstractControl {
 	private GameStateDTO gameStateDTO;
 	private Camera camera;
 	private ObjectsHolderDTO objectsHolderDTO;
-	private MouseSetup mouseSetup;
+	private IdleTimeChecker idleTimeChecker;
 
 	public DaleFollowingCameraControl(GameStateDTO gameStateDTO, Camera camera,
-			ObjectsHolderDTO objectsHolderDTO, MouseSetup mouseSetup) {
+			ObjectsHolderDTO objectsHolderDTO, IdleTimeChecker idleTimeChecker) {
 		this.gameStateDTO = gameStateDTO;
 		this.camera = camera;
 		this.objectsHolderDTO = objectsHolderDTO;
-		this.mouseSetup = mouseSetup;
+		this.idleTimeChecker = idleTimeChecker;
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class DaleFollowingCameraControl extends AbstractControl {
 
 		if (gameStateDTO.getDaleStateDTO()
 						.hasThrowingDestination()
-				&& mouseSetup.getIdleTime() > 0.5f) {
+				&& idleTimeChecker.getIdleTime() > 0.5f) {
 			Vector3f throwingDestinationLocation = gameStateDTO.getDaleStateDTO()
 															   .getThrowingDestination()
 															   .getWorldTranslation();

@@ -5,12 +5,12 @@ import com.jme3.input.RawInputListener;
 import com.jme3.input.event.*;
 import core.GameApplication;
 
-public class MouseSetup implements RawInputListener {
+public class IdleTimeChecker implements RawInputListener {
 
 	private InputManager inputManager;
-	private float mouseIdleTime;
+	private float idleTime;
 
-	public MouseSetup() {
+	public IdleTimeChecker() {
 		inputManager = GameApplication.getInstance()
 									  .getInputManager();
 	}
@@ -20,11 +20,11 @@ public class MouseSetup implements RawInputListener {
 	}
 
 	public void updateTimePassed(float timePassed) {
-		mouseIdleTime += timePassed;
+		idleTime += timePassed;
 	}
 
 	public float getIdleTime() {
-		return mouseIdleTime;
+		return idleTime;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class MouseSetup implements RawInputListener {
 
 	@Override
 	public void onMouseMotionEvent(MouseMotionEvent evt) {
-		mouseIdleTime = 0;
+		idleTime = 0;
 
 	}
 
@@ -60,7 +60,7 @@ public class MouseSetup implements RawInputListener {
 
 	@Override
 	public void onKeyEvent(KeyInputEvent evt) {
-
+		idleTime = 0;
 	}
 
 	@Override

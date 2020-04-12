@@ -50,15 +50,15 @@ public class ObjectsInitializer {
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
 	private CameraNode cameraNode;
-	private MouseSetup mouseSetup;
+	private IdleTimeChecker idleTimeChecker;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO, MouseSetup mouseSetup) {
+			GameStateDTO gameStateDTO, IdleTimeChecker idleTimeChecker) {
 		collisionController = new CollisionController(objectsHolderDTO,
 				gameStateDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.mouseSetup = mouseSetup;
+		this.idleTimeChecker = idleTimeChecker;
 	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
@@ -183,7 +183,7 @@ public class ObjectsInitializer {
 		cameraNode = new CameraNode("Main camera", camera);
 		cameraNode.addControl(
 				new DaleFollowingCameraControl(gameStateDTO, camera,
-						objectsHolderDTO, mouseSetup));
+						objectsHolderDTO, idleTimeChecker));
 		cameraNode.removeControl(CameraControl.class);
 
 	}

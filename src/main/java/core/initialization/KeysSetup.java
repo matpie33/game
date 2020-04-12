@@ -7,8 +7,6 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import core.GameApplication;
-import core.controllers.ObjectsMovementController;
-import core.controllers.ThrowingController;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 

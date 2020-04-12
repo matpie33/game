@@ -28,7 +28,7 @@ public class GameController {
 	private ObjectsRemovingController objectsRemovingController;
 	private EffectsController effectsController;
 	private AnimationsController animationsController;
-	private MouseSetup mouseSetup;
+	private IdleTimeChecker idleTimeChecker;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -60,8 +60,8 @@ public class GameController {
 	}
 
 	private void setUpMouse() {
-		mouseSetup = new MouseSetup();
-		mouseSetup.setUp();
+		idleTimeChecker = new IdleTimeChecker();
+		idleTimeChecker.setUp();
 	}
 
 	private void createGui() {
@@ -99,7 +99,7 @@ public class GameController {
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
-				gameStateDTO, mouseSetup);
+				gameStateDTO, idleTimeChecker);
 		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}
@@ -120,7 +120,7 @@ public class GameController {
 	}
 
 	public void update(float tpf) {
-		mouseSetup.updateTimePassed(tpf);
+		idleTimeChecker.updateTimePassed(tpf);
 		animationsController.handleAnimations();
 		objectsRemovingController.handleObjectsRemoved();
 		objectsStateController.handleObjectsState(tpf);
