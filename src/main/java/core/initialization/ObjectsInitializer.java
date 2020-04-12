@@ -210,8 +210,8 @@ public class ObjectsInitializer {
 			CarriedObjectControl carriedObjectControl = new CarriedObjectControl(
 					gameStateDTO, objectsHolderDTO);
 			RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
-					0.5f);
-			rigidBodyControl.setGravity(new Vector3f(0, -10f, 0));
+					5f);
+			rigidBodyControl.setGravity(new Vector3f(0, -300f, 0));
 			box.addControl(rigidBodyControl);
 			box.addControl(carriedObjectControl);
 			bulletAppState.getPhysicsSpace()

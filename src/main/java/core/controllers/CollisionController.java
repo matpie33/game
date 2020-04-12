@@ -10,7 +10,7 @@ import enums.ObjectsTypes;
 
 public class CollisionController implements PhysicsCollisionListener {
 
-	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 4;
+	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 40;
 
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;

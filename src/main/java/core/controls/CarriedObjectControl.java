@@ -66,11 +66,12 @@ public class CarriedObjectControl extends AbstractControl {
 							   .setKinematic(false);
 			PhysicsControls.BOX.cast(control)
 							   .setKinematicSpatial(false);
+			Vector3f force = gameApplication.getCamera()
+											.getDirection()
+											.mult(150f);
+			force.setY(force.getY() + 30f);
 			PhysicsControls.BOX.cast(control)
-							   .setLinearVelocity(new Vector3f(
-									   gameApplication.getCamera()
-													  .getDirection()
-													  .mult(80f)));
+							   .applyForce(force, new Vector3f(0, 0.2f, 0));
 		}
 
 	}
