@@ -30,6 +30,7 @@ import dto.DogStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,13 +50,15 @@ public class ObjectsInitializer {
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
 	private CameraNode cameraNode;
+	private MouseSetup mouseSetup;
 
 	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO) {
+			GameStateDTO gameStateDTO, MouseSetup mouseSetup) {
 		collisionController = new CollisionController(objectsHolderDTO,
 				gameStateDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
+		this.mouseSetup = mouseSetup;
 	}
 
 	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
@@ -156,7 +159,8 @@ public class ObjectsInitializer {
 									   .getCamera();
 		cameraNode = new CameraNode("Main camera", camera);
 		cameraNode.addControl(
-				new DaleFollowingCameraControl(gameStateDTO, camera, objectsHolderDTO));
+				new DaleFollowingCameraControl(gameStateDTO, camera,
+						objectsHolderDTO, mouseSetup));
 		cameraNode.removeControl(CameraControl.class);
 
 

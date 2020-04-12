@@ -29,6 +29,7 @@ public class GameController {
 	private ObjectsRemovingController objectsRemovingController;
 	private EffectsController effectsController;
 	private AnimationsController animationsController;
+	private MouseSetup mouseSetup;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -36,6 +37,7 @@ public class GameController {
 
 	public void initialize() {
 
+		setUpMouse();
 		effectsController = new EffectsController();
 		gameStateDTO = new GameStateDTO();
 		objectsRemovingController = new ObjectsRemovingController(gameStateDTO,
@@ -58,6 +60,11 @@ public class GameController {
 		setUpLight();
 		setupKeys();
 
+	}
+
+	private void setUpMouse() {
+		mouseSetup = new MouseSetup();
+		mouseSetup.setUp();
 	}
 
 	private void createGui() {
@@ -95,7 +102,7 @@ public class GameController {
 
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
-				gameStateDTO);
+				gameStateDTO, mouseSetup);
 		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}
@@ -116,6 +123,7 @@ public class GameController {
 	}
 
 	public void update(float tpf) {
+		mouseSetup.updateTimePassed(tpf);
 		animationsController.handleAnimations();
 		objectsRemovingController.handleObjectsRemoved();
 		objectsStateController.handleObjectsState(tpf);

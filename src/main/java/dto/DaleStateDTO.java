@@ -1,6 +1,5 @@
 package dto;
 
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 
 public class DaleStateDTO {
@@ -10,7 +9,7 @@ public class DaleStateDTO {
 	private boolean isMovingLeft;
 	private boolean isMovingRight;
 	private boolean alive;
-	private ThrowableObjectDTO carriedObject = new ThrowableObjectDTO();
+	private ThrowingDTO carriedObject = new ThrowingDTO();
 	private int hp;
 	private boolean isJumping;
 	private boolean isThrowingObject;
@@ -62,7 +61,7 @@ public class DaleStateDTO {
 		this.hp = hp;
 	}
 
-	public ThrowableObjectDTO getCarriedObject() {
+	public ThrowingDTO getCarriedObject() {
 		return carriedObject;
 	}
 
@@ -107,7 +106,7 @@ public class DaleStateDTO {
 	}
 
 	public void setCarriedObject(Spatial geometry) {
-		carriedObject.setObject(geometry);
+		carriedObject.setCarriedObject(geometry);
 	}
 
 	public boolean isJumping() {
@@ -124,5 +123,22 @@ public class DaleStateDTO {
 
 	public boolean isThrowingObject() {
 		return isThrowingObject;
+	}
+
+	public void setThrowingDestination(Spatial throwingDestination) {
+		carriedObject.setThrowingDestination(throwingDestination);
+	}
+
+	public Spatial getThrowingDestination() {
+		return carriedObject.getThrowingDestination();
+	}
+
+	public boolean hasThrowingDestination() {
+		return isCarryingThrowableObject()
+				&& carriedObject.getThrowingDestination() != null;
+	}
+
+	public void clearThrowingDestination() {
+		carriedObject.setThrowingDestination(null);
 	}
 }

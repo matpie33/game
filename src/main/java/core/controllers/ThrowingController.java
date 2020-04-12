@@ -37,19 +37,24 @@ public class ThrowingController {
 
 	private void markThrowingDestination() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
+		if (daleStateDTO.hasThrowingDestination() &&
+				daleStateDTO.getThrowingDestination()
+							.getParent() == null) {
+			daleStateDTO.clearThrowingDestination();
+		}
 		if (!daleStateDTO.isCarryingThrowableObject()) {
+			daleStateDTO.clearThrowingDestination();
 			return;
 		}
 		Spatial dale = objectsHolderDTO.getDale();
 		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
 							  .getPhysicsLocation(), gameApplication.getCamera()
-																	.getDirection()
-																	.mult(100f));
+																	.getDirection());
 		CollisionResults collisionResults = new CollisionResults();
 		for (Spatial spatial : gameApplication.getRootNode()
 											  .getChildren()) {
 			if (spatial.equals(dale) || daleStateDTO.getCarriedObject()
-													.getObject()
+													.getCarriedObject()
 													.getParent() == spatial) {
 				continue;
 			}
@@ -68,6 +73,8 @@ public class ThrowingController {
 				MatParam previousColor = previouslyMarkedAsThrowingDestinationSpatial.getMaterial()
 																					 .getParam(
 																							 "Diffuse");
+				gameStateDTO.getDaleStateDTO()
+							.setThrowingDestination(parent);
 				this.previousColor = (ColorRGBA) previousColor.getValue();
 				closestCollision.getGeometry()
 								.getMaterial()

@@ -45,7 +45,7 @@ public class CarriedObjectControl extends AbstractControl {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		daleStateDTO.setCarryingThrowableObject(false);
 		RigidBodyControl control = daleStateDTO.getCarriedObject()
-											   .getObject()
+											   .getCarriedObject()
 											   .getControl(PhysicsControls.BOX);
 		control.setKinematicSpatial(false);
 		control.setKinematic(false);
@@ -60,7 +60,7 @@ public class CarriedObjectControl extends AbstractControl {
 		if (daleStateDTO.isThrowingObject()) {
 			daleStateDTO.setCarryingThrowableObject(false);
 			Object control = daleStateDTO.getCarriedObject()
-										 .getObject()
+										 .getCarriedObject()
 										 .getControl(PhysicsControls.BOX);
 			PhysicsControls.BOX.cast(control)
 							   .setKinematic(false);
@@ -81,7 +81,7 @@ public class CarriedObjectControl extends AbstractControl {
 			return;
 		}
 		Spatial carriedObject = daleStateDTO.getCarriedObject()
-											.getObject();
+											.getCarriedObject();
 		Vector3f dalePosition = objectsHolderDTO.getDale()
 												.getLocalTranslation();
 		BoundingBox daleSize = CoordinatesUtil.getSizeOfSpatial(
