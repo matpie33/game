@@ -1,26 +1,34 @@
 package core.controls;
 
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.bullet.control.GhostControl;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
+import dto.ObjectsHolderDTO;
 
 public class DaleMovingControl extends AbstractControl {
 
+	public static final float START_OF_VIEW = 10f;
 	private GameStateDTO gameStateDTO;
 	private Vector3f modifiableWalkDirectionVector = new Vector3f(0, 0, 0);
 	private GameApplication gameApplication;
+	private ObjectsHolderDTO objectsHolderDTO;
 
-	public DaleMovingControl(GameStateDTO gameStateDTO) {
+	public DaleMovingControl(GameStateDTO gameStateDTO,
+			ObjectsHolderDTO objectsHolderDTO) {
 		this.gameStateDTO = gameStateDTO;
 		gameApplication = GameApplication.getInstance();
+		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
 	@Override
@@ -57,6 +65,17 @@ public class DaleMovingControl extends AbstractControl {
 			rotateCharacter(tpf, false);
 		}
 		setMovementDirection();
+		CharacterControl control = spatial.getControl(PhysicsControls.DALE);
+		Geometry fieldOfView = objectsHolderDTO.getFieldOfView();
+		float fieldOfViewRadius = ((SphereCollisionShape) fieldOfView.getControl(
+				GhostControl.class)
+																	 .getCollisionShape()).getRadius();
+		objectsHolderDTO.getFieldOfView()
+						.getControl(GhostControl.class)
+						.setPhysicsLocation(spatial.getLocalTranslation()
+												   .add(control.getViewDirection()
+															   .mult(fieldOfViewRadius
+																	   + START_OF_VIEW)));
 	}
 
 	private void setMovementDirection() {

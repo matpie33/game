@@ -6,7 +6,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import core.initialization.MouseSetup;
 import dto.DaleStateDTO;
@@ -39,9 +38,13 @@ public class DaleFollowingCameraControl extends AbstractControl {
 		if (gameStateDTO.getDaleStateDTO()
 						.hasThrowingDestination()
 				&& mouseSetup.getIdleTime() > 0.5f) {
-			camera.lookAt(gameStateDTO.getDaleStateDTO()
-									  .getThrowingDestination()
-									  .getWorldTranslation(), Vector3f.UNIT_Y);
+			Vector3f throwingDestinationLocation = gameStateDTO.getDaleStateDTO()
+															   .getThrowingDestination()
+															   .getWorldTranslation();
+			camera.lookAt(throwingDestinationLocation, Vector3f.UNIT_Y);
+			objectsHolderDTO.getDale()
+							.lookAt(throwingDestinationLocation,
+									Vector3f.UNIT_Y);
 		}
 
 	}

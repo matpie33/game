@@ -5,32 +5,32 @@ import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.material.Material;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.CameraNode;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
+import com.jme3.scene.shape.Sphere;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionController;
-import core.controls.DaleFollowingCameraControl;
-import core.controls.CarriedObjectControl;
-import core.controls.DaleMovingControl;
-import core.controls.DalePickingObjectsControl;
+import core.controls.*;
 import core.util.CoordinatesUtil;
 import dto.DaleStateDTO;
 import dto.DogStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
-import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,6 +152,29 @@ public class ObjectsInitializer {
 		initializeMark();
 		initializeBoxes(bulletAppState);
 		initializeCamera();
+		initializeDaleFieldOfView(bulletAppState);
+	}
+
+	private void initializeDaleFieldOfView(BulletAppState bulletAppState) {
+		Sphere sphere = new Sphere(3, 1, 1);
+		Geometry sphereGeometry = new Geometry("fieldOfView", sphere);
+		sphereGeometry.setCullHint(Spatial.CullHint.Always);
+		Material material = new Material(GameApplication.getInstance()
+														.getAssetManager(),
+				"Common/MatDefs/Misc/Unshaded.j3md");
+		sphereGeometry.setMaterial(material);
+		SphereCollisionShape sphereCollisionShape = new SphereCollisionShape(
+				50);
+		GhostControl control = new GhostControl(sphereCollisionShape);
+		sphereGeometry.addControl(control);
+		bulletAppState.getPhysicsSpace()
+					  .add(control);
+		objectsHolderDTO.setFieldOfView(sphereGeometry);
+		sphereGeometry.addControl(
+				new DaleFieldOfViewControl(objectsHolderDTO, gameStateDTO));
+		GameApplication.getInstance()
+					   .getRootNode()
+					   .attachChild(sphereGeometry);
 	}
 
 	private void initializeCamera() {
@@ -162,7 +185,6 @@ public class ObjectsInitializer {
 				new DaleFollowingCameraControl(gameStateDTO, camera,
 						objectsHolderDTO, mouseSetup));
 		cameraNode.removeControl(CameraControl.class);
-
 
 	}
 
@@ -237,7 +259,7 @@ public class ObjectsInitializer {
 	private void initializeDaleControls(BulletAppState bulletAppState,
 			Spatial model, CapsuleCollisionShape capsuleShape) {
 		DaleMovingControl daleMovingControl = new DaleMovingControl(
-				gameStateDTO);
+				gameStateDTO, objectsHolderDTO);
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
 				gameStateDTO, objectsHolderDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);

@@ -1,5 +1,6 @@
 package dto;
 
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.texture.Texture;
@@ -17,11 +18,20 @@ public class ObjectsHolderDTO {
 	private Spatial mark;
 	private Spatial arrow;
 	private Spatial sky;
+	private Geometry fieldOfView;
 
 	private Texture road;
 	private Texture heightMap;
 
 	private TerrainQuad terrain;
+
+	public Geometry getFieldOfView() {
+		return fieldOfView;
+	}
+
+	public void setFieldOfView(Geometry fieldOfView) {
+		this.fieldOfView = fieldOfView;
+	}
 
 	public TerrainQuad getTerrain() {
 		return terrain;
