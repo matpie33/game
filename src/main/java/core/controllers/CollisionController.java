@@ -4,6 +4,7 @@ import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
+import constants.PhysicsControls;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -34,9 +35,16 @@ public class CollisionController implements PhysicsCollisionListener {
 		ObjectsTypes nodeBType = getObjectType(nodeB);
 		boolean isABox = ObjectsTypes.BOX.equals(nodeAType);
 		boolean isBBox = ObjectsTypes.BOX.equals(nodeBType);
+		boolean isEnoughSpeedOfBoxToDestroy = isEnoughSpeedOfBoxToDestroy(
+				isABox ? nodeA : isBBox ? nodeB : null);
 
-		if ((isABox || isBBox)
-				&& event.getAppliedImpulse() > MINIMUM_IMPULSE_TO_DESTROY_BOX) {
+		if (nodeAType.equals(ObjectsTypes.NONE) || nodeBType.equals(
+				ObjectsTypes.NONE)) {
+			return;
+		}
+
+
+		if ((isABox || isBBox) && isEnoughSpeedOfBoxToDestroy) {
 			gameStateDTO.getObjectsToRemove()
 						.add(isABox ? nodeA : nodeB);
 		}
@@ -61,11 +69,19 @@ public class CollisionController implements PhysicsCollisionListener {
 		}
 
 		if (isDogWithBoxCollision(nodeAType, nodeBType)) {
-//			gameStateDTO.getObjectsToRemove()
-//						.add(isABox ? nodeA : nodeB);
-//			markDogNotAlive(nodeAType, nodeA, nodeB);
 		}
 
+		if (isDogWithBoxCollision(nodeAType, nodeBType)
+				&& isEnoughSpeedOfBoxToDestroy) {
+			markDogNotAlive(nodeAType, nodeA, nodeB);
+		}
+
+	}
+
+	private boolean isEnoughSpeedOfBoxToDestroy(Spatial box) {
+		return box != null && box.getControl(PhysicsControls.BOX)
+								 .getLinearVelocity()
+								 .length() > 40f;
 	}
 
 	private IllegalArgumentException createExeptionForDogCollision(
