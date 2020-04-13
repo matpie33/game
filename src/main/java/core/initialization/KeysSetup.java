@@ -67,7 +67,9 @@ public class KeysSetup implements ActionListener {
 					isPressed && daleStateDTO.isCarryingThrowableObject());
 		}
 		if (THROW_OBJECT.equals(name)) {
-			daleStateDTO.setThrowingObject(isPressed);
+			if (daleStateDTO.isCarryingThrowableObject()) {
+				daleStateDTO.setThrowingObject(isPressed);
+			}
 		}
 
 	}

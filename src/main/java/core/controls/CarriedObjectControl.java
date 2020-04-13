@@ -43,22 +43,23 @@ public class CarriedObjectControl extends AbstractControl {
 
 	private void putAsideObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		daleStateDTO.setCarryingThrowableObject(false);
 		RigidBodyControl control = daleStateDTO.getCarriedObject()
 											   .getCarriedObject()
 											   .getControl(PhysicsControls.BOX);
 		control.setKinematicSpatial(false);
 		control.setKinematic(false);
-		control.applyCentralForce(gameApplication.getCamera()
-												 .getDirection()
-												 .mult(-0.5f));
+		control.applyImpulse(gameApplication.getCamera()
+											.getDirection()
+											.mult(-20), Vector3f.ZERO);
+		daleStateDTO.setCarryingThrowableObject(false);
+		daleStateDTO.setPuttingAsideObject(false);
+		daleStateDTO.setCarriedObject(null);
 
 	}
 
 	private void handleThrowingObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.isThrowingObject()) {
-			daleStateDTO.setCarryingThrowableObject(false);
 			Object control = daleStateDTO.getCarriedObject()
 										 .getCarriedObject()
 										 .getControl(PhysicsControls.BOX);
@@ -68,15 +69,18 @@ public class CarriedObjectControl extends AbstractControl {
 							   .setKinematicSpatial(false);
 			Vector3f force = gameApplication.getCamera()
 											.getDirection()
-											.mult(150f);
-			force.setY(force.getY() + 30f);
+											.mult(250f);
+			force.setY(force.getY() + 60f);
 			PhysicsControls.BOX.cast(control)
-							   .applyForce(force, new Vector3f(0, 0.2f, 0));
+							   .applyImpulse(force, new Vector3f(0, 0.5f, 0));
+			daleStateDTO.setCarryingThrowableObject(false);
+			daleStateDTO.setCarriedObject(null);
+			daleStateDTO.setThrowingObject(false);
 		}
 
 	}
 
-	public void handleBeingCarried() {
+	private void handleBeingCarried() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (!daleStateDTO.isCarryingThrowableObject()) {
 			return;
