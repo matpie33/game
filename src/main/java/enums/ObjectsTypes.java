@@ -1,5 +1,5 @@
 package enums;
 
 public enum ObjectsTypes {
-	DALE, DOG, BOX
+	DALE, DOG, BOX, NONE, TREE, SCENE
 }

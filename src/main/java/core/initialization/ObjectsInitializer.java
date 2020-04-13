@@ -82,7 +82,8 @@ public class ObjectsInitializer {
 						currentZCoordinate + 10));
 			}
 			if (i < numberOfDogs) {
-				dogsCoordinates.add(new Vector3f(50 * i, 245, -30 * i));
+				dogsCoordinates.add(
+						new Vector3f(30 * (i + 1), 245, 50 * (i + 1)));
 			}
 			increaseXNow = !increaseXNow;
 		}
@@ -210,7 +211,7 @@ public class ObjectsInitializer {
 					gameStateDTO, objectsHolderDTO);
 			RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
 					5f);
-			rigidBodyControl.setGravity(new Vector3f(0, -300f, 0));
+			rigidBodyControl.setGravity(new Vector3f(0, -30f, 0));
 			box.addControl(rigidBodyControl);
 			box.addControl(carriedObjectControl);
 			bulletAppState.getPhysicsSpace()

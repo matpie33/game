@@ -13,7 +13,8 @@ public class DogStateDTO {
 	private final Vector3f startOfSquareWhereTheDogMoves;
 	private final int squareWidth;
 	private boolean isAlive;
-	private boolean isMoving;
+	private boolean collidedWithObstacle;
+	private boolean isMovingAroundObstacle;
 
 	public DogStateDTO(Spatial dog, Vector3f startOfSquareWhereTheDogMoves,
 			int squareWidth) {
@@ -21,15 +22,22 @@ public class DogStateDTO {
 		this.startOfSquareWhereTheDogMoves = startOfSquareWhereTheDogMoves;
 		this.squareWidth = squareWidth;
 		isAlive = true;
-		isMoving = true;
 	}
 
-	public boolean isMoving() {
-		return isMoving;
+	public boolean isMovingAroundObstacle() {
+		return isMovingAroundObstacle;
 	}
 
-	public void setMoving(boolean moving) {
-		isMoving = moving;
+	public void setMovingAroundObstacle(boolean movingAroundObstacle) {
+		isMovingAroundObstacle = movingAroundObstacle;
+	}
+
+	public boolean isCollidedWithObstacle() {
+		return collidedWithObstacle;
+	}
+
+	public void setCollidedWithObstacle(boolean collidedWithObstacle) {
+		this.collidedWithObstacle = collidedWithObstacle;
 	}
 
 	public boolean isAlive() {

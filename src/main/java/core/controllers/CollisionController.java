@@ -2,6 +2,7 @@ package core.controllers;
 
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
@@ -44,14 +45,34 @@ public class CollisionController implements PhysicsCollisionListener {
 			daleStateDTO.setCollidingWithEnemy(true);
 
 		}
-		if (isDogWithBoxCollision(nodeAType, nodeBType)) {
-			gameStateDTO.getObjectsToRemove()
-						.add(isABox ? nodeA : nodeB);
-			//TODO why applied impulse is zero here? adding boxes to remove
-			// here is redundant, use strategies maybe
-			markDogNotAlive(nodeAType, nodeA, nodeB);
+		if (isDogWithImmobileObjectCollision(nodeA, nodeB, nodeAType,
+				nodeBType)) {
+			Spatial dogNode = nodeAType.equals(ObjectsTypes.DOG) ?
+					nodeA :
+					nodeB;
+			gameStateDTO.getDogStateDTOS()
+						.stream()
+						.filter(state -> state.getDog()
+											  .equals(dogNode))
+						.findFirst()
+						.orElseThrow(
+								() -> createExeptionForDogCollision(dogNode))
+						.setCollidedWithObstacle(true);
 		}
 
+		if (isDogWithBoxCollision(nodeAType, nodeBType)) {
+//			gameStateDTO.getObjectsToRemove()
+//						.add(isABox ? nodeA : nodeB);
+//			markDogNotAlive(nodeAType, nodeA, nodeB);
+		}
+
+	}
+
+	private IllegalArgumentException createExeptionForDogCollision(
+			Spatial dogNode) {
+		return new IllegalArgumentException(
+				"Dog " + "collided with obstacle, but dog state not "
+						+ "found: " + dogNode);
 	}
 
 	private void markDogNotAlive(ObjectsTypes nodeAType, Spatial nodeA,
@@ -109,9 +130,47 @@ public class CollisionController implements PhysicsCollisionListener {
 							.contains(node)) {
 			return ObjectsTypes.BOX;
 		}
+		if (objectsHolderDTO.getScene()
+							.equals(node)) {
+			return ObjectsTypes.SCENE;
+		}
+		if (objectsHolderDTO.getFieldOfView()
+							.equals(node) || objectsHolderDTO.getMark()
+															 .equals(node)
+				|| objectsHolderDTO.getArrow()
+								   .equals(node)) {
+			return ObjectsTypes.NONE;
+		}
+		if (objectsHolderDTO.getTrees()
+							.contains(node)) {
+			return ObjectsTypes.TREE;
+		}
 		return null;
 	}
 
+	private boolean isDogWithImmobileObjectCollision(Spatial nodeA,
+			Spatial nodeB, ObjectsTypes nodeAType, ObjectsTypes nodeBType) {
+		return !isOneOfNodesScene(nodeAType, nodeBType) && (
+				isNode1DogAnd2ImmobileObject(nodeAType, nodeB)
+						|| isNode1DogAnd2ImmobileObject(nodeBType, nodeA));
+	}
 
+	private boolean isOneOfNodesScene(ObjectsTypes nodeAType,
+			ObjectsTypes nodeBType) {
+		return nodeAType.equals(ObjectsTypes.SCENE) || nodeBType.equals(
+				ObjectsTypes.SCENE);
+	}
 
+	private boolean isNode1DogAnd2ImmobileObject(ObjectsTypes node1Type,
+			Spatial node2) {
+		if (node1Type.equals(ObjectsTypes.DOG)) {
+			RigidBodyControl control = node2.getControl(RigidBodyControl.class);
+			if (control != null) {
+				float length = control.getLinearVelocity()
+									  .length();
+				return length < 0.1;
+			}
+		}
+		return false;
+	}
 }
