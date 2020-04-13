@@ -22,7 +22,6 @@ public class GameController {
 	private TerrainCreator terrainCreator;
 	private ObjectsHolderDTO objectsHolderDTO = new ObjectsHolderDTO();
 	private GameApplication gameApplication;
-	private EnemyMovementController enemyMovementController;
 	private HUDCreator hudCreator;
 	private ObjectsStateController objectsStateController;
 	private ObjectsRemovingController objectsRemovingController;
@@ -51,7 +50,6 @@ public class GameController {
 				objectsHolderDTO);
 		setUpObjects();
 		setUpAnimations();
-		enemyMovementController = new EnemyMovementController(gameStateDTO);
 		objectsStateController = new ObjectsStateController(gameStateDTO,
 				objectsMovementController, hudCreator, objectsHolderDTO);
 		setUpLight();
@@ -124,7 +122,6 @@ public class GameController {
 		animationsController.handleAnimations();
 		objectsRemovingController.handleObjectsRemoved();
 		objectsStateController.handleObjectsState(tpf);
-		enemyMovementController.moveEnemies(tpf);
 	}
 
 }

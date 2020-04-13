@@ -4,9 +4,8 @@ import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import core.controls.DogMovementControl;
 import dto.DogStateDTO;
-import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -14,11 +13,7 @@ import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
 
-public class EnemyMovementControllerTest {
-
-	private GameStateDTO gameStateDTO = new GameStateDTO();
-	private EnemyMovementController enemyMovementController = new EnemyMovementController(
-			gameStateDTO);
+public class DogMovementControlTest {
 
 	private Vector3f characterPosition = Vector3f.ZERO;
 
@@ -48,12 +43,12 @@ public class EnemyMovementControllerTest {
 		dogStateDTO.setPositionWhereMovementBegan(150);
 		dogStateDTO.setMovementDirection(MovementDirection.FORWARD_X);
 		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(20);
-		gameStateDTO.getDogStateDTOS()
-					.add(dogStateDTO);
+		DogMovementControl dogMovementControl = new DogMovementControl(
+				dogStateDTO);
 
 		//when, then
 		for (int i = 0; i < 10000; i++) {
-			enemyMovementController.moveEnemies(0.3f);
+			dogMovementControl.moveEnemies();
 			Assertions.assertThat(characterPosition.getX() >= 130
 					&& characterPosition.getX() <= 170
 					&& characterPosition.getZ() >= -50

@@ -138,7 +138,6 @@ public class ObjectsInitializer {
 			Spatial object = objects.get(i);
 			CharacterControl control = object.getControl(controlClass);
 			control.setPhysicsLocation(coordinates.get(i));
-			addDogMovement(object, control);
 		}
 	}
 
@@ -311,10 +310,14 @@ public class ObjectsInitializer {
 			Spatial model, CapsuleCollisionShape capsuleShape) {
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl control = new CharacterControl(capsuleShape, 0.05f);
+		DogStateDTO dogStateDTO = addDogState(model, control);
+		DogMovementControl dogMovementControl = new DogMovementControl(
+				dogStateDTO);
 
 		control.setGravity(new Vector3f(0, -40f, 0));
 		model.addControl(control);
 		model.addControl(ghostControl);
+		model.addControl(dogMovementControl);
 
 		bulletAppState.getPhysicsSpace()
 					  .add(control);
@@ -329,13 +332,14 @@ public class ObjectsInitializer {
 		return new CapsuleCollisionShape(height, width, 0);
 	}
 
-	private void addDogMovement(Spatial model, CharacterControl control) {
+	private DogStateDTO addDogState(Spatial model, CharacterControl control) {
 		Vector3f physicsLocation = control.getPhysicsLocation();
 		DogStateDTO dogStateDTO = new DogStateDTO(model, physicsLocation, 20);
 		dogStateDTO.setMovementDirection(MovementDirection.FORWARD_X);
 		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(10);
 		dogStateDTO.setPositionWhereMovementBegan(physicsLocation.getX());
 		gameStateDTO.addDogState(dogStateDTO);
+		return dogStateDTO;
 	}
 
 	private void initializeScene(BulletAppState bulletAppState) {
