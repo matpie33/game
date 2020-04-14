@@ -243,13 +243,13 @@ public class ObjectsInitializer {
 				0.05f);
 		Vector3f coordinates = new Vector3f(0, 255, -20);
 		model.setLocalTranslation(coordinates);
+		characterControl.setGravity(new Vector3f(0, -40f, 0));
 		characterControl.setPhysicsLocation(coordinates);
 		ghostControl.setPhysicsLocation(coordinates);
 
 		bulletAppState.getPhysicsSpace()
 					  .add(characterControl);
 		model.addControl(characterControl);
-		characterControl.setGravity(new Vector3f(0, -40f, 0));
 
 		bulletAppState.getPhysicsSpace()
 					  .add(ghostControl);
@@ -293,7 +293,7 @@ public class ObjectsInitializer {
 		CharacterControl control = new CharacterControl(capsuleShape, 0.05f);
 		DogStateDTO dogStateDTO = addDogState(model, control);
 		DogMovementControl dogMovementControl = new DogMovementControl(
-				dogStateDTO, objectsHolderDTO);
+				dogStateDTO, objectsHolderDTO, gameStateDTO);
 
 		model.setLocalTranslation(coordinates);
 		ghostControl.setPhysicsLocation(coordinates);

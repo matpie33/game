@@ -6,6 +6,7 @@ import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
 import core.controls.DogMovementControl;
 import dto.DogStateDTO;
+import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
 import org.assertj.core.api.Assertions;
@@ -47,8 +48,9 @@ public class DogMovementControlTest {
 		dogStateDTO.setPositionWhereMovementBegan(150);
 		dogStateDTO.setMovementDirection(MovementDirection.FORWARD_X);
 		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(20);
+		GameStateDTO gameState = new GameStateDTO();
 		DogMovementControl dogMovementControl = new DogMovementControl(
-				dogStateDTO, objectsHolderDTO);
+				dogStateDTO, objectsHolderDTO, gameState);
 
 		//when, then
 		for (int i = 0; i < 10000; i++) {
