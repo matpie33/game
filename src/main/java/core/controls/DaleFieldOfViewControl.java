@@ -28,11 +28,11 @@ public class DaleFieldOfViewControl extends AbstractControl {
 
 	@Override
 	protected void controlUpdate(float tpf) {
-		if (gameStateDTO.getDaleStateDTO()
-						.isCarryingThrowableObject()) {
-			handleThrowingFieldOfView();
-		}
-		else {
+
+		handleThrowingFieldOfView();
+		if (!gameStateDTO.getDaleStateDTO()
+						 .isCarryingThrowableObject()) {
+
 			resetThrowingDestination();
 		}
 
@@ -46,20 +46,37 @@ public class DaleFieldOfViewControl extends AbstractControl {
 			Node collidingObject = (Node) physicsCollisionObject.getUserObject();
 			if (objectsHolderDTO.getDogs()
 								.contains(collidingObject)) {
-				changePreviouslyMarkedTargetToItsColor();
-
-				Geometry geometry = (Geometry) (collidingObject).getChild(0);
-				markObjectAsCurrentThrowingDestination(geometry);
-				gameStateDTO.getDaleStateDTO()
-							.setThrowingDestination(collidingObject);
-				setColor(geometry, ColorRGBA.Red);
-				containsAnyThrowingDestination = true;
+				if (gameStateDTO.getDaleStateDTO()
+								.isCarryingThrowableObject()) {
+					containsAnyThrowingDestination = handleThrowingDestination(
+							collidingObject);
+				}
+				gameStateDTO.getDogStateDTOS()
+							.stream()
+							.filter(dogState -> dogState.getDog()
+														.equals(collidingObject))
+							.findFirst()
+							.ifPresent(dogStateDTO -> dogStateDTO.setSeeingDale(
+									true));
 
 			}
 		}
 		if (!containsAnyThrowingDestination) {
 			resetThrowingDestination();
 		}
+	}
+
+	private boolean handleThrowingDestination(Node collidingObject) {
+		boolean containsAnyThrowingDestination;
+		changePreviouslyMarkedTargetToItsColor();
+
+		Geometry geometry = (Geometry) (collidingObject).getChild(0);
+		markObjectAsCurrentThrowingDestination(geometry);
+		gameStateDTO.getDaleStateDTO()
+					.setThrowingDestination(collidingObject);
+		setColor(geometry, ColorRGBA.Red);
+		containsAnyThrowingDestination = true;
+		return containsAnyThrowingDestination;
 	}
 
 	private void markObjectAsCurrentThrowingDestination(Geometry geometry) {

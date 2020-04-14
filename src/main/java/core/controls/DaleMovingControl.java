@@ -8,7 +8,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
-import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import core.GameApplication;
@@ -66,16 +66,16 @@ public class DaleMovingControl extends AbstractControl {
 		}
 		setMovementDirection();
 		CharacterControl control = spatial.getControl(PhysicsControls.DALE);
-		Geometry fieldOfView = objectsHolderDTO.getFieldOfView();
+		Spatial fieldOfView = objectsHolderDTO.getFieldOfView();
 		float fieldOfViewRadius = ((SphereCollisionShape) fieldOfView.getControl(
 				GhostControl.class)
 																	 .getCollisionShape()).getRadius();
 		objectsHolderDTO.getFieldOfView()
-						.getControl(GhostControl.class)
-						.setPhysicsLocation(spatial.getLocalTranslation()
-												   .add(control.getViewDirection()
-															   .mult(fieldOfViewRadius
-																	   + START_OF_VIEW)));
+
+						.setLocalTranslation(spatial.getWorldTranslation()
+													.add(control.getViewDirection()
+																.mult(fieldOfViewRadius
+																		+ START_OF_VIEW)));
 	}
 
 	private void setMovementDirection() {

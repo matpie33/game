@@ -43,7 +43,6 @@ public class CollisionController implements PhysicsCollisionListener {
 			return;
 		}
 
-
 		if ((isABox || isBBox) && isEnoughSpeedOfBoxToDestroy) {
 			gameStateDTO.getObjectsToRemove()
 						.add(isABox ? nodeA : nodeB);
@@ -66,9 +65,6 @@ public class CollisionController implements PhysicsCollisionListener {
 						.orElseThrow(
 								() -> createExeptionForDogCollision(dogNode))
 						.setCollidedWithObstacle(true);
-		}
-
-		if (isDogWithBoxCollision(nodeAType, nodeBType)) {
 		}
 
 		if (isDogWithBoxCollision(nodeAType, nodeBType)

@@ -18,18 +18,18 @@ public class ObjectsHolderDTO {
 	private Spatial mark;
 	private Spatial arrow;
 	private Spatial sky;
-	private Geometry fieldOfView;
+	private Spatial fieldOfView;
 
 	private Texture road;
 	private Texture heightMap;
 
 	private TerrainQuad terrain;
 
-	public Geometry getFieldOfView() {
+	public Spatial getFieldOfView() {
 		return fieldOfView;
 	}
 
-	public void setFieldOfView(Geometry fieldOfView) {
+	public void setFieldOfView(Spatial fieldOfView) {
 		this.fieldOfView = fieldOfView;
 	}
 

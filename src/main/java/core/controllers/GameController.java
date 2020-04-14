@@ -98,7 +98,6 @@ public class GameController {
 	private void setUpObjects() {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
 				gameStateDTO, idleTimeChecker);
-		objectsInitializer.initializeObjects();
 		objectsInitializer.addObjectsToScene();
 	}
 

@@ -6,6 +6,7 @@ import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
 import core.controls.DogMovementControl;
 import dto.DogStateDTO;
+import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -15,7 +16,10 @@ import static org.mockito.Mockito.when;
 
 public class DogMovementControlTest {
 
+	public static final float TPF = 0.25f;
 	private Vector3f characterPosition = Vector3f.ZERO;
+
+	private ObjectsHolderDTO objectsHolderDTO = new ObjectsHolderDTO();
 
 	@Test
 	public void shouldTestThatEnemiesStayInSquare() {
@@ -44,11 +48,11 @@ public class DogMovementControlTest {
 		dogStateDTO.setMovementDirection(MovementDirection.FORWARD_X);
 		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(20);
 		DogMovementControl dogMovementControl = new DogMovementControl(
-				dogStateDTO);
+				dogStateDTO, objectsHolderDTO);
 
 		//when, then
 		for (int i = 0; i < 10000; i++) {
-			dogMovementControl.moveEnemies();
+			dogMovementControl.moveEnemies(TPF);
 			Assertions.assertThat(characterPosition.getX() >= 130
 					&& characterPosition.getX() <= 170
 					&& characterPosition.getZ() >= -50

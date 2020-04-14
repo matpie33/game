@@ -15,6 +15,7 @@ public class DogStateDTO {
 	private boolean isAlive;
 	private boolean collidedWithObstacle;
 	private boolean isMovingAroundObstacle;
+	private boolean seeingDale;
 
 	public DogStateDTO(Spatial dog, Vector3f startOfSquareWhereTheDogMoves,
 			int squareWidth) {
@@ -84,5 +85,13 @@ public class DogStateDTO {
 
 	public Vector3f getStartOfSquareWhereTheDogMoves() {
 		return startOfSquareWhereTheDogMoves;
+	}
+
+	public void setSeeingDale(boolean seeingDale) {
+		this.seeingDale = seeingDale;
+	}
+
+	public boolean isSeeingDale() {
+		return seeingDale;
 	}
 }

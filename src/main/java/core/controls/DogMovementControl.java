@@ -1,5 +1,6 @@
 package core.controls;
 
+import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -9,6 +10,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import dto.DogStateDTO;
+import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
 
 import java.util.Random;
@@ -20,14 +22,17 @@ public class DogMovementControl extends AbstractControl {
 	public static final float MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION = 10.000000f;
 	public static final float MOVEMENT_SPEED = 0.1f;
 	private DogStateDTO dogStateDTO;
+	private ObjectsHolderDTO objectsHolderDTO;
 
-	public DogMovementControl(DogStateDTO dogStateDTO) {
+	public DogMovementControl(DogStateDTO dogStateDTO,
+			ObjectsHolderDTO objectsHolderDTO) {
 		this.dogStateDTO = dogStateDTO;
+		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
 	@Override
 	protected void controlUpdate(float tpf) {
-		moveEnemies();
+		moveEnemies(tpf);
 	}
 
 	@Override
@@ -35,13 +40,26 @@ public class DogMovementControl extends AbstractControl {
 
 	}
 
-	public void moveEnemies() {
+	public void moveEnemies(float tpf) {
 		if (!dogStateDTO.getDog()
 						.getControl(PhysicsControls.DOG)
 						.onGround()) {
 			dogStateDTO.getDog()
 					   .getControl(PhysicsControls.DOG)
 					   .setWalkDirection(Vector3f.ZERO);
+			return;
+		}
+		if (dogStateDTO.isSeeingDale()) {
+			CharacterControl control = dogStateDTO.getDog()
+												  .getControl(
+														  PhysicsControls.DOG);
+			control.setViewDirection(objectsHolderDTO.getDale()
+													 .getLocalTranslation()
+													 .subtract(
+															 control.getPhysicsLocation()));
+			control.setWalkDirection(control.getViewDirection()
+											.normalize()
+											.mult(0.2f));
 			return;
 		}
 		if (enemyMovedEnoughInCurrentDirection(dogStateDTO)) {
