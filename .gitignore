@@ -1,2 +1,5 @@
 *.iml
 /target
+*.dll
+/.idea
+/assets.jmp
