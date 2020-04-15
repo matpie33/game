@@ -8,9 +8,13 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DaleFieldOfViewControl extends AbstractControl {
 
@@ -19,6 +23,7 @@ public class DaleFieldOfViewControl extends AbstractControl {
 	private Geometry spatialPreviouslyMarkedAsThrowingDestination;
 	private ColorRGBA previousColorOfThrowingDestination;
 	private GameStateDTO gameStateDTO;
+	private List<Spatial> enemiesSeeingDale = new ArrayList<>();
 
 	public DaleFieldOfViewControl(ObjectsHolderDTO objectsHolderDTO,
 			GameStateDTO gameStateDTO) {
@@ -29,41 +34,51 @@ public class DaleFieldOfViewControl extends AbstractControl {
 	@Override
 	protected void controlUpdate(float tpf) {
 
-		handleThrowingFieldOfView();
+		List<Spatial> enemiesSeeingDaleInThisUpdate = handleThrowingFieldOfView();
 		if (!gameStateDTO.getDaleStateDTO()
 						 .isCarryingThrowableObject()) {
 
 			resetThrowingDestination();
 		}
+		enemiesSeeingDale.forEach(
+				enemy -> findDogAndSetSeeingDale(enemy, false));
+		enemiesSeeingDale = enemiesSeeingDaleInThisUpdate;
 
 	}
 
-	private void handleThrowingFieldOfView() {
+	private void findDogAndSetSeeingDale(Spatial enemy, boolean seeingDale) {
+		gameStateDTO.getDogStateDTOS()
+					.stream()
+					.filter(dog -> dog.getDog()
+									  .equals(enemy))
+					.findFirst()
+					.ifPresent(dog -> dog.setSeeingDale(seeingDale));
+	}
+
+	private List<Spatial> handleThrowingFieldOfView() {
 		boolean containsAnyThrowingDestination = false;
+		List<Spatial> enemiesSeeingDaleInThisUpdate = new ArrayList<>();
 		for (PhysicsCollisionObject physicsCollisionObject : spatial.getControl(
 				GhostControl.class)
 																	.getOverlappingObjects()) {
 			Node collidingObject = (Node) physicsCollisionObject.getUserObject();
 			if (objectsHolderDTO.getDogs()
 								.contains(collidingObject)) {
+				enemiesSeeingDaleInThisUpdate.add(collidingObject);
+				this.enemiesSeeingDale.remove(collidingObject);
 				if (gameStateDTO.getDaleStateDTO()
 								.isCarryingThrowableObject()) {
 					containsAnyThrowingDestination = handleThrowingDestination(
 							collidingObject);
 				}
-				gameStateDTO.getDogStateDTOS()
-							.stream()
-							.filter(dogState -> dogState.getDog()
-														.equals(collidingObject))
-							.findFirst()
-							.ifPresent(dogStateDTO -> dogStateDTO.setSeeingDale(
-									true));
+				findDogAndSetSeeingDale(collidingObject, true);
 
 			}
 		}
 		if (!containsAnyThrowingDestination) {
 			resetThrowingDestination();
 		}
+		return enemiesSeeingDaleInThisUpdate;
 	}
 
 	private boolean handleThrowingDestination(Node collidingObject) {
