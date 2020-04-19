@@ -21,6 +21,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl;
 import com.jme3.scene.shape.Sphere;
 import constants.NodeNames;
+import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionController;
 import core.controls.*;
@@ -123,6 +124,8 @@ public class ObjectsInitializer {
 				new DaleFollowingCameraControl(gameStateDTO, camera,
 						objectsHolderDTO, idleTimeChecker));
 		cameraNode.removeControl(CameraControl.class);
+		camera.lookAtDirection(objectsHolderDTO.getDale().getControl(
+				PhysicsControls.DALE).getViewDirection(), Vector3f.UNIT_Y);
 		rootNode.attachChild(cameraNode);
 	}
 
