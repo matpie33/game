@@ -11,7 +11,6 @@ import core.gui.HUDCreator;
 import core.initialization.*;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
-import initialization.ModelsLoader;
 
 import java.util.List;
 
@@ -31,8 +30,7 @@ public class GameController {
 	private EffectsController effectsController;
 	private AnimationsController animationsController;
 	private IdleTimeChecker idleTimeChecker;
-	private ModelsLoader modelsLoader;
-	private AdditionalModelsLoader additionalModelsLoader;
+	private LevelInitializer levelInitializer;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -85,11 +83,9 @@ public class GameController {
 	}
 
 	private List<Spatial> setUpModels() {
-		additionalModelsLoader = new AdditionalModelsLoader(objectsHolderDTO);
-		additionalModelsLoader.loadModels();
-		ModelsLoader modelsLoader =
-				new ModelsLoader(gameApplication.getAssetManager());
-		return modelsLoader.loadModelsFromFile("level.txt");
+		levelInitializer = new LevelInitializer(objectsHolderDTO,
+				gameApplication.getAssetManager());
+		return levelInitializer.initializeLevel();
 	}
 
 	private void setUpTerrain() {

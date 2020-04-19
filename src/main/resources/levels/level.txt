@@ -1,0 +1,160 @@
+Start object
+Path: /box.mesh.xml
+Position: (10.194333, -6.9960623, -20.603046)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /dalev4.mesh.xml
+Position: (18.5218, -5.941701, -46.94894)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /dog.mesh.xml
+Position: (30.499418, -5.269476, -20.711863)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /map.mesh.xml
+Position: (40.0, -10.0, -20.0)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /box.mesh.xml
+Position: (19.98518, -3.023841, 4.429442)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /box.mesh.xml
+Position: (20.000338, -6.9960623, 4.132961)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /box.mesh.xml
+Position: (24.139307, -6.9960623, 3.759498)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /box.mesh.xml
+Position: (24.26016, -3.0329654, 3.852284)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /box.mesh.xml
+Position: (28.199722, -6.9960623, 3.7072613)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (65.094284, -9.2795315, -20.140297)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (-21.069159, -9.368221, -35.585217)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (72.6208, -8.771563, -7.6745434)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /box.mesh.xml
+Position: (17.563572, -6.9960623, -25.183422)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /box.mesh.xml
+Position: (31.31137, -6.9960623, -33.528473)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (72.207466, -8.771563, 10.592363)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (63.21478, -8.771563, 24.582684)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (81.23954, -8.771563, 33.20741)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (96.70896, -8.771563, 13.155947)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (92.00683, -9.2795315, -32.05056)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (96.9651, -9.2795315, -53.329826)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (104.80712, -9.2795315, -41.51238)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (109.04831, -9.2795315, -15.648111)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (114.87464, -9.2795315, -29.33231)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (123.798065, -9.2795315, -22.643913)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (48.63144, -9.368221, -77.7408)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (31.539124, -9.368221, -83.63203)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (55.81137, -9.368221, -82.1719)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (55.620583, -9.368221, -64.66417)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (43.953888, -9.368221, -83.35128)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (41.12052, -9.368221, -62.4484)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (43.13677, -9.368221, -74.75485)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (64.11717, -9.368221, -71.51188)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (8.730002, -9.368221, -84.20124)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (17.215454, -9.368221, -70.71175)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (7.391716, -9.368221, -58.71796)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (-1.3046077, -9.368221, -48.20256)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /tree.mesh.xml
+Position: (-1.0691586, -9.368221, -35.585217)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /dog.mesh.xml
+Position: (35.644485, -5.2700953, 44.975792)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /box.mesh.xml
+Position: (-1.5447475, -6.996309, 0.7824882)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /box.mesh.xml
+Position: (-0.7050319, -6.996973, 18.139887)
+Rotation: (0.0, 0.0, 0.0, 1.0)
