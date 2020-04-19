@@ -28,6 +28,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>Level editor</groupId>
+            <artifactId>Level editor</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>${jme3_groupId}</groupId>
             <artifactId>jme3-core</artifactId>
             <version>${jme3_version}</version>

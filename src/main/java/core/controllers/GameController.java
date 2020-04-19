@@ -5,15 +5,18 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import core.GameApplication;
 import core.gui.HUDCreator;
 import core.initialization.*;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
+import initialization.ModelsLoader;
+
+import java.util.List;
 
 public class GameController {
 
-	private ModelLoader modelLoader;
 	private ObjectsInitializer objectsInitializer;
 	private KeysSetup keysSetup;
 	private ObjectsMovementController objectsMovementController;
@@ -28,6 +31,8 @@ public class GameController {
 	private EffectsController effectsController;
 	private AnimationsController animationsController;
 	private IdleTimeChecker idleTimeChecker;
+	private ModelsLoader modelsLoader;
+	private AdditionalModelsLoader additionalModelsLoader;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -42,13 +47,13 @@ public class GameController {
 				effectsController);
 		createGui();
 
-		setUpModels();
+		List<Spatial> spatials = setUpModels();
 		setUpTerrain();
 
 		setUpMusic();
 		objectsMovementController = new ObjectsMovementController(gameStateDTO,
 				objectsHolderDTO);
-		setUpObjects();
+		setUpObjects(spatials);
 		setUpAnimations();
 		objectsStateController = new ObjectsStateController(gameStateDTO,
 				objectsMovementController, hudCreator, objectsHolderDTO);
@@ -79,9 +84,12 @@ public class GameController {
 		soundsInitializer.addMusic();
 	}
 
-	private void setUpModels() {
-		modelLoader = new ModelLoader(objectsHolderDTO);
-		modelLoader.loadModels();
+	private List<Spatial> setUpModels() {
+		additionalModelsLoader = new AdditionalModelsLoader(objectsHolderDTO);
+		additionalModelsLoader.loadModels();
+		ModelsLoader modelsLoader =
+				new ModelsLoader(gameApplication.getAssetManager());
+		return modelsLoader.loadModelsFromFile("level.txt");
 	}
 
 	private void setUpTerrain() {
@@ -95,10 +103,10 @@ public class GameController {
 		keysSetup.setupKeys();
 	}
 
-	private void setUpObjects() {
+	private void setUpObjects(List<Spatial> spatials) {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
 				gameStateDTO, idleTimeChecker);
-		objectsInitializer.addObjectsToScene();
+		objectsInitializer.addObjectsToScene(spatials);
 	}
 
 	private void setUpLight() {

@@ -31,19 +31,11 @@ import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 import enums.MovementDirection;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectsInitializer {
 
 	public static final int INITIAL_HP_OF_DALE = 100;
-	private List<Vector3f> treesCoordinates = new ArrayList<>();
-	private List<Vector3f> boxesCoordinates = new ArrayList<>();
-	private List<Vector3f> dogsCoordinates = new ArrayList<>();
-	private static final int FIRST_COORDINATE_OF_TREE_Z = 0;
-	private static final int FIRST_COORDINATE_OF_TREE_X = 15;
-	private static final int INCREASE_X_BY = 20;
-	private static final int INCREASE_Z_BY = 40;
 
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
@@ -59,56 +51,41 @@ public class ObjectsInitializer {
 		this.idleTimeChecker = idleTimeChecker;
 	}
 
-	private void initializeCoordinates(int numberOfTrees, int numberOfBoxes,
-			int numberOfDogs) {
-		boolean increaseXNow = true;
-		int currentXCoordinate = FIRST_COORDINATE_OF_TREE_X;
-		int currentZCoordinate;
+	public void addObjectsToScene(List<Spatial> spatials) {
 
-		for (int i = 0; i < numberOfTrees; i++) {
-			if (increaseXNow) {
-				currentXCoordinate += INCREASE_X_BY;
-				currentZCoordinate = FIRST_COORDINATE_OF_TREE_Z;
-			}
-			else {
-				currentZCoordinate = FIRST_COORDINATE_OF_TREE_Z + INCREASE_Z_BY;
-			}
-			treesCoordinates.add(
-					new Vector3f(currentXCoordinate, 230, currentZCoordinate));
-			if (i < numberOfBoxes) {
-				boxesCoordinates.add(new Vector3f(currentXCoordinate - 90, 235,
-						currentZCoordinate + 10));
-			}
-			if (i < numberOfDogs) {
-				dogsCoordinates.add(
-						new Vector3f(30 * (i + 1), 245, 100 * (i + 1)));
-			}
-			increaseXNow = !increaseXNow;
-		}
-	}
-
-	public void addObjectsToScene() {
-		List<Spatial> trees = objectsHolderDTO.getTrees();
-		List<Spatial> boxes = objectsHolderDTO.getBoxes();
-		List<Spatial> dogs = objectsHolderDTO.getDogs();
-		initializeCoordinates(trees.size(), boxes.size(), dogs.size());
-
+		BulletAppState bulletAppState = initializeBulletAppState();
 		Node rootNode = GameApplication.getInstance()
 									   .getRootNode();
-		BulletAppState bulletAppState = initializeBulletAppState();
-		initializeBoxes(bulletAppState, rootNode);
-		initializeScene(bulletAppState, rootNode);
-		initializeDogs(bulletAppState, rootNode);
-		initializeTrees(bulletAppState, rootNode);
-		initializeDale(bulletAppState, rootNode);
+		Node throwables = new Node(NodeNames.THROWABLES);
+		rootNode.attachChild(throwables);
+		for (Spatial spatial : spatials) {
+			String spatialName = spatial.getName()
+										.replace("/", "");
+			if (spatialName.startsWith("dale")) {
+				initializeDale(bulletAppState, spatial);
+			}
+			if (spatialName.startsWith("map")) {
+				initializeScene(bulletAppState, rootNode, spatial);
+			}
+			if (spatialName.startsWith("dog")) {
+				initializeDog(bulletAppState, rootNode, spatial);
+			}
+			if (spatialName.startsWith("tree")) {
+				initializeTree(bulletAppState, rootNode, spatial);
+			}
+			if (spatialName.startsWith("box")) {
+				initializeBox(bulletAppState, spatial, throwables);
+			}
+			else {
+				rootNode.attachChild(spatial);
+			}
+		}
+
 		initializeDaleFieldOfView(bulletAppState);
-		objectsHolderDTO.getDogs()
-						.forEach(rootNode::attachChild);
 		rootNode.attachChild(objectsHolderDTO.getSky());
-		rootNode.attachChild(objectsHolderDTO.getMark());
 		rootNode.attachChild(objectsHolderDTO.getScene());
-		initializeCamera(rootNode);
 		rootNode.attachChild(objectsHolderDTO.getFieldOfView());
+		initializeCamera(rootNode);
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
 	}
 
@@ -164,53 +141,37 @@ public class ObjectsInitializer {
 		//		terrain.addControl(control);
 	}
 
-	private void initializeBoxes(BulletAppState bulletAppState, Node rootNode) {
-		Node throwables = new Node(NodeNames.THROWABLES);
-		List<Spatial> boxes = objectsHolderDTO.getBoxes();
-		for (int i = 0; i < boxes.size(); i++) {
-			Spatial box = boxes.get(i);
-			Vector3f coordintes = boxesCoordinates.get(i);
-			CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
+	private void initializeBox(BulletAppState bulletAppState, Spatial box,
+			Node throwables) {
+		objectsHolderDTO.addBox(box);
+		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
 
-			CarriedObjectControl carriedObjectControl = new CarriedObjectControl(
-					gameStateDTO, objectsHolderDTO);
-			RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape,
-					5f);
-			rigidBodyControl.setGravity(new Vector3f(0, -30f, 0));
-			rigidBodyControl.setPhysicsLocation(coordintes);
-			box.setLocalTranslation(coordintes);
+		CarriedObjectControl carriedObjectControl = new CarriedObjectControl(
+				gameStateDTO, objectsHolderDTO);
+		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 5f);
+		rigidBodyControl.setGravity(new Vector3f(0, -30f, 0));
+		rigidBodyControl.setPhysicsLocation(box.getLocalTranslation());
 
-			box.addControl(rigidBodyControl);
-			box.addControl(carriedObjectControl);
-			bulletAppState.getPhysicsSpace()
-						  .add(rigidBodyControl);
-			throwables.attachChild(box);
-		}
-		rootNode.attachChild(throwables);
+		box.addControl(rigidBodyControl);
+		box.addControl(carriedObjectControl);
+		bulletAppState.getPhysicsSpace()
+					  .add(rigidBodyControl);
+		throwables.attachChild(box);
 
 	}
 
-	private void initializeMark() {
-		objectsHolderDTO.getMark()
-						.setLocalTranslation(5, 5, 5);
-	}
-
-	private void initializeTrees(BulletAppState bulletAppState, Node rootNode) {
-		List<Spatial> trees = objectsHolderDTO.getTrees();
-		for (int i = 0; i < trees.size(); i++) {
-			Spatial tree = trees.get(i);
-			Vector3f coordinates = treesCoordinates.get(i);
-			CollisionShape collisionShape = CollisionShapeFactory.createMeshShape(
-					tree);
-			RigidBodyControl rigidBodyControl = new RigidBodyControl(
-					collisionShape, 0);
-			tree.setLocalTranslation(coordinates);
-			rigidBodyControl.setPhysicsLocation(coordinates);
-			tree.addControl(rigidBodyControl);
-			bulletAppState.getPhysicsSpace()
-						  .add(rigidBodyControl);
-			rootNode.attachChild(tree);
-		}
+	private void initializeTree(BulletAppState bulletAppState, Node rootNode,
+			Spatial tree) {
+		objectsHolderDTO.addTree(tree);
+		CollisionShape collisionShape = CollisionShapeFactory.createMeshShape(
+				tree);
+		RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape,
+				0);
+		rigidBodyControl.setPhysicsLocation(tree.getLocalTranslation());
+		tree.addControl(rigidBodyControl);
+		bulletAppState.getPhysicsSpace()
+					  .add(rigidBodyControl);
+		rootNode.attachChild(tree);
 	}
 
 	private BulletAppState initializeBulletAppState() {
@@ -223,12 +184,11 @@ public class ObjectsInitializer {
 		return bulletAppState;
 	}
 
-	private void initializeDale(BulletAppState bulletAppState, Node rootNode) {
-		Spatial model = objectsHolderDTO.getDale();
+	private void initializeDale(BulletAppState bulletAppState, Spatial model) {
+		objectsHolderDTO.setDale(model);
 		CapsuleCollisionShape capsuleShape = initializeDaleShape(model);
 		initializeDaleState();
 		initializeDaleControls(bulletAppState, model, capsuleShape);
-		rootNode.attachChild(model);
 
 	}
 
@@ -241,11 +201,10 @@ public class ObjectsInitializer {
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl characterControl = new CharacterControl(capsuleShape,
 				0.05f);
-		Vector3f coordinates = new Vector3f(0, 255, -20);
-		model.setLocalTranslation(coordinates);
 		characterControl.setGravity(new Vector3f(0, -40f, 0));
-		characterControl.setPhysicsLocation(coordinates);
-		ghostControl.setPhysicsLocation(coordinates);
+		Vector3f position = model.getLocalTranslation();
+		characterControl.setPhysicsLocation(position);
+		ghostControl.setPhysicsLocation(position);
 
 		bulletAppState.getPhysicsSpace()
 					  .add(characterControl);
@@ -274,30 +233,24 @@ public class ObjectsInitializer {
 		return new CapsuleCollisionShape(width, height, 1);
 	}
 
-	private void initializeDogs(BulletAppState bulletAppState, Node rootNode) {
-		List<Spatial> dogs = objectsHolderDTO.getDogs();
-		for (int i = 0; i < dogs.size(); i++) {
-			Spatial model = dogs.get(i);
-			Vector3f coordinates = dogsCoordinates.get(i);
-			CapsuleCollisionShape capsuleShape = initializeDogShape(model);
-			initializeDogControls(bulletAppState, model, capsuleShape,
-					coordinates);
-			rootNode.attachChild(model);
-		}
+	private void initializeDog(BulletAppState bulletAppState, Node rootNode,
+			Spatial model) {
+		objectsHolderDTO.addDog(model);
+		CapsuleCollisionShape capsuleShape = initializeDogShape(model);
+		initializeDogControls(bulletAppState, model, capsuleShape);
+		rootNode.attachChild(model);
 	}
 
 	private void initializeDogControls(BulletAppState bulletAppState,
-			Spatial model, CapsuleCollisionShape capsuleShape,
-			Vector3f coordinates) {
+			Spatial model, CapsuleCollisionShape capsuleShape) {
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl control = new CharacterControl(capsuleShape, 0.05f);
 		DogStateDTO dogStateDTO = addDogState(model, control);
 		DogMovementControl dogMovementControl = new DogMovementControl(
 				dogStateDTO, objectsHolderDTO, gameStateDTO);
 
-		model.setLocalTranslation(coordinates);
-		ghostControl.setPhysicsLocation(coordinates);
-		control.setPhysicsLocation(coordinates);
+		ghostControl.setPhysicsLocation(model.getLocalTranslation());
+		control.setPhysicsLocation(model.getLocalTranslation());
 
 		control.setGravity(new Vector3f(0, -40f, 0));
 		model.addControl(control);
@@ -327,16 +280,14 @@ public class ObjectsInitializer {
 		return dogStateDTO;
 	}
 
-	private void initializeScene(BulletAppState bulletAppState, Node rootNode) {
-		Spatial scene = objectsHolderDTO.getScene();
-		scene.setLocalScale(10);
+	private void initializeScene(BulletAppState bulletAppState, Node rootNode,
+			Spatial scene) {
+		objectsHolderDTO.setScene(scene);
 		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(
 				scene);
 		RigidBodyControl landscape = new RigidBodyControl(sceneShape, 0);
 		scene.addControl(landscape);
-		Vector3f coordinates = new Vector3f(0, 230, 0);
-		landscape.setPhysicsLocation(coordinates);
-		scene.setLocalTranslation(coordinates);
+		landscape.setPhysicsLocation(scene.getLocalTranslation());
 
 		bulletAppState.getPhysicsSpace()
 					  .add(landscape);

@@ -7,11 +7,8 @@ import com.jme3.util.SkyFactory;
 import core.GameApplication;
 import dto.ObjectsHolderDTO;
 
-public class ModelLoader {
+public class AdditionalModelsLoader {
 
-	private static final int NUMBER_OF_TREES = 20;
-	private static final int NUMBER_OF_BOXES = 15;
-	private static final int NUMBER_OF_DOGS = 5;
 	private static final String MODELS_DIRECTORY = "models/";
 	private static final String TEXTURES_DIRECTORY = "textures/";
 	private static final String SCENE_DIRECTORY = "scene/";
@@ -21,14 +18,13 @@ public class ModelLoader {
 	private ObjectsHolderDTO objectsHolderDTO;
 	private AssetManager assetManager;
 
-	public ModelLoader(ObjectsHolderDTO objectsHolderDTO) {
+	public AdditionalModelsLoader(ObjectsHolderDTO objectsHolderDTO) {
 		this.objectsHolderDTO = objectsHolderDTO;
 		assetManager = GameApplication.getInstance()
 									  .getAssetManager();
 	}
 
 	public void loadModels() {
-		createScene();
 		createModels();
 		createSky();
 		createTextures();
@@ -44,24 +40,11 @@ public class ModelLoader {
 				"models/clouds" + "" + ".dds", SkyFactory.EnvMapType.CubeMap));
 	}
 
-	private void createScene() {
-		objectsHolderDTO.setScene(loadScene("scene"));
-	}
 
 	private void createModels() {
 
-		objectsHolderDTO.setDale(loadModel("dalev4"));
 		objectsHolderDTO.setArrow(loadModel("arrow"));
 		objectsHolderDTO.setMark(loadModel("mark"));
-		for (int i = 0; i < NUMBER_OF_DOGS; i++) {
-			objectsHolderDTO.addDog(loadModel("dog"));
-		}
-		for (int i = 0; i < NUMBER_OF_TREES; i++) {
-			objectsHolderDTO.addTree(loadModel("tree"));
-		}
-		for (int i = 0; i < NUMBER_OF_BOXES; i++) {
-			objectsHolderDTO.addBox(loadModel("box"));
-		}
 	}
 
 	private Spatial loadModel(String modelName) {
