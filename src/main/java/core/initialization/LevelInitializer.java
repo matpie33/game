@@ -2,6 +2,7 @@ package core.initialization;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Spatial;
+import core.GameApplication;
 import dto.ObjectsHolderDTO;
 import initialization.ModelsLoader;
 
@@ -25,7 +26,10 @@ public class LevelInitializer {
 	public List<Spatial> initializeLevel() {
 		additionalModelsLoader = new AdditionalModelsLoader(objectsHolderDTO);
 		additionalModelsLoader.loadModels();
-		ModelsLoader modelsLoader = new ModelsLoader(assetManager);
+		ModelsLoader modelsLoader = new ModelsLoader(assetManager,
+				GameApplication.getInstance()
+							   .getCamera(),
+				GameApplication.getInstance().getRootNode());
 		String path = getClass().getResource(PATH_TO_LEVELS + LEVEL)
 								.getPath();
 		return modelsLoader.loadModelsFromFile(path.substring(1));
