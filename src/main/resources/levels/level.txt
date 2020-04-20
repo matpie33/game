@@ -1,6 +1,18 @@
 Start object
 Path: /box.mesh.xml
-Position: (55.150284, -7.4420815, 21.65997)
+Position: (57.722828, -7.4420815, 15.311277)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /flower.mesh.xml
+Position: (56.24489, -3.6677632, 25.371391)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /apple.mesh.xml
+Position: (53.26603, -7.680682, 32.933342)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /flowerpot.mesh.xml
+Position: (57.24024, -7.6806803, 29.057919)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: /dalev4.mesh.xml
@@ -8,7 +20,7 @@ Position: (18.5218, -5.941701, -46.94894)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: /dog.mesh.xml
-Position: (45.772167, -5.269476, 9.423876)
+Position: (44.53258, -5.2694554, 6.0584135)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: /map.mesh.xml
@@ -160,7 +172,7 @@ Position: (-0.61945057, -7.788495, 28.922716)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: /dog.mesh.xml
-Position: (52.001022, -5.2700953, 59.832817)
+Position: (63.01407, -5.26995, 46.075974)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: /tree.mesh.xml
@@ -209,4 +221,12 @@ Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: /box.mesh.xml
 Position: (22.954454, -7.7886734, 32.590786)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /flower.mesh.xml
+Position: (58.081173, -3.6677544, 26.124237)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: /flower.mesh.xml
+Position: (56.207367, -3.2863157, 26.512966)
 Rotation: (0.0, 0.0, 0.0, 1.0)
