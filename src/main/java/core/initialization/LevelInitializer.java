@@ -6,6 +6,7 @@ import core.GameApplication;
 import dto.ObjectsHolderDTO;
 import initialization.ModelsLoader;
 
+import java.io.InputStream;
 import java.util.List;
 
 public class LevelInitializer {
@@ -28,11 +29,10 @@ public class LevelInitializer {
 		additionalModelsLoader.loadModels();
 		ModelsLoader modelsLoader = new ModelsLoader(assetManager,
 				GameApplication.getInstance()
-							   .getCamera(),
-				GameApplication.getInstance().getRootNode());
-		String path = getClass().getResource(PATH_TO_LEVELS + LEVEL)
-								.getPath();
-		return modelsLoader.loadModelsFromFile(path.substring(1));
+							   .getCamera(), GameApplication.getInstance()
+															.getRootNode());
+		InputStream in = getClass().getResourceAsStream(PATH_TO_LEVELS + LEVEL);
+		return modelsLoader.loadModelsFromFile(in);
 	}
 
 }

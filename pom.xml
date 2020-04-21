@@ -28,8 +28,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>Level editor</groupId>
-            <artifactId>Level editor</artifactId>
+            <groupId>LevelEditor</groupId>
+            <artifactId>LevelEditor</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
