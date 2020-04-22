@@ -25,7 +25,7 @@ public class EffectsController {
 	public static final int IMAGES_IN_TEXTURE_VERTICALLY = 3;
 	public static final int NUMBER_OF_PIECES = 15;
 	public static final String MATERIAL_DEFINITION_PATH = "Common/MatDefs/Misc/Particle.j3md";
-	public static final String TEXTURE_PATH = "models/debris.png";
+	public static final String TEXTURE_PATH = "debris.png";
 	public static final String TEXTURE_NAME = "Texture";
 
 	public void createBoxDestroyEffect (Spatial box){
@@ -56,6 +56,7 @@ public class EffectsController {
 				MATERIAL_DEFINITION_PATH);
 		material.setTexture(TEXTURE_NAME,
 				assetManager.loadTexture(TEXTURE_PATH));
+		//TODO load it from models loader
 		boxParticles.setMaterial(material);
 		boxParticles.setLocalTranslation(box.getLocalTranslation());
 		boxParticles.emitAllParticles();

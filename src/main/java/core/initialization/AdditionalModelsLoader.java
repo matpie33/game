@@ -9,7 +9,6 @@ import dto.ObjectsHolderDTO;
 
 public class AdditionalModelsLoader {
 
-	private static final String MODELS_DIRECTORY = "models/";
 	private static final String TEXTURES_DIRECTORY = "textures/";
 	private static final String SCENE_DIRECTORY = "scene/";
 	private static final String MODEL_EXTENSION = ".mesh.xml";
@@ -37,9 +36,8 @@ public class AdditionalModelsLoader {
 
 	private void createSky() {
 		objectsHolderDTO.setSky(SkyFactory.createSky(assetManager,
-				"models/clouds" + "" + ".dds", SkyFactory.EnvMapType.CubeMap));
+				"clouds" + "" + ".dds", SkyFactory.EnvMapType.CubeMap));
 	}
-
 
 	private void createModels() {
 
@@ -48,9 +46,7 @@ public class AdditionalModelsLoader {
 	}
 
 	private Spatial loadModel(String modelName) {
-		return assetManager.loadModel(
-				String.format(MODELS_DIRECTORY + "%s" + MODEL_EXTENSION,
-						modelName));
+		return assetManager.loadModel(modelName + MODEL_EXTENSION);
 	}
 
 	private Texture loadTexture(String textureName) {
