@@ -33,13 +33,13 @@ public class LevelInitializer {
 				GameApplication.getInstance()
 							   .getCamera(), GameApplication.getInstance()
 															.getRootNode());
-		InputStream in = getClass().getResourceAsStream(PATH_TO_LEVELS + LEVEL);
+		InputStream levelsFileStream = getClass().getResourceAsStream(PATH_TO_LEVELS + LEVEL);
 		modelsLoader.setPaths(Collections.singletonList(
 				System.getProperty("user.dir") + MODELS_DIRECTORY));
 		additionalModelsLoader = new AdditionalModelsLoader(objectsHolderDTO);
 		additionalModelsLoader.loadModels();
 
-		List<SpatialDTO> spatialDTOS = new FileLoad().readFile(in);
+		List<SpatialDTO> spatialDTOS = new FileLoad().readFile(levelsFileStream);
 		spatialDTOS.forEach(dto->{
 			String pathToModel = dto.getPathToModel();
 			Spatial spatial = modelsLoader.loadModel(pathToModel);
