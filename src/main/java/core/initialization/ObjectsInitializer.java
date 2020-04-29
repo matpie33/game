@@ -26,10 +26,7 @@ import core.GameApplication;
 import core.controllers.CollisionController;
 import core.controls.*;
 import core.util.CoordinatesUtil;
-import dto.DaleStateDTO;
-import dto.DogStateDTO;
-import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.*;
 import enums.MovementDirection;
 
 import java.util.List;
@@ -52,16 +49,17 @@ public class ObjectsInitializer {
 		this.idleTimeChecker = idleTimeChecker;
 	}
 
-	public void addObjectsToScene(List<Spatial> spatials) {
+	public void addObjectsToScene(List<SpatialDTO> spatials) {
 
 		BulletAppState bulletAppState = initializeBulletAppState();
 		Node rootNode = GameApplication.getInstance()
 									   .getRootNode();
 		Node throwables = new Node(NodeNames.THROWABLES);
 		rootNode.attachChild(throwables);
-		for (Spatial spatial : spatials) {
-			String spatialName = spatial.getName()
+		for (SpatialDTO spatialDTO : spatials) {
+			String spatialName = spatialDTO.getPathToModel()
 										.replace("/", "");
+			Spatial spatial = setSpatialPositionAndRotation(spatialDTO);
 			if (spatialName.startsWith("dale")) {
 				initializeDale(bulletAppState, spatial);
 			}
@@ -88,6 +86,13 @@ public class ObjectsInitializer {
 		rootNode.attachChild(objectsHolderDTO.getFieldOfView());
 		initializeCamera(rootNode);
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
+	}
+
+	private Spatial setSpatialPositionAndRotation(SpatialDTO spatialDTO) {
+		Spatial spatial = spatialDTO.getSpatial();
+		spatial.setLocalTranslation(spatialDTO.getPosition());
+		spatial.setLocalRotation(spatialDTO.getRotation());
+		return spatial;
 	}
 
 	private void initializeDaleFieldOfView(BulletAppState bulletAppState) {

@@ -5,12 +5,13 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import core.GameApplication;
 import core.gui.HUDCreator;
 import core.initialization.*;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
+import dto.SpatialDTO;
+import initialization.ModelsLoader;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class GameController {
 	private AnimationsController animationsController;
 	private IdleTimeChecker idleTimeChecker;
 	private LevelInitializer levelInitializer;
+	private ModelsLoader modelsLoader;
 
 	public GameController(GameApplication gameApplication) {
 		this.gameApplication = gameApplication;
@@ -45,12 +47,16 @@ public class GameController {
 				effectsController);
 		createGui();
 
-		List<Spatial> spatials = setUpModels();
+		GameApplication instance = GameApplication.getInstance();
+		List<SpatialDTO> spatials = setUpModels();
 		setUpTerrain();
 
 		setUpMusic();
 		objectsMovementController = new ObjectsMovementController(gameStateDTO,
 				objectsHolderDTO);
+
+		modelsLoader = new ModelsLoader(instance.getAssetManager(),
+				instance.getCamera(), instance.getRootNode());
 		setUpObjects(spatials);
 		setUpAnimations();
 		objectsStateController = new ObjectsStateController(gameStateDTO,
@@ -82,7 +88,7 @@ public class GameController {
 		soundsInitializer.addMusic();
 	}
 
-	private List<Spatial> setUpModels() {
+	private List<SpatialDTO> setUpModels() {
 		levelInitializer = new LevelInitializer(objectsHolderDTO,
 				gameApplication.getAssetManager());
 		return levelInitializer.initializeLevel();
@@ -99,7 +105,7 @@ public class GameController {
 		keysSetup.setupKeys();
 	}
 
-	private void setUpObjects(List<Spatial> spatials) {
+	private void setUpObjects(List<SpatialDTO> spatials) {
 		objectsInitializer = new ObjectsInitializer(objectsHolderDTO,
 				gameStateDTO, idleTimeChecker);
 		objectsInitializer.addObjectsToScene(spatials);
