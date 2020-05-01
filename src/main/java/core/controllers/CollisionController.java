@@ -157,7 +157,7 @@ public class CollisionController implements PhysicsCollisionListener {
 							.contains(node)) {
 			return ObjectsTypes.TREE;
 		}
-		return null;
+		return ObjectsTypes.NONE;
 	}
 
 	private boolean isDogWithImmobileObjectCollision(Spatial nodeA,

@@ -60,6 +60,10 @@ public class ObjectsInitializer {
 			String spatialName = spatialDTO.getPathToModel()
 										.replace("/", "");
 			Spatial spatial = setSpatialPositionAndRotation(spatialDTO);
+			if (spatialName.startsWith("house") || spatialName.startsWith(
+					"fence") || spatialName.startsWith("trash")) {
+				initializeRigidObject(bulletAppState, spatial, rootNode);
+			}
 			if (spatialName.startsWith("dale")) {
 				initializeDale(bulletAppState, spatial);
 			}
@@ -86,6 +90,18 @@ public class ObjectsInitializer {
 		rootNode.attachChild(objectsHolderDTO.getFieldOfView());
 		initializeCamera(rootNode);
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
+	}
+
+	private void initializeRigidObject(BulletAppState bulletAppState, Spatial spatial,
+			Node rootNode) {
+		CollisionShape shape = CollisionShapeFactory.createMeshShape(
+				spatial);
+		RigidBodyControl control = new RigidBodyControl(shape, 0);
+		spatial.addControl(control);
+		control.setPhysicsLocation(spatial.getLocalTranslation());
+		bulletAppState.getPhysicsSpace()
+					  .add(control);
+		rootNode.attachChild(spatial);
 	}
 
 	private Spatial setSpatialPositionAndRotation(SpatialDTO spatialDTO) {
@@ -236,7 +252,7 @@ public class ObjectsInitializer {
 	private CapsuleCollisionShape initializeDaleShape(Spatial model) {
 		BoundingBox sizeOfDale = CoordinatesUtil.getSizeOfSpatial(model);
 		float height = sizeOfDale.getYExtent();
-		float width = sizeOfDale.getXExtent();
+		float width = sizeOfDale.getZExtent();
 		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
 		return new CapsuleCollisionShape(width, height, 1);
 	}
