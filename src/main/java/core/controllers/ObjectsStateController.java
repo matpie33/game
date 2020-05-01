@@ -59,15 +59,12 @@ public class ObjectsStateController {
 				throwableObject);
 		float yDimensionArrow = CoordinatesUtil.getSizeOfSpatial(arrow)
 											   .getYExtent();
-		float xDimensionCollisionObject = throwableObjectSize.getXExtent();
 		float yDimensionCollisionObject = throwableObjectSize.getYExtent();
-		float zDimensionCollisionObject = throwableObjectSize.getZExtent();
 		Vector3f throwableObjectPosition = throwableObject.getWorldTranslation();
-		arrow.setLocalTranslation(
-				throwableObjectPosition.getX() + xDimensionCollisionObject,
+		arrow.setLocalTranslation(throwableObjectPosition.getX(),
 				throwableObjectPosition.getY() + yDimensionArrow
 						+ yDimensionCollisionObject,
-				throwableObjectPosition.getZ() - zDimensionCollisionObject);
+				throwableObjectPosition.getZ());
 		GameApplication.getInstance()
 					   .getRootNode()
 					   .attachChild(arrow);

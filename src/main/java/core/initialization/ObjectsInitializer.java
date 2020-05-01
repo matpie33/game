@@ -253,7 +253,6 @@ public class ObjectsInitializer {
 		BoundingBox sizeOfDale = CoordinatesUtil.getSizeOfSpatial(model);
 		float height = sizeOfDale.getYExtent();
 		float width = sizeOfDale.getZExtent();
-		model.rotate(0, 0, 90 * FastMath.DEG_TO_RAD);
 		return new CapsuleCollisionShape(width, height, 1);
 	}
 
