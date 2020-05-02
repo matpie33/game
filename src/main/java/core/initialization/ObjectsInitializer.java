@@ -11,7 +11,6 @@ import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.material.Material;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.CameraNode;
@@ -58,7 +57,7 @@ public class ObjectsInitializer {
 		rootNode.attachChild(throwables);
 		for (SpatialDTO spatialDTO : spatials) {
 			String spatialName = spatialDTO.getPathToModel()
-										.replace("/", "");
+										   .replace("/", "");
 			Spatial spatial = setSpatialPositionAndRotation(spatialDTO);
 			if (spatialName.startsWith("house") || spatialName.startsWith(
 					"fence") || spatialName.startsWith("trash")) {
@@ -82,6 +81,12 @@ public class ObjectsInitializer {
 			else {
 				rootNode.attachChild(spatial);
 			}
+			CharacterControl control = spatial.getControl(CharacterControl.class);
+			if (control != null) {
+				control.setViewDirection(spatialDTO.getRotation()
+												   .mult(new Vector3f(0, 0, 1)));
+			}
+
 		}
 
 		initializeDaleFieldOfView(bulletAppState);
@@ -92,10 +97,9 @@ public class ObjectsInitializer {
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
 	}
 
-	private void initializeRigidObject(BulletAppState bulletAppState, Spatial spatial,
-			Node rootNode) {
-		CollisionShape shape = CollisionShapeFactory.createMeshShape(
-				spatial);
+	private void initializeRigidObject(BulletAppState bulletAppState,
+			Spatial spatial, Node rootNode) {
+		CollisionShape shape = CollisionShapeFactory.createMeshShape(spatial);
 		RigidBodyControl control = new RigidBodyControl(shape, 0);
 		spatial.addControl(control);
 		control.setPhysicsLocation(spatial.getLocalTranslation());
@@ -108,6 +112,7 @@ public class ObjectsInitializer {
 		Spatial spatial = spatialDTO.getSpatial();
 		spatial.setLocalTranslation(spatialDTO.getPosition());
 		spatial.setLocalRotation(spatialDTO.getRotation());
+
 		return spatial;
 	}
 
@@ -145,8 +150,10 @@ public class ObjectsInitializer {
 				new DaleFollowingCameraControl(gameStateDTO, camera,
 						objectsHolderDTO, idleTimeChecker));
 		cameraNode.removeControl(CameraControl.class);
-		camera.lookAtDirection(objectsHolderDTO.getDale().getControl(
-				PhysicsControls.DALE).getViewDirection(), Vector3f.UNIT_Y);
+		camera.lookAtDirection(objectsHolderDTO.getDale()
+											   .getControl(PhysicsControls.DALE)
+											   .getViewDirection(),
+				Vector3f.UNIT_Y);
 		rootNode.attachChild(cameraNode);
 	}
 
