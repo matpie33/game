@@ -91,7 +91,7 @@ public class ObjectsInitializer {
 
 		initializeDaleFieldOfView(bulletAppState);
 		rootNode.attachChild(objectsHolderDTO.getSky());
-		rootNode.attachChild(objectsHolderDTO.getScene());
+//		rootNode.attachChild(objectsHolderDTO.getScene());
 		rootNode.attachChild(objectsHolderDTO.getFieldOfView());
 		initializeCamera(rootNode);
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());

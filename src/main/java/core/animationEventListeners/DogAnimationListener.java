@@ -8,7 +8,7 @@ import dto.DogStateDTO;
 
 public class DogAnimationListener implements AnimEventListener {
 
-	public static final String WALK = "Walk";
+	public static final String WALK = "walk";
 
 	private DogStateDTO dogStateDTO;
 

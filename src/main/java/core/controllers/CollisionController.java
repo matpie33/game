@@ -142,10 +142,6 @@ public class CollisionController implements PhysicsCollisionListener {
 							.contains(node)) {
 			return ObjectsTypes.BOX;
 		}
-		if (objectsHolderDTO.getScene()
-							.equals(node)) {
-			return ObjectsTypes.SCENE;
-		}
 		if (objectsHolderDTO.getFieldOfView()
 							.equals(node) || objectsHolderDTO.getMark()
 															 .equals(node)
