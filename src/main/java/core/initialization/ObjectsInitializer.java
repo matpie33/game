@@ -6,6 +6,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -60,7 +61,8 @@ public class ObjectsInitializer {
 										   .replace("/", "");
 			Spatial spatial = setSpatialPositionAndRotation(spatialDTO);
 			if (spatialName.startsWith("house") || spatialName.startsWith(
-					"fence") || spatialName.startsWith("trash")) {
+					"fence") || spatialName.startsWith("trash")
+					|| spatialName.startsWith("pylon")) {
 				initializeRigidObject(bulletAppState, spatial, rootNode);
 			}
 			if (spatialName.startsWith("dale")) {
@@ -81,17 +83,19 @@ public class ObjectsInitializer {
 			else {
 				rootNode.attachChild(spatial);
 			}
-			CharacterControl control = spatial.getControl(CharacterControl.class);
+			CharacterControl control = spatial.getControl(
+					CharacterControl.class);
 			if (control != null) {
 				control.setViewDirection(spatialDTO.getRotation()
-												   .mult(new Vector3f(0, 0, 1)));
+												   .mult(new Vector3f(0, 0,
+														   1)));
 			}
 
 		}
 
 		initializeDaleFieldOfView(bulletAppState);
 		rootNode.attachChild(objectsHolderDTO.getSky());
-//		rootNode.attachChild(objectsHolderDTO.getScene());
+		//		rootNode.attachChild(objectsHolderDTO.getScene());
 		rootNode.attachChild(objectsHolderDTO.getFieldOfView());
 		initializeCamera(rootNode);
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
@@ -229,6 +233,7 @@ public class ObjectsInitializer {
 				gameStateDTO, objectsHolderDTO);
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
 				gameStateDTO, objectsHolderDTO);
+		DaleClimbingControl daleClimbingControl = new DaleClimbingControl();
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl characterControl = new CharacterControl(capsuleShape,
 				0.05f);
@@ -240,6 +245,7 @@ public class ObjectsInitializer {
 		bulletAppState.getPhysicsSpace()
 					  .add(characterControl);
 		model.addControl(characterControl);
+		model.addControl(daleClimbingControl);
 
 		bulletAppState.getPhysicsSpace()
 					  .add(ghostControl);

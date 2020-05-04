@@ -44,7 +44,7 @@ Position: (116.886215, 10.020891, 143.10358)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: trashbin.mesh.xml
-Position: (170.29689, 8.119442, 93.35421)
+Position: (179.2373, 9.771675, 82.27494)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: dog.mesh.xml
@@ -61,4 +61,8 @@ Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: box.mesh.xml
 Position: (169.68831, 6.0213594, 164.00034)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: pylon.mesh.xml
+Position: (198.90742, 31.443447, 67.90495)
 Rotation: (0.0, 0.0, 0.0, 1.0)
