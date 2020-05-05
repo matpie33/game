@@ -1,5 +1,6 @@
 package dto;
 
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 public class DaleStateDTO {
@@ -16,6 +17,42 @@ public class DaleStateDTO {
 	private boolean isPickingObject;
 	private boolean isPuttingAsideObject;
 	private boolean isCollidingWithEnemy;
+	private boolean isGrabbingLedge;
+	private boolean isLetGoLedge;
+	private boolean moveInLedge;
+	private Vector3f ledgeCollisionPoint;
+
+	public Vector3f getLedgeCollisionPoint() {
+		return ledgeCollisionPoint;
+	}
+
+	public void setLedgeCollisionPoint(Vector3f ledgeCollisionPoint) {
+		this.ledgeCollisionPoint = ledgeCollisionPoint;
+	}
+
+	public boolean isMoveInLedge() {
+		return moveInLedge;
+	}
+
+	public void setMoveInLedge(boolean moveInLedge) {
+		this.moveInLedge = moveInLedge;
+	}
+
+	public boolean isLetGoLedge() {
+		return isLetGoLedge;
+	}
+
+	public void setLetGoLedge(boolean letGoLedge) {
+		isLetGoLedge = letGoLedge;
+	}
+
+	public boolean isGrabbingLedge() {
+		return isGrabbingLedge;
+	}
+
+	public void setGrabbingLedge(boolean grabbingLedge) {
+		isGrabbingLedge = grabbingLedge;
+	}
 
 	public boolean isCollidingWithEnemy() {
 		return isCollidingWithEnemy;

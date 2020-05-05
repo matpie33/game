@@ -233,7 +233,7 @@ public class ObjectsInitializer {
 				gameStateDTO, objectsHolderDTO);
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
 				gameStateDTO, objectsHolderDTO);
-		DaleClimbingControl daleClimbingControl = new DaleClimbingControl();
+		DaleClimbingControl daleClimbingControl = new DaleClimbingControl(gameStateDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl characterControl = new CharacterControl(capsuleShape,
 				0.05f);

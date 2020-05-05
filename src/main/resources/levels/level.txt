@@ -16,7 +16,7 @@ Position: (383.80698, 66.85616, -144.42734)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: dalev4.mesh.xml
-Position: (175.39897, 9.3617, 254.99193)
+Position: (197.74658, 9.3617, 114.35181)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: box.mesh.xml
@@ -45,18 +45,6 @@ Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: trashbin.mesh.xml
 Position: (179.2373, 9.771675, 82.27494)
-Rotation: (0.0, 0.0, 0.0, 1.0)
-Start object
-Path: dog.mesh.xml
-Position: (197.42897, 7.098427, 35.499096)
-Rotation: (0.0, 0.0, 0.0, 1.0)
-Start object
-Path: dog.mesh.xml
-Position: (212.3505, 7.011709, 90.486046)
-Rotation: (0.0, 0.0, 0.0, 1.0)
-Start object
-Path: dog.mesh.xml
-Position: (177.55893, 7.0983796, 36.24206)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: box.mesh.xml
