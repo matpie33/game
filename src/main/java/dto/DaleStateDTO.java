@@ -36,7 +36,14 @@ public class DaleStateDTO {
 	}
 
 	public void setMoveInLedge(State moveInLedge) {
-		this.moveInLedge = moveInLedge;
+		this.moveInLedge = changeState(this.moveInLedge, moveInLedge);
+	}
+
+	public State changeState(State oldState, State newState) {
+		if (oldState.inProgress() && newState.requested()) {
+			return oldState;
+		}
+		return newState;
 	}
 
 	public State isLetGoLedge() {
@@ -44,7 +51,7 @@ public class DaleStateDTO {
 	}
 
 	public void setLetGoLedge(State letGoLedge) {
-		isLetGoLedge = letGoLedge;
+		isLetGoLedge = changeState(isLetGoLedge, letGoLedge);
 	}
 
 	public State isGrabbingLedge() {
@@ -52,7 +59,7 @@ public class DaleStateDTO {
 	}
 
 	public void setGrabbingLedge(State grabbingLedge) {
-		isGrabbingLedge = grabbingLedge;
+		isGrabbingLedge = changeState(isGrabbingLedge, grabbingLedge);
 	}
 
 	public boolean isCollidingWithEnemy() {
