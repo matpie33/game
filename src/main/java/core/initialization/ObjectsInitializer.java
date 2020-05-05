@@ -6,7 +6,6 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
-import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -233,7 +232,8 @@ public class ObjectsInitializer {
 				gameStateDTO, objectsHolderDTO);
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
 				gameStateDTO, objectsHolderDTO);
-		DaleClimbingControl daleClimbingControl = new DaleClimbingControl(gameStateDTO);
+		DaleClimbingControl daleClimbingControl = new DaleClimbingControl(
+				gameStateDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl characterControl = new CharacterControl(capsuleShape,
 				0.05f);
@@ -264,9 +264,12 @@ public class ObjectsInitializer {
 
 	private CapsuleCollisionShape initializeDaleShape(Spatial model) {
 		BoundingBox sizeOfDale = CoordinatesUtil.getSizeOfSpatial(model);
-		float height = sizeOfDale.getYExtent();
-		float width = sizeOfDale.getZExtent();
-		return new CapsuleCollisionShape(width, height, 1);
+		float yExtent = sizeOfDale.getYExtent();
+		float zExtent = sizeOfDale.getZExtent();
+		float xExtent = sizeOfDale.getXExtent();
+
+		return new CapsuleCollisionShape(Math.max(zExtent, xExtent),
+				yExtent, 1);
 	}
 
 	private void initializeDog(BulletAppState bulletAppState, Node rootNode,

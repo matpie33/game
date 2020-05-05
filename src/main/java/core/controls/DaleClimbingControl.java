@@ -21,6 +21,7 @@ import java.util.List;
 
 public class DaleClimbingControl extends AbstractControl {
 
+	public static final float MIN_DISTANCE = 1.5f;
 	private Camera camera;
 	private Node rootNode;
 	private GameStateDTO gameStateDTO;
@@ -174,7 +175,7 @@ public class DaleClimbingControl extends AbstractControl {
 		return closestCollision != null &&
 				closestCollision.getDistance() - spatialExtent.mult(
 						control.getViewDirection())
-															  .length() < 0.5f
+															  .length() < MIN_DISTANCE
 				&& !control.onGround();
 	}
 
