@@ -15,6 +15,7 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
+import enums.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,30 +36,51 @@ public class DaleClimbingControl extends AbstractControl {
 
 	@Override
 	protected void controlUpdate(float tpf) {
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
+		checkCorrectStates(daleStateDTO);
 		if (!spatial.getControl(PhysicsControls.DALE)
 					.onGround()) {
-			if (!gameStateDTO.getDaleStateDTO()
-							 .isLetGoLedge() && !gameStateDTO.getDaleStateDTO()
-															 .isMoveInLedge()) {
+			if (!daleStateDTO.isLetGoLedge()
+							 .inProgress() && !daleStateDTO.isMoveInLedge()
+														   .inProgress()) {
 				handleGrabbing();
 			}
 			handleLetGoLedge();
 			handleMoveInLedge();
 		}
+		else {
+			daleStateDTO.setMoveInLedge(State.NOT_RUNNING);
+			daleStateDTO.setLetGoLedge(State.NOT_RUNNING);
+			daleStateDTO.setGrabbingLedge(State.NOT_RUNNING);
+		}
 
+	}
+
+	private void checkCorrectStates(DaleStateDTO daleStateDTO) {
+		if (daleStateDTO.isMoveInLedge()
+						.requested()) {
+
+			daleStateDTO.setMoveInLedge(daleStateDTO.isGrabbingLedge()
+													.inProgress() ?
+					State.IN_PROGRESS :
+					State.NOT_RUNNING);
+		}
+		if (daleStateDTO.isLetGoLedge()
+						.requested()) {
+			daleStateDTO.setLetGoLedge(daleStateDTO.isGrabbingLedge()
+												   .inProgress() ?
+					State.IN_PROGRESS :
+					State.NOT_RUNNING);
+		}
 	}
 
 	private void handleLetGoLedge() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (spatial.getControl(PhysicsControls.DALE)
-				   .onGround()) {
-			gameStateDTO.getDaleStateDTO()
-						.setLetGoLedge(false);
-		}
-		if (daleStateDTO.isGrabbingLedge() && daleStateDTO.isLetGoLedge()) {
+		if (daleStateDTO.isLetGoLedge()
+						.inProgress()) {
 			CharacterControl control = spatial.getControl(PhysicsControls.DALE);
 			control.setEnabled(true);
-			daleStateDTO.setGrabbingLedge(false);
+			daleStateDTO.setGrabbingLedge(State.NOT_RUNNING);
 
 		}
 	}
@@ -82,7 +104,7 @@ public class DaleClimbingControl extends AbstractControl {
 							.setLedgeCollisionPoint(
 									closestCollision.getContactPoint());
 				gameStateDTO.getDaleStateDTO()
-							.setGrabbingLedge(true);
+							.setGrabbingLedge(State.IN_PROGRESS);
 
 			}
 		}
@@ -90,9 +112,10 @@ public class DaleClimbingControl extends AbstractControl {
 
 	private void handleMoveInLedge() {
 		if (gameStateDTO.getDaleStateDTO()
-						.isMoveInLedge()) {
+						.isMoveInLedge()
+						.inProgress()) {
 			gameStateDTO.getDaleStateDTO()
-						.setGrabbingLedge(false);
+						.setGrabbingLedge(State.NOT_RUNNING);
 			CharacterControl control = spatial.getControl(
 					CharacterControl.class);
 			Vector3f destinationPoint = calculateDestinationPointForMovingInLedge(
@@ -109,7 +132,7 @@ public class DaleClimbingControl extends AbstractControl {
 
 	private void enablePhysicsAfterReachingLedge(CharacterControl control) {
 		gameStateDTO.getDaleStateDTO()
-					.setMoveInLedge(false);
+					.setMoveInLedge(State.NOT_RUNNING);
 		control.setEnabled(true);
 		control.setPhysicsLocation(spatial.getWorldTranslation());
 	}

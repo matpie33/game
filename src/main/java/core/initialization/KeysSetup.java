@@ -9,6 +9,7 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
+import enums.State;
 
 public class KeysSetup implements ActionListener {
 
@@ -31,7 +32,8 @@ public class KeysSetup implements ActionListener {
 												   .getInputManager();
 		inputManager.addMapping(MOVE_LEFT, new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addMapping(MOVE_RIGHT, new KeyTrigger(KeyInput.KEY_D));
-		inputManager.addMapping(MOVE_FORWARD_OR_MOVE_IN_LEDGE, new KeyTrigger(KeyInput.KEY_W));
+		inputManager.addMapping(MOVE_FORWARD_OR_MOVE_IN_LEDGE,
+				new KeyTrigger(KeyInput.KEY_W));
 		inputManager.addMapping(MOVE_BACKWARD, new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addMapping(JUMP, new KeyTrigger(KeyInput.KEY_SPACE));
 		inputManager.addMapping(PICK_THROWABLE_OBJECT_OR_LET_GO_LEDGE,
@@ -39,8 +41,8 @@ public class KeysSetup implements ActionListener {
 		inputManager.addMapping(THROW_OBJECT,
 				new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		inputManager.addListener(this, MOVE_LEFT, MOVE_RIGHT,
-				MOVE_FORWARD_OR_MOVE_IN_LEDGE,
-				MOVE_BACKWARD, JUMP, PICK_THROWABLE_OBJECT_OR_LET_GO_LEDGE, THROW_OBJECT);
+				MOVE_FORWARD_OR_MOVE_IN_LEDGE, MOVE_BACKWARD, JUMP,
+				PICK_THROWABLE_OBJECT_OR_LET_GO_LEDGE, THROW_OBJECT);
 	}
 
 	@Override
@@ -54,10 +56,10 @@ public class KeysSetup implements ActionListener {
 		}
 		if (MOVE_FORWARD_OR_MOVE_IN_LEDGE.equals(name)) {
 			daleStateDTO.setMovingForward(isPressed);
-			if (daleStateDTO.isGrabbingLedge()){
-				daleStateDTO.setMoveInLedge(true);
-
+			if (isPressed){
+				daleStateDTO.setMoveInLedge(State.REQUESTED);
 			}
+
 		}
 		if (MOVE_BACKWARD.equals(name)) {
 			daleStateDTO.setMovingBackward(isPressed);
@@ -71,8 +73,8 @@ public class KeysSetup implements ActionListener {
 					isPressed && !daleStateDTO.isCarryingThrowableObject());
 			daleStateDTO.setPuttingAsideObject(
 					isPressed && daleStateDTO.isCarryingThrowableObject());
-			if (isPressed){
-				daleStateDTO.setLetGoLedge(isPressed);
+			if (isPressed) {
+				daleStateDTO.setLetGoLedge(State.REQUESTED);
 			}
 		}
 		if (THROW_OBJECT.equals(name)) {
