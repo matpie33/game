@@ -35,9 +35,16 @@ public class DaleClimbingControl extends AbstractControl {
 
 	@Override
 	protected void controlUpdate(float tpf) {
-		handleGrabbing();
-		handleLetGoLedge();
-		handleMoveInLedge();
+		if (!spatial.getControl(PhysicsControls.DALE)
+					.onGround()) {
+			if (!gameStateDTO.getDaleStateDTO()
+							 .isLetGoLedge() && !gameStateDTO.getDaleStateDTO()
+															 .isMoveInLedge()) {
+				handleGrabbing();
+			}
+			handleLetGoLedge();
+			handleMoveInLedge();
+		}
 
 	}
 
@@ -58,20 +65,17 @@ public class DaleClimbingControl extends AbstractControl {
 
 	private void handleGrabbing() {
 		CharacterControl control = spatial.getControl(CharacterControl.class);
-		Vector3f extent = ((BoundingBox) spatial.getWorldBound()).getExtent(
+		Vector3f spatialExtent = ((BoundingBox) spatial.getWorldBound()).getExtent(
 				new Vector3f());
 		CollisionResult closestCollision = getClosestObjectFromCharacterHeadForward(
-				control, extent);
-		boolean isVeryCloseToObstacle = isVeryCloseToObstacle(control, extent,
-				closestCollision);
+				control, spatialExtent);
+		boolean isVeryCloseToObstacle = isVeryCloseToObstacle(control,
+				spatialExtent, closestCollision);
 
-		if (!gameStateDTO.getDaleStateDTO()
-						 .isLetGoLedge() && !gameStateDTO.getDaleStateDTO()
-														 .isMoveInLedge()
-				&& isVeryCloseToObstacle) {
+		if (isVeryCloseToObstacle) {
 			boolean enoughSpaceToWalkOnIt = isEnoughSpaceToWalkOnLedge(
 					closestCollision.getContactPoint(),
-					control.getViewDirection(), extent);
+					control.getViewDirection(), spatialExtent);
 			if (enoughSpaceToWalkOnIt) {
 				control.setEnabled(false);
 				gameStateDTO.getDaleStateDTO()
@@ -89,43 +93,61 @@ public class DaleClimbingControl extends AbstractControl {
 						.isMoveInLedge()) {
 			gameStateDTO.getDaleStateDTO()
 						.setGrabbingLedge(false);
-			Vector3f extent = ((BoundingBox) spatial.getWorldBound()).getExtent(
-					new Vector3f());
 			CharacterControl control = spatial.getControl(
 					CharacterControl.class);
-			Vector3f moveDirection;
-			Vector3f finalPoint = gameStateDTO.getDaleStateDTO()
-											  .getLedgeCollisionPoint()
-											  .add(extent.mult(
-													  control.getViewDirection()))
-											  .add(extent.mult(
-													  Vector3f.UNIT_Y));
-			float distanceToFinalPoint = spatial.getLocalTranslation()
-												.distance(finalPoint);
-			Vector3f physicsLocation = spatial.getLocalTranslation();
-			if (distanceToFinalPoint < 0.5f) {
-				gameStateDTO.getDaleStateDTO()
-							.setMoveInLedge(false);
-				control.setEnabled(true);
-				control.setPhysicsLocation(spatial.getWorldTranslation());
-				return;
-			}
-			float distanceToFinalPointDirectionY = finalPoint.mult(
-					Vector3f.UNIT_Y)
-															 .distance(
-																	 physicsLocation.mult(
-																			 Vector3f.UNIT_Y));
-			if (distanceToFinalPointDirectionY < 0.1f) {
-				moveDirection = control.getViewDirection();
+			Vector3f destinationPoint = calculateDestinationPointForMovingInLedge(
+					control);
+			if (isMovingInLedgeCompleted(destinationPoint)) {
+				enablePhysicsAfterReachingLedge(control);
 			}
 			else {
-				moveDirection = Vector3f.UNIT_Y;
+				moveIntoLedge(control, spatial.getLocalTranslation(),
+						destinationPoint);
 			}
-			moveDirection = moveDirection.clone()
-										 .mult(0.01f);
-			spatial.setLocalTranslation(spatial.getLocalTranslation()
-											   .add(moveDirection));
 		}
+	}
+
+	private void enablePhysicsAfterReachingLedge(CharacterControl control) {
+		gameStateDTO.getDaleStateDTO()
+					.setMoveInLedge(false);
+		control.setEnabled(true);
+		control.setPhysicsLocation(spatial.getWorldTranslation());
+	}
+
+	private void moveIntoLedge(CharacterControl control,
+			Vector3f localTranslation, Vector3f destinationPoint) {
+		float distanceToDestinationPointDirectionY = destinationPoint.mult(
+				Vector3f.UNIT_Y)
+																	 .distance(
+																			 localTranslation.mult(
+																					 Vector3f.UNIT_Y));
+		Vector3f moveDirection;
+		if (distanceToDestinationPointDirectionY < 0.1f) {
+			moveDirection = control.getViewDirection();
+		}
+		else {
+			moveDirection = Vector3f.UNIT_Y;
+		}
+		moveDirection = moveDirection.clone()
+									 .mult(0.01f);
+		spatial.setLocalTranslation(spatial.getLocalTranslation()
+										   .add(moveDirection));
+	}
+
+	private Vector3f calculateDestinationPointForMovingInLedge(
+			CharacterControl control) {
+		Vector3f spatialExtent = ((BoundingBox) spatial.getWorldBound()).getExtent(
+				new Vector3f());
+		return gameStateDTO.getDaleStateDTO()
+						   .getLedgeCollisionPoint()
+						   .add(spatialExtent.mult(control.getViewDirection()))
+						   .add(spatialExtent.mult(Vector3f.UNIT_Y));
+	}
+
+	private boolean isMovingInLedgeCompleted(Vector3f finalPoint) {
+		float distanceToFinalPoint = spatial.getLocalTranslation()
+											.distance(finalPoint);
+		return distanceToFinalPoint < 0.5f;
 	}
 
 	private boolean isEnoughSpaceToWalkOnLedge(Vector3f contactPoint,
@@ -175,8 +197,9 @@ public class DaleClimbingControl extends AbstractControl {
 		return closestCollision != null &&
 				closestCollision.getDistance() - spatialExtent.mult(
 						control.getViewDirection())
-															  .length() < MIN_DISTANCE
-				&& !control.onGround();
+															  .length()
+						< MIN_DISTANCE;
+
 	}
 
 	private CollisionResult getClosestObjectFromCharacterHeadForward(
