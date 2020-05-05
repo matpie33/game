@@ -15,6 +15,8 @@ public class DaleAnimationListener implements AnimEventListener {
 	public static final String WALK_BACK_ANIMATION = "walk_back";
 	public static final String HOLDING_OBJECT = "hold_object";
 	private static final String DEAD_ANIMATION = "dead";
+	private static final String GRABBING_LEDGE = "grabbingLedge";
+	private static final String MOVE_IN_LEDGE = "moveInLedge";
 	private AnimChannel channel;
 	private GameStateDTO gameStateDTO;
 	private ObjectsHolderDTO objectsHolderDTO;
@@ -62,7 +64,13 @@ public class DaleAnimationListener implements AnimEventListener {
 			return;
 		}
 
-		if (daleStateDTO.isMovingForward()) {
+		if (daleStateDTO.isGrabbingLedge().inProgress()) {
+			setAnimation(GRABBING_LEDGE);
+		}
+		else if (daleStateDTO.isMoveInLedge().inProgress()) {
+			setAnimation(MOVE_IN_LEDGE);
+		}
+		else if (daleStateDTO.isMovingForward()) {
 			setAnimation(RUN_ANIMATION);
 		}
 		else if (daleStateDTO.isMovingBackward()) {
