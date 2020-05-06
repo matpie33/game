@@ -100,6 +100,7 @@ public class DaleClimbingControl extends AbstractControl {
 					control.getViewDirection(), spatialExtent);
 			if (enoughSpaceToWalkOnIt) {
 				control.setEnabled(false);
+				control.setLinearVelocity(Vector3f.ZERO);
 				gameStateDTO.getDaleStateDTO()
 							.setLedgeCollisionPoint(
 									closestCollision.getContactPoint());
