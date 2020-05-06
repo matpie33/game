@@ -15,6 +15,7 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
+import dto.ObjectsHolderDTO;
 import enums.State;
 
 import java.util.ArrayList;
@@ -26,12 +27,15 @@ public class DaleClimbingControl extends AbstractControl {
 	private Camera camera;
 	private Node rootNode;
 	private GameStateDTO gameStateDTO;
+	private ObjectsHolderDTO objectsHolderDTO;
 
-	public DaleClimbingControl(GameStateDTO gameStateDTO) {
+	public DaleClimbingControl(GameStateDTO gameStateDTO,
+			ObjectsHolderDTO objectsHolderDTO) {
 		GameApplication instance = GameApplication.getInstance();
 		camera = instance.getCamera();
 		rootNode = instance.getRootNode();
 		this.gameStateDTO = gameStateDTO;
+		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
 	@Override
@@ -99,6 +103,10 @@ public class DaleClimbingControl extends AbstractControl {
 					closestCollision.getContactPoint(),
 					control.getViewDirection(), spatialExtent);
 			if (enoughSpaceToWalkOnIt) {
+				if (isTheRayInsideObject(closestCollision.getContactPoint(),
+						spatialExtent, control.getViewDirection())) {
+					return;
+				}
 				control.setEnabled(false);
 				control.setLinearVelocity(Vector3f.ZERO);
 				gameStateDTO.getDaleStateDTO()
@@ -109,6 +117,21 @@ public class DaleClimbingControl extends AbstractControl {
 
 			}
 		}
+	}
+
+	private boolean isTheRayInsideObject(Vector3f contactPoint,
+			Vector3f spatialExtent, Vector3f viewDirection) {
+
+		Ray ray = new Ray(contactPoint.add(viewDirection.mult(spatialExtent))
+									  .add(Vector3f.UNIT_Y.mult(spatialExtent)),
+				viewDirection.negate());
+		CollisionResults results = new CollisionResults();
+		rootNode.collideWith(ray, results);
+		CollisionResult closestCollision = results.getClosestCollision();
+		return closestCollision != null
+				&& closestCollision.getDistance() <= spatialExtent.mult(
+				viewDirection)
+																  .length();
 	}
 
 	private void handleMoveInLedge() {
@@ -191,7 +214,9 @@ public class DaleClimbingControl extends AbstractControl {
 			Vector3f contactPoint, Vector3f viewDirection,
 			Vector3f extentOfCharacter) {
 		Vector3f mainPoint = contactPoint.add(
-				extentOfCharacter.mult(viewDirection));
+				extentOfCharacter.mult(viewDirection))
+										 .add(extentOfCharacter.mult(
+												 Vector3f.UNIT_Y));
 		Vector3f leftFromMainPoint = mainPoint.add(camera.getLeft()
 														 .mult(extentOfCharacter));
 		Vector3f rightFromMainPoint = mainPoint.add(camera.getLeft()
@@ -206,13 +231,13 @@ public class DaleClimbingControl extends AbstractControl {
 
 	private boolean isEnoughHeightToStandInPoint(Vector3f spatialExtent,
 			Vector3f pointToCheck) {
-		Vector3f sizeOfSpatialDirectionY = Vector3f.UNIT_Y.mult(spatialExtent);
-		Vector3f rayStart = pointToCheck.add(sizeOfSpatialDirectionY);
-		Ray ray = new Ray(rayStart, Vector3f.UNIT_Y.negate());
+		Ray ray = new Ray(pointToCheck, Vector3f.UNIT_Y.negate());
 		CollisionResults collisionResults = new CollisionResults();
 		rootNode.collideWith(ray, collisionResults);
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
-		return closestCollision.getDistance() - sizeOfSpatialDirectionY.length()
+		return Math.abs(closestCollision.getDistance() - spatialExtent.mult(
+				Vector3f.UNIT_Y)
+																	  .length())
 				< 0.5f;
 	}
 
