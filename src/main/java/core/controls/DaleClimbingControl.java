@@ -10,6 +10,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import core.GameApplication;
@@ -142,8 +143,10 @@ public class DaleClimbingControl extends AbstractControl {
 						.setGrabbingLedge(State.NOT_RUNNING);
 			CharacterControl control = spatial.getControl(
 					CharacterControl.class);
-			Vector3f destinationPoint = calculateDestinationPointForMovingInLedge(
-					control);
+			Vector3f destinationPoint = getDestinationPointAboveLedge(
+					gameStateDTO.getDaleStateDTO()
+								.getLedgeCollisionPoint(),
+					control.getViewDirection());
 			if (isMovingInLedgeCompleted(destinationPoint)) {
 				enablePhysicsAfterReachingLedge(control);
 			}
@@ -181,17 +184,6 @@ public class DaleClimbingControl extends AbstractControl {
 										   .add(moveDirection));
 	}
 
-	private Vector3f calculateDestinationPointForMovingInLedge(
-			CharacterControl control) {
-		Vector3f spatialExtent = ((BoundingBox) spatial.getWorldBound()).getExtent(
-				new Vector3f());
-		return gameStateDTO.getDaleStateDTO()
-						   .getLedgeCollisionPoint()
-						   .add(spatialExtent.mult(control.getViewDirection()))
-						   .add(spatialExtent.mult(Vector3f.UNIT_Y))
-						   .add(new Vector3f(0, 0.5f, 0));
-	}
-
 	private boolean isMovingInLedgeCompleted(Vector3f finalPoint) {
 		float distanceToFinalPoint = spatial.getLocalTranslation()
 											.distance(finalPoint);
@@ -214,21 +206,27 @@ public class DaleClimbingControl extends AbstractControl {
 	private List<Vector3f> getPointsToCheckEnoughHeightToWalk(
 			Vector3f contactPoint, Vector3f viewDirection,
 			Vector3f extentOfCharacter) {
-		Vector3f mainPoint = contactPoint.add(
-				extentOfCharacter.mult(viewDirection))
-										 .add(extentOfCharacter.mult(
-												 Vector3f.UNIT_Y.mult(2))
-															   .add(Vector3f.UNIT_Y));
+		Vector3f mainPoint = getDestinationPointAboveLedge(contactPoint, viewDirection);
 		Vector3f leftFromMainPoint = mainPoint.add(camera.getLeft()
 														 .mult(extentOfCharacter));
 		Vector3f rightFromMainPoint = mainPoint.add(camera.getLeft()
 														  .negate()
 														  .mult(extentOfCharacter));
+
 		List<Vector3f> points = new ArrayList<>();
 		points.add(mainPoint);
 		points.add(leftFromMainPoint);
 		points.add(rightFromMainPoint);
 		return points;
+	}
+
+	private Vector3f getDestinationPointAboveLedge(Vector3f contactPoint,
+			Vector3f viewDirection) {
+		Vector3f extent = ((BoundingBox) spatial.getWorldBound()).getExtent(
+				new Vector3f());
+		return contactPoint.add(extent.mult(viewDirection))
+						   .add(extent.mult(Vector3f.UNIT_Y.mult(2))
+									  .add(Vector3f.UNIT_Y));
 	}
 
 	private boolean isEnoughHeightToStandInPoint(Vector3f spatialExtent,
@@ -252,10 +250,12 @@ public class DaleClimbingControl extends AbstractControl {
 	private CollisionResult getClosestObjectFromCharacterHeadForward(
 			CharacterControl control, Vector3f extent) {
 		Vector3f rayStart = spatial.getWorldTranslation()
-							  .add(extent.mult(control.getViewDirection()));
+								   .add(extent.mult(
+										   control.getViewDirection()));
 		Ray ray = new Ray(rayStart, control.getViewDirection());
 		CollisionResults collisionResults = new CollisionResults();
 		rootNode.collideWith(ray, collisionResults);
+
 		return collisionResults.getClosestCollision();
 	}
 
