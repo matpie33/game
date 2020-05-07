@@ -4,6 +4,7 @@ import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
+import com.jme3.bullet.control.CharacterControl;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -41,10 +42,12 @@ public class DaleAnimationListener implements AnimEventListener {
 		if (previousAnimation.equals(DEAD_ANIMATION)) {
 			return;
 		}
+		channel.setLoopMode(LoopMode.Loop);
+
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (!daleStateDTO.isAlive()) {
 			setAnimation(DEAD_ANIMATION);
-			channel.setLoopMode(LoopMode.DontLoop);
+
 		}
 		else {
 			handleAnimation();
@@ -60,30 +63,43 @@ public class DaleAnimationListener implements AnimEventListener {
 
 	public void handleAnimation() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (!daleStateDTO.isAlive()){
+		if (!daleStateDTO.isAlive()) {
 			return;
 		}
 
-		if (daleStateDTO.isGrabbingLedge().inProgress()) {
-			setAnimation(GRABBING_LEDGE);
-		}
-		else if (daleStateDTO.isMoveInLedge().inProgress()) {
-			setAnimation(MOVE_IN_LEDGE);
-		}
-		else if (daleStateDTO.isMovingForward()) {
-			setAnimation(RUN_ANIMATION);
-		}
-		else if (daleStateDTO.isMovingBackward()) {
-			setAnimation(WALK_BACK_ANIMATION);
-		}
-		else {
-			if (daleStateDTO.isCarryingThrowableObject()) {
+		boolean onGround = objectsHolderDTO.getDale()
+										   .getControl(CharacterControl.class)
+										   .onGround();
+		if (onGround) {
+			if (daleStateDTO.isMovingForward()) {
+				setAnimation(RUN_ANIMATION);
+			}
+			else if (daleStateDTO.isMovingBackward()) {
+				setAnimation(WALK_BACK_ANIMATION);
+			}
+			else if (daleStateDTO.isCarryingThrowableObject()) {
 				setAnimation(HOLDING_OBJECT);
 			}
 			else {
 				setAnimation(STAND_ANIMATION);
 			}
+
 		}
+		else {
+			if (daleStateDTO.isGrabbingLedge()
+							.inProgress()) {
+				setAnimation(GRABBING_LEDGE);
+			}
+			else if (daleStateDTO.isMoveInLedge()
+								 .inProgress()) {
+				setAnimation(MOVE_IN_LEDGE);
+			}
+			else {
+				setAnimation(STAND_ANIMATION);
+			}
+		}
+
+
 	}
 
 	public void setAnimation(String animation) {

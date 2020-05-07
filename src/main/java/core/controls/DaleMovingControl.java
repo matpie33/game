@@ -49,22 +49,29 @@ public class DaleMovingControl extends AbstractControl {
 		if (daleStateDTO.isJumping()) {
 			daleJump();
 		}
-		if (daleStateDTO.isMovingForward()) {
-			setDaleViewDirectionToCameraDirection();
-			modifiableWalkDirectionVector.addLocal(camDir);
+		else if (spatial.getControl(CharacterControl.class).onGround()){
+			if (daleStateDTO.isMovingForward()) {
+				setDaleViewDirectionToCameraDirection();
+				modifiableWalkDirectionVector.addLocal(camDir);
+			}
+			if (daleStateDTO.isMovingBackward()) {
+				setDaleViewDirectionToCameraDirection();
+				modifiableWalkDirectionVector.addLocal(camDir.negate()
+															 .mult(0.5f));
+			}
+			if (daleStateDTO.isMovingLeft()) {
+				rotateCharacter(tpf, true);
+			}
+			if (daleStateDTO.isMovingRight()) {
+				rotateCharacter(tpf, false);
+			}
+			setMovementDirection();
+			moveFieldOfView();
 		}
-		if (daleStateDTO.isMovingBackward()) {
-			setDaleViewDirectionToCameraDirection();
-			modifiableWalkDirectionVector.addLocal(camDir.negate()
-														 .mult(0.5f));
-		}
-		if (daleStateDTO.isMovingLeft()) {
-			rotateCharacter(tpf, true);
-		}
-		if (daleStateDTO.isMovingRight()) {
-			rotateCharacter(tpf, false);
-		}
-		setMovementDirection();
+
+	}
+
+	private void moveFieldOfView() {
 		CharacterControl control = spatial.getControl(PhysicsControls.DALE);
 		Spatial fieldOfView = objectsHolderDTO.getFieldOfView();
 		float fieldOfViewRadius = ((SphereCollisionShape) fieldOfView.getControl(
