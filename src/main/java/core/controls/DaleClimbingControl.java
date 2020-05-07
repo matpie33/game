@@ -188,7 +188,8 @@ public class DaleClimbingControl extends AbstractControl {
 		return gameStateDTO.getDaleStateDTO()
 						   .getLedgeCollisionPoint()
 						   .add(spatialExtent.mult(control.getViewDirection()))
-						   .add(spatialExtent.mult(Vector3f.UNIT_Y));
+						   .add(spatialExtent.mult(Vector3f.UNIT_Y))
+						   .add(new Vector3f(0, 0.5f, 0));
 	}
 
 	private boolean isMovingInLedgeCompleted(Vector3f finalPoint) {
@@ -216,7 +217,8 @@ public class DaleClimbingControl extends AbstractControl {
 		Vector3f mainPoint = contactPoint.add(
 				extentOfCharacter.mult(viewDirection))
 										 .add(extentOfCharacter.mult(
-												 Vector3f.UNIT_Y));
+												 Vector3f.UNIT_Y.mult(2))
+															   .add(Vector3f.UNIT_Y));
 		Vector3f leftFromMainPoint = mainPoint.add(camera.getLeft()
 														 .mult(extentOfCharacter));
 		Vector3f rightFromMainPoint = mainPoint.add(camera.getLeft()
@@ -235,27 +237,23 @@ public class DaleClimbingControl extends AbstractControl {
 		CollisionResults collisionResults = new CollisionResults();
 		rootNode.collideWith(ray, collisionResults);
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
-		return Math.abs(closestCollision.getDistance() - spatialExtent.mult(
+		return closestCollision.getDistance() >= spatialExtent.mult(
 				Vector3f.UNIT_Y)
-																	  .length())
-				< 0.5f;
+															  .length();
 	}
 
 	private boolean isVeryCloseToObstacle(CharacterControl control,
 			Vector3f spatialExtent, CollisionResult closestCollision) {
-		return closestCollision != null &&
-				closestCollision.getDistance() - spatialExtent.mult(
-						control.getViewDirection())
-															  .length()
-						< MIN_DISTANCE;
+		return closestCollision != null
+				&& closestCollision.getDistance() < MIN_DISTANCE;
 
 	}
 
 	private CollisionResult getClosestObjectFromCharacterHeadForward(
 			CharacterControl control, Vector3f extent) {
-		Ray ray = new Ray(spatial.getWorldTranslation()
-								 .add(Vector3f.UNIT_Y.mult(extent)),
-				control.getViewDirection());
+		Vector3f rayStart = spatial.getWorldTranslation()
+							  .add(extent.mult(control.getViewDirection()));
+		Ray ray = new Ray(rayStart, control.getViewDirection());
 		CollisionResults collisionResults = new CollisionResults();
 		rootNode.collideWith(ray, collisionResults);
 		return collisionResults.getClosestCollision();
