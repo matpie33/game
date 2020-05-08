@@ -266,9 +266,8 @@ public class ObjectsInitializer {
 		BoundingBox sizeOfDale = CoordinatesUtil.getSizeOfSpatial(model);
 		float yExtent = sizeOfDale.getYExtent();
 		float zExtent = sizeOfDale.getZExtent();
-		float xExtent = sizeOfDale.getXExtent();
 
-		return new CapsuleCollisionShape(Math.max(zExtent, xExtent),
+		return new CapsuleCollisionShape(zExtent,
 				yExtent, 1);
 	}
 

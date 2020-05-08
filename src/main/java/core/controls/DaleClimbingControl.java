@@ -10,7 +10,6 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import core.GameApplication;
@@ -24,7 +23,7 @@ import java.util.List;
 
 public class DaleClimbingControl extends AbstractControl {
 
-	public static final float MIN_DISTANCE = 1.5f;
+	public static final float MIN_DISTANCE = 0.5f;
 	private Camera camera;
 	private Node rootNode;
 	private GameStateDTO gameStateDTO;
@@ -206,7 +205,8 @@ public class DaleClimbingControl extends AbstractControl {
 	private List<Vector3f> getPointsToCheckEnoughHeightToWalk(
 			Vector3f contactPoint, Vector3f viewDirection,
 			Vector3f extentOfCharacter) {
-		Vector3f mainPoint = getDestinationPointAboveLedge(contactPoint, viewDirection);
+		Vector3f mainPoint = getDestinationPointAboveLedge(contactPoint,
+				viewDirection);
 		Vector3f leftFromMainPoint = mainPoint.add(camera.getLeft()
 														 .mult(extentOfCharacter));
 		Vector3f rightFromMainPoint = mainPoint.add(camera.getLeft()
@@ -225,8 +225,7 @@ public class DaleClimbingControl extends AbstractControl {
 		Vector3f extent = ((BoundingBox) spatial.getWorldBound()).getExtent(
 				new Vector3f());
 		return contactPoint.add(extent.mult(viewDirection))
-						   .add(extent.mult(Vector3f.UNIT_Y.mult(2))
-									  .add(Vector3f.UNIT_Y));
+						   .add(extent.mult(Vector3f.UNIT_Y.mult(2)));
 	}
 
 	private boolean isEnoughHeightToStandInPoint(Vector3f spatialExtent,
