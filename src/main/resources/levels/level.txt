@@ -58,3 +58,7 @@ Start object
 Path: mark.mesh.xml
 Position: (186.98969, 2.460689, 212.92944)
 Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: house_with_exit.scene
+Position: (324.43594, 66.82722, -520.5574)
+Rotation: (0.0, 0.0, 0.0, 1.0)

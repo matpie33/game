@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- exporter: blender2ogre 0.7.0 -->
-<!-- export_time: Fri, 08 May 2020 15:41:38 +0000 -->
-<!-- previous_export_time: Fri, 08 May 2020 15:39:49 +0000 -->
+<!-- export_time: Fri, 08 May 2020 15:42:16 +0000 -->
+<!-- previous_export_time: Fri, 08 May 2020 15:31:47 +0000 -->
 <scene author="Admin" formatVersion="1.1" >
   <nodes >
     <node name="gravel" >
@@ -62,11 +62,11 @@
         </userData>
       </entity>
     </node>
-    <node name="fence_brown" >
+    <node name="fence_orange" >
       <position x="-22.777336" y="-44.366802" z="8.149572" />
       <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
       <scale x="3.378378" y="16.856260" z="5.000000" />
-      <entity meshFile="fence_brown.mesh" name="fence_brown" >
+      <entity meshFile="fence_orange.mesh" name="fence_orange" >
         <userData >
           <property data="1.0" name="mass" type="float" />
           <property data="1.0" name="mass_radius" type="float" />
@@ -94,13 +94,13 @@
   </nodes>
   <externals >
     <item type="material" >
-      <file name="house.material" />
-    </item>
-    <item type="material" >
-      <file name="fence_brown.material" />
-    </item>
-    <item type="material" >
       <file name="gravel.material" />
+    </item>
+    <item type="material" >
+      <file name="fence_orange.material" />
+    </item>
+    <item type="material" >
+      <file name="house.material" />
     </item>
   </externals>
   <environment >
