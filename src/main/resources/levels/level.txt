@@ -4,10 +4,6 @@ Position: (5.193684, 3.8244913, -3.5424862)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: house.scene
-Position: (-76.39126, 68.76293, 7.514079)
-Rotation: (0.0, 0.0, 0.0, 1.0)
-Start object
-Path: house.scene
 Position: (-55.567684, 70.4503, -401.5688)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
@@ -16,43 +12,31 @@ Position: (383.80698, 66.85616, -144.42734)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: dalev4.mesh.xml
-Position: (197.74658, 9.3617, 114.35181)
-Rotation: (0.0, 0.0, 0.0, 1.0)
+Position: (189.60678, 9.361774, 307.89038)
+Rotation: (0.0, 1.0, 0.0, 0.0)
 Start object
 Path: box.mesh.xml
-Position: (130.08136, 8.1219845, 175.6149)
-Rotation: (0.0, 0.0, 0.0, 1.0)
-Start object
-Path: box.mesh.xml
-Position: (176.62482, 8.122, 132.43068)
-Rotation: (0.0, 0.0, 0.0, 1.0)
-Start object
-Path: box.mesh.xml
-Position: (182.1202, 8.122011, 172.0494)
+Position: (235.0384, 8.121842, 90.48331)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: trashbin.mesh.xml
-Position: (217.74565, 12.919048, 199.60315)
+Position: (264.40976, 12.918925, -89.760254)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: trashbin.mesh.xml
-Position: (215.38005, 7.625478, 149.83102)
+Position: (273.88522, 7.6253204, 110.14297)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: trashbin.mesh.xml
-Position: (116.886215, 10.020891, 143.10358)
+Position: (107.81935, 11.194041, 143.12347)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: trashbin.mesh.xml
-Position: (179.2373, 9.771675, 82.27494)
+Position: (142.98544, 9.771772, -15.228858)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: box.mesh.xml
-Position: (169.68831, 6.0213594, 164.00034)
-Rotation: (0.0, 0.0, 0.0, 1.0)
-Start object
-Path: pylon.mesh.xml
-Position: (198.90742, 31.443447, 67.90495)
+Position: (69.574974, 7.150415, 296.07327)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: mark.mesh.xml
@@ -60,5 +44,41 @@ Position: (186.98969, 2.460689, 212.92944)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: house_with_exit.scene
-Position: (324.43594, 66.82722, -520.5574)
+Position: (107.165634, 67.4952, 147.47784)
+Rotation: (0.0, 0.7071067, 0.0, -0.7071067)
+Start object
+Path: dog.mesh.xml
+Position: (38.485146, 10.380437, 150.38893)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: dog.mesh.xml
+Position: (199.27905, 9.150376, -54.235573)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: box.mesh.xml
+Position: (178.82481, 8.122, 132.43068)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: dog.mesh.xml
+Position: (6.6236415, 10.622859, 279.47424)
+Rotation: (0.0, 0.70710677, 0.0, 0.70710677)
+Start object
+Path: box.mesh.xml
+Position: (199.15962, 6.0212975, 274.04858)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: box.mesh.xml
+Position: (67.92712, 7.29174, 247.18637)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: box.mesh.xml
+Position: (68.68311, 7.291719, 210.08624)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: box.mesh.xml
+Position: (86.74558, 7.194145, 208.64351)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: dog.mesh.xml
+Position: (153.31041, 10.622845, 121.71538)
 Rotation: (0.0, 0.0, 0.0, 1.0)
