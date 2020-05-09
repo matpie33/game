@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- exporter: blender2ogre 0.7.0 -->
-<!-- export_time: Fri, 08 May 2020 15:41:38 +0000 -->
-<!-- previous_export_time: Fri, 08 May 2020 15:39:49 +0000 -->
+<!-- export_time: Sat, 09 May 2020 09:56:59 +0000 -->
+<!-- previous_export_time: Sat, 09 May 2020 09:51:17 +0000 -->
 <scene author="Admin" formatVersion="1.1" >
   <nodes >
-    <node name="gravel" >
-      <position x="57.221687" y="-68.931137" z="115.079224" />
+    <node name="gravel_1" >
+      <position x="38.079544" y="-69.814880" z="142.901672" />
       <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
-      <scale x="179.773209" y="0.380714" z="179.773209" />
-      <entity meshFile="gravel.mesh" name="gravel" >
+      <scale x="127.997414" y="0.380714" z="129.802536" />
+      <entity meshFile="gravel_1.mesh" name="gravel_1" >
         <userData >
           <property data="1.0" name="mass" type="float" />
           <property data="1.0" name="mass_radius" type="float" />
@@ -34,7 +34,7 @@
       </entity>
     </node>
     <node name="house" >
-      <position x="25.167992" y="0.006392" z="2.373552" />
+      <position x="3.619591" y="24.253290" z="22.512972" />
       <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
       <scale x="1.000000" y="1.000000" z="1.000000" />
       <entity meshFile="house.mesh" name="house" >
@@ -62,11 +62,11 @@
         </userData>
       </entity>
     </node>
-    <node name="fence_brown" >
-      <position x="-22.777336" y="-44.366802" z="8.149572" />
+    <node name="fence_test" >
+      <position x="-44.274704" y="-53.674492" z="242.933823" />
       <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
-      <scale x="3.378378" y="16.856260" z="5.000000" />
-      <entity meshFile="fence_brown.mesh" name="fence_brown" >
+      <scale x="1.000000" y="1.000000" z="1.000000" />
+      <entity meshFile="fence_test.mesh" name="fence_test" >
         <userData >
           <property data="1.0" name="mass" type="float" />
           <property data="1.0" name="mass_radius" type="float" />
@@ -94,13 +94,13 @@
   </nodes>
   <externals >
     <item type="material" >
+      <file name="fence_test.material" />
+    </item>
+    <item type="material" >
       <file name="house.material" />
     </item>
     <item type="material" >
-      <file name="fence_brown.material" />
-    </item>
-    <item type="material" >
-      <file name="gravel.material" />
+      <file name="gravel_1.material" />
     </item>
   </externals>
   <environment >
