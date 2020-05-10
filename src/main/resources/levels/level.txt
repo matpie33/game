@@ -12,7 +12,7 @@ Position: (306.69525, 64.77852, 143.66759)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: dalev4.mesh.xml
-Position: (241.84555, 7.7523804, -339.26376)
+Position: (-241.55547, 14.839376, 190.64658)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: box.mesh.xml
@@ -44,7 +44,7 @@ Position: (186.98969, 2.460689, 212.92944)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: house_with_exit.scene
-Position: (-291.77792, 69.54891, 288.67828)
+Position: (-285.3366, 27.926746, 290.90295)
 Rotation: (0.0, -0.7071067, 0.0, -0.7071067)
 Start object
 Path: dog.mesh.xml
@@ -68,7 +68,7 @@ Position: (224.41766, 6.021133, -77.5309)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: box.mesh.xml
-Position: (67.92712, 7.29174, 247.18637)
+Position: (-270.3456, 14.168397, 200.6587)
 Rotation: (0.0, 0.0, 0.0, 1.0)
 Start object
 Path: box.mesh.xml
@@ -94,3 +94,7 @@ Start object
 Path: house.scene
 Position: (511.58176, 66.97914, -412.92758)
 Rotation: (0.0, 0.7071067, 0.0, -0.7071067)
+Start object
+Path: broken_fence.mesh.xml
+Position: (-414.59778, 14.576949, 202.4457)
+Rotation: (0.0, -0.70710677, -0.0, 0.70710677)

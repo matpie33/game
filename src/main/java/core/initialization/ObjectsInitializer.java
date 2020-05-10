@@ -76,12 +76,16 @@ public class ObjectsInitializer {
 			if (spatialName.startsWith("tree")) {
 				initializeTree(bulletAppState, rootNode, spatial);
 			}
+			if (spatialName.startsWith("broken")) {
+				initializeBoxShape(bulletAppState, spatial, throwables);
+			}
 			if (spatialName.startsWith("box")) {
 				initializeBox(bulletAppState, spatial, throwables);
 			}
 			else {
 				rootNode.attachChild(spatial);
 			}
+
 			CharacterControl control = spatial.getControl(
 					CharacterControl.class);
 			if (control != null) {
@@ -98,6 +102,18 @@ public class ObjectsInitializer {
 		rootNode.attachChild(objectsHolderDTO.getFieldOfView());
 		initializeCamera(rootNode);
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
+	}
+
+	private void initializeBoxShape(BulletAppState bulletAppState, Spatial spatial, Node throwables) {
+		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(spatial);
+
+		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 5f);
+		rigidBodyControl.setGravity(new Vector3f(0, -30f, 0));
+		rigidBodyControl.setPhysicsLocation(spatial.getLocalTranslation());
+
+		spatial.addControl(rigidBodyControl);
+		bulletAppState.getPhysicsSpace()
+					  .add(rigidBodyControl);
 	}
 
 	private void initializeRigidObject(BulletAppState bulletAppState,

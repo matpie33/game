@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- exporter: blender2ogre 0.7.0 -->
-<!-- export_time: Sat, 09 May 2020 09:56:59 +0000 -->
+<!-- export_time: Sun, 10 May 2020 14:00:14 +0000 -->
 <!-- previous_export_time: Sat, 09 May 2020 09:51:17 +0000 -->
 <scene author="Admin" formatVersion="1.1" >
   <nodes >
@@ -94,13 +94,13 @@
   </nodes>
   <externals >
     <item type="material" >
+      <file name="gravel_1.material" />
+    </item>
+    <item type="material" >
       <file name="fence_test.material" />
     </item>
     <item type="material" >
       <file name="house.material" />
-    </item>
-    <item type="material" >
-      <file name="gravel_1.material" />
     </item>
   </externals>
   <environment >
