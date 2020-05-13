@@ -11,15 +11,15 @@ public class SoundsInitializer {
 
 	public void addMusic() {
 		GameApplication gameApplication = GameApplication.getInstance();
-		AudioNode audio_gun = new AudioNode(gameApplication.getAssetManager(),
+		AudioNode music = new AudioNode(gameApplication.getAssetManager(),
 				MUSIC_DIRECTORY + "level1" + SOUND_EXTENSION,
 				AudioData.DataType.Buffer);
-		audio_gun.setPositional(false);
-		audio_gun.setLooping(true);
-		audio_gun.setVolume(1);
-		//		audio_gun.play();
+		music.setPositional(false);
+		music.setLooping(true);
+		music.setVolume(0.1f);
+		music.play();
 		gameApplication.getRootNode()
-					   .attachChild(audio_gun);
+					   .attachChild(music);
 	}
 
 }
