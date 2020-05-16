@@ -98,7 +98,3 @@ Start object
 Path: box.mesh.xml
 Position: (40.80049, 7.150196, 305.6298)
 Rotation: (0.0, 0.0, 0.0, 1.0)
-Start object
-Path: grass.mesh.xml
-Position: (-79.994965, 5.5610676, -221.56577)
-Rotation: (0.0, 0.0, 0.0, 1.0)
