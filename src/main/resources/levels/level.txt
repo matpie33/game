@@ -1,8 +1,4 @@
 Start object
-Path: map.mesh.xml
-Position: (5.193684, 3.8244913, -3.5424862)
-Rotation: (0.0, 0.0, 0.0, 1.0)
-Start object
 Path: house.scene
 Position: (-298.97665, 66.26593, -51.63462)
 Rotation: (0.0, -0.7071067, 0.0, -0.7071067)
@@ -97,4 +93,8 @@ Rotation: (0.0, 0.70710677, 0.0, 0.70710677)
 Start object
 Path: box.mesh.xml
 Position: (40.80049, 7.150196, 305.6298)
+Rotation: (0.0, 0.0, 0.0, 1.0)
+Start object
+Path: map.scene
+Position: (-15.978767, 2.2437706, 80.041916)
 Rotation: (0.0, 0.0, 0.0, 1.0)

@@ -60,7 +60,8 @@ public class ObjectsInitializer {
 										   .replace("/", "");
 			Spatial spatial = setSpatialPositionAndRotation(spatialDTO);
 			if (spatialName.startsWith("house") || spatialName.startsWith(
-					"fence") || spatialName.startsWith("trash")
+					"sidewalk") || spatialName.startsWith("fence")
+					|| spatialName.startsWith("trash")
 					|| spatialName.startsWith("pylon")) {
 				initializeRigidObject(bulletAppState, spatial, rootNode);
 			}
@@ -104,7 +105,8 @@ public class ObjectsInitializer {
 		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
 	}
 
-	private void initializeBoxShape(BulletAppState bulletAppState, Spatial spatial, Node throwables) {
+	private void initializeBoxShape(BulletAppState bulletAppState,
+			Spatial spatial, Node throwables) {
 		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(spatial);
 
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 5f);
@@ -283,8 +285,7 @@ public class ObjectsInitializer {
 		float yExtent = sizeOfDale.getYExtent();
 		float zExtent = sizeOfDale.getZExtent();
 
-		return new CapsuleCollisionShape(zExtent,
-				yExtent, 1);
+		return new CapsuleCollisionShape(zExtent, yExtent, 1);
 	}
 
 	private void initializeDog(BulletAppState bulletAppState, Node rootNode,
