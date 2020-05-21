@@ -441,8 +441,4 @@
         <submesh index="1" name="street"/>
         <submesh index="2" name="pavement"/>
     </submeshnames>
-    <levelofdetail manual="true" numlevels="3" strategy="default">
-        <lodmanual meshname="map_LOD_1.mesh" value="300"/>
-        <lodmanual meshname="map_LOD_2.mesh" value="600"/>
-    </levelofdetail>
 </mesh>
