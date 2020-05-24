@@ -1,13 +1,15 @@
-package core.initialization;
+package core.appState;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Spatial;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
-import core.GameApplication;
 import dto.ObjectsHolderDTO;
 
-public class AdditionalModelsLoader {
+public class AdditionalModelsAppState extends AbstractAppState {
 
 	private static final String TEXTURES_DIRECTORY = "textures/";
 	private static final String SCENE_DIRECTORY = "scene/";
@@ -17,13 +19,14 @@ public class AdditionalModelsLoader {
 	private ObjectsHolderDTO objectsHolderDTO;
 	private AssetManager assetManager;
 
-	public AdditionalModelsLoader(ObjectsHolderDTO objectsHolderDTO) {
+	public AdditionalModelsAppState(ObjectsHolderDTO objectsHolderDTO) {
 		this.objectsHolderDTO = objectsHolderDTO;
-		assetManager = GameApplication.getInstance()
-									  .getAssetManager();
 	}
 
-	public void loadModels() {
+	@Override
+	public void initialize(AppStateManager stateManager, Application app) {
+		super.initialize(stateManager, app);
+		assetManager = app.getAssetManager();
 		createModels();
 		createSky();
 		createTextures();
@@ -35,8 +38,9 @@ public class AdditionalModelsLoader {
 	}
 
 	private void createSky() {
-		objectsHolderDTO.setSky(SkyFactory.createSky(assetManager,
-				"clouds" + "" + ".dds", SkyFactory.EnvMapType.CubeMap));
+		objectsHolderDTO.setSky(
+				SkyFactory.createSky(assetManager, "clouds.dds",
+						SkyFactory.EnvMapType.CubeMap));
 	}
 
 	private void createModels() {

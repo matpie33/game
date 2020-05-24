@@ -1,5 +1,8 @@
-package core.gui;
+package core.appState;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import core.GameApplication;
 import de.lessvoid.nifty.Nifty;
@@ -11,7 +14,7 @@ import de.lessvoid.nifty.controls.label.builder.LabelBuilder;
 import de.lessvoid.nifty.screen.DefaultScreenController;
 import de.lessvoid.nifty.screen.Screen;
 
-public class HUDCreator {
+public class HUDAppState extends AbstractAppState {
 
 	public static final String HUD_SCREEN_NAME = "HUD_SCREEN";
 	public static final String LAYER1_NAME = "layer1";
@@ -21,7 +24,8 @@ public class HUDCreator {
 	private Screen hudScreen;
 	private static final String HP_FORMAT = "HP: %d%%";
 
-	public void createHUD() {
+	@Override
+	public void initialize(AppStateManager stateManager, Application app) {
 		GameApplication gameApplication = GameApplication.getInstance();
 		NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(
 				gameApplication.getAssetManager(),
@@ -62,6 +66,7 @@ public class HUDCreator {
 
 		setHp(100);
 	}
+
 
 	public void setHp (int hp){
 		Label control = hudScreen.findNiftyControl(HP_LABEL_NAME,

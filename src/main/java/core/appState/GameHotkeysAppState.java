@@ -1,17 +1,20 @@
-package core.initialization;
+package core.appState;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import enums.State;
 
-public class KeysSetup implements ActionListener {
+public class GameHotkeysAppState extends AbstractAppState
+		implements ActionListener {
 
 	public static final String MOVE_LEFT = "moveLeft";
 	public static final String MOVE_RIGHT = "moveRight";
@@ -23,13 +26,13 @@ public class KeysSetup implements ActionListener {
 
 	private GameStateDTO gameStateDTO;
 
-	public KeysSetup(GameStateDTO gameStateDTO) {
+	public GameHotkeysAppState(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
 	}
 
-	public void setupKeys() {
-		InputManager inputManager = GameApplication.getInstance()
-												   .getInputManager();
+	@Override
+	public void initialize(AppStateManager stateManager, Application app) {
+		InputManager inputManager = app.getInputManager();
 		inputManager.addMapping(MOVE_LEFT, new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addMapping(MOVE_RIGHT, new KeyTrigger(KeyInput.KEY_D));
 		inputManager.addMapping(MOVE_FORWARD_OR_MOVE_IN_LEDGE,
@@ -56,7 +59,7 @@ public class KeysSetup implements ActionListener {
 		}
 		if (MOVE_FORWARD_OR_MOVE_IN_LEDGE.equals(name)) {
 			daleStateDTO.setMovingForward(isPressed);
-			if (isPressed){
+			if (isPressed) {
 				daleStateDTO.setMoveInLedge(State.REQUESTED);
 			}
 

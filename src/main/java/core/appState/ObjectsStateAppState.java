@@ -1,17 +1,18 @@
-package core.controllers;
+package core.appState;
 
+import com.jme3.app.state.AbstractAppState;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import core.GameApplication;
-import core.gui.HUDCreator;
+import core.controllers.ObjectsMovementController;
 import core.util.CoordinatesUtil;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 
-public class ObjectsStateController {
+public class ObjectsStateAppState extends AbstractAppState {
 
 	private GameStateDTO gameStateDTO;
 	public static final int HP_DECREASE_VALUE = 20;
@@ -19,20 +20,19 @@ public class ObjectsStateController {
 
 	private float timeSinceLastHpDecrease;
 	private ObjectsMovementController objectsMovementController;
-	private HUDCreator hudCreator;
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public ObjectsStateController(GameStateDTO gameStateDTO,
-			ObjectsMovementController objectsMovementController,
-			HUDCreator hudCreator, ObjectsHolderDTO objectsHolderDTO) {
+	public ObjectsStateAppState(GameStateDTO gameStateDTO,
+			ObjectsHolderDTO objectsHolderDTO) {
 		this.gameStateDTO = gameStateDTO;
 		timeSinceLastHpDecrease = 0;
-		this.objectsMovementController = objectsMovementController;
-		this.hudCreator = hudCreator;
 		this.objectsHolderDTO = objectsHolderDTO;
+		objectsMovementController = new ObjectsMovementController(gameStateDTO,
+				objectsHolderDTO);
 	}
 
-	public void handleObjectsState(float tpf) {
+	@Override
+	public void update(float tpf) {
 		timeSinceLastHpDecrease += tpf;
 		handleDaleState();
 		handleCursorState();
@@ -83,7 +83,11 @@ public class ObjectsStateController {
 			daleStateDTO.setCollidingWithEnemy(false);
 			daleStateDTO.setHp(daleStateDTO.getHp() - HP_DECREASE_VALUE);
 			objectsMovementController.moveDaleBack();
-			hudCreator.setHp(daleStateDTO.getHp());
+			HUDAppState hudAppState = GameApplication.getInstance()
+													 .getStateManager()
+													 .getState(
+															 HUDAppState.class);
+			hudAppState.setHp(daleStateDTO.getHp());
 		}
 
 	}

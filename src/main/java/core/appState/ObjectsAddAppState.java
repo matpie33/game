@@ -1,5 +1,7 @@
-package core.initialization;
+package core.appState;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
@@ -30,31 +32,31 @@ import enums.MovementDirection;
 
 import java.util.List;
 
-public class ObjectsInitializer {
+public class ObjectsAddAppState extends AbstractAppState {
 
 	public static final int INITIAL_HP_OF_DALE = 100;
 
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
-	private IdleTimeChecker idleTimeChecker;
 
-	public ObjectsInitializer(ObjectsHolderDTO objectsHolderDTO,
-			GameStateDTO gameStateDTO, IdleTimeChecker idleTimeChecker) {
+	public ObjectsAddAppState(ObjectsHolderDTO objectsHolderDTO,
+			GameStateDTO gameStateDTO) {
 		collisionController = new CollisionController(objectsHolderDTO,
 				gameStateDTO);
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.idleTimeChecker = idleTimeChecker;
 	}
 
-	public void addObjectsToScene(List<SpatialDTO> spatials) {
-
+	@Override
+	public void initialize(AppStateManager stateManager, Application app) {
 		BulletAppState bulletAppState = initializeBulletAppState();
 		Node rootNode = GameApplication.getInstance()
 									   .getRootNode();
 		Node throwables = new Node(NodeNames.THROWABLES);
 		rootNode.attachChild(throwables);
+		List<SpatialDTO> spatials = stateManager.getState(LevelAppState.class)
+												.getSpatialDTOS();
 		for (SpatialDTO spatialDTO : spatials) {
 			String spatialName = spatialDTO.getPathToModel()
 										   .replace("/", "");
@@ -169,7 +171,7 @@ public class ObjectsInitializer {
 		CameraNode cameraNode = new CameraNode("Main camera", camera);
 		cameraNode.addControl(
 				new DaleFollowingCameraControl(gameStateDTO, camera,
-						objectsHolderDTO, idleTimeChecker));
+						objectsHolderDTO));
 		cameraNode.removeControl(CameraControl.class);
 		camera.lookAtDirection(objectsHolderDTO.getDale()
 											   .getControl(PhysicsControls.DALE)

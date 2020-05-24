@@ -1,5 +1,8 @@
-package core.controllers;
+package core.appState;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import core.animationEventListeners.DaleAnimationListener;
 import core.animationEventListeners.DogAnimationListener;
 import dto.DogStateDTO;
@@ -9,20 +12,21 @@ import dto.ObjectsHolderDTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnimationsController {
+public class AnimationsAppState extends AbstractAppState {
 
 	private DaleAnimationListener daleAnimationListener;
 	private List<DogAnimationListener> dogAnimationListeners = new ArrayList<>();
 	private GameStateDTO gameStateDTO;
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public AnimationsController(GameStateDTO gameStateDTO,
+	public AnimationsAppState(GameStateDTO gameStateDTO,
 			ObjectsHolderDTO objectsHolderDTO) {
 		this.gameStateDTO = gameStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
-	public void setUp() {
+	@Override
+	public void initialize(AppStateManager stateManager, Application app) {
 		daleAnimationListener = new DaleAnimationListener(gameStateDTO,
 				objectsHolderDTO);
 		daleAnimationListener.setUpAnimations();
@@ -34,9 +38,9 @@ public class AnimationsController {
 		}
 	}
 
-	public void handleAnimations() {
+	@Override
+	public void update(float tpf) {
 		daleAnimationListener.handleAnimation();
-
 	}
 
 }

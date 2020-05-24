@@ -1,27 +1,29 @@
-package core.controllers;
+package core.appState;
 
+import com.jme3.app.state.AbstractAppState;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import core.controllers.EffectsController;
 import dto.DogStateDTO;
 import dto.GameStateDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObjectsRemovingController {
+public class ObjectsRemovingAppState extends AbstractAppState {
 
 	private GameStateDTO gameStateDTO;
 	private EffectsController effectsController;
 
-	public ObjectsRemovingController(GameStateDTO gameStateDTO,
-			EffectsController effectsController) {
+	public ObjectsRemovingAppState(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
-		this.effectsController = effectsController;
+		this.effectsController = new EffectsController();
 	}
 
-	public void handleObjectsRemoved() {
+	@Override
+	public void update(float tpf) {
 		List<DogStateDTO> removedDogs = new ArrayList<>();
 		for (DogStateDTO dogStateDTO : gameStateDTO.getDogStateDTOS()) {
 			if (!dogStateDTO.isAlive()) {

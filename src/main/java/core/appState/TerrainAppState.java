@@ -1,5 +1,8 @@
-package core.initialization;
+package core.appState;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.terrain.geomipmap.TerrainQuad;
@@ -11,17 +14,17 @@ import core.GameApplication;
 import dto.ObjectsHolderDTO;
 import external.HeightBasedAlphaMapGenerator;
 
-public class TerrainCreator {
+public class TerrainAppState extends AbstractAppState {
 
 	private HeightBasedAlphaMapGenerator heightBasedAlphaMapGenerator;
 	private ObjectsHolderDTO objectsHolderDTO;
 
-	public TerrainCreator(ObjectsHolderDTO objectsHolderDTO) {
+	public TerrainAppState(ObjectsHolderDTO objectsHolderDTO) {
 		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
-	public void setupTerrain() {
-
+	@Override
+	public void initialize(AppStateManager stateManager, Application app) {
 		Material material = new Material(GameApplication.getInstance()
 														.getAssetManager(),
 				"Common/MatDefs/Terrain/Terrain.j3md");
@@ -52,7 +55,7 @@ public class TerrainCreator {
 		objectsHolderDTO.setTerrain(terrain);
 
 		terrain.setMaterial(material);
-
 	}
+
 
 }

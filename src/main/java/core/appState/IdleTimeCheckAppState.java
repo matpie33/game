@@ -1,22 +1,22 @@
-package core.initialization;
+package core.appState;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.input.InputManager;
 import com.jme3.input.RawInputListener;
 import com.jme3.input.event.*;
 import core.GameApplication;
 
-public class IdleTimeChecker implements RawInputListener {
+public class IdleTimeCheckAppState extends AbstractAppState
+		implements RawInputListener {
 
-	private InputManager inputManager;
 	private float idleTime;
 
-	public IdleTimeChecker() {
-		inputManager = GameApplication.getInstance()
-									  .getInputManager();
-	}
 
-	public void setUp() {
-		inputManager.addRawInputListener(this);
+	@Override
+	public void initialize(AppStateManager stateManager, Application app) {
+		app.getInputManager().addRawInputListener(this);
 	}
 
 	public void updateTimePassed(float timePassed) {
