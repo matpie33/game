@@ -11,6 +11,7 @@ import com.jme3.scene.control.AbstractControl;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
+import core.appState.ThrowableObjectInRangeAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -21,12 +22,15 @@ public class DalePickingObjectsControl extends AbstractControl {
 	private GameApplication gameApplication;
 	private ObjectsHolderDTO objectsHolderDTO;
 	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
+	private ThrowableObjectInRangeAppState throwableObjectInRangeAppState;
 
 	public DalePickingObjectsControl(GameStateDTO gameStateDTO,
-			ObjectsHolderDTO objectsHolderDTO) {
+			ObjectsHolderDTO objectsHolderDTO,
+			ThrowableObjectInRangeAppState throwableObjectInRangeAppState) {
 		this.gameStateDTO = gameStateDTO;
 		this.gameApplication = GameApplication.getInstance();
 		this.objectsHolderDTO = objectsHolderDTO;
+		this.throwableObjectInRangeAppState = throwableObjectInRangeAppState;
 	}
 
 	@Override
@@ -48,27 +52,24 @@ public class DalePickingObjectsControl extends AbstractControl {
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
 
 		if (isCloseEnoughToAnyObject(collisionResults)) {
-			if (!gameStateDTO.isCursorShowing()
-					&& !daleStateDTO.isCarryingThrowableObject()) {
+			if (!daleStateDTO.isCarryingThrowableObject()) {
 
-				gameStateDTO.setCursorShowingAt(closestCollision.getGeometry());
+				throwableObjectInRangeAppState.setThrowableObject(
+						closestCollision.getGeometry());
+				throwableObjectInRangeAppState.setEnabled(true);
 			}
 			if (daleStateDTO.isPickingObject()) {
 				daleStateDTO.setCarryingThrowableObject(true);
 				daleStateDTO.setCarriedObject(closestCollision.getGeometry()
 															  .getParent());
-				gameStateDTO.setCursorNotShowing();
+				throwableObjectInRangeAppState.setEnabled(false);
 			}
 
 		}
 
-		if (gameStateDTO.isCursorShowing() && (collisionResults.size() == 0
-				|| closestCollision.getGeometry()
-				!= gameStateDTO.getSpatialOnWhichCursorIsShowing()
-				|| closestCollision.getDistance()
+		if ((collisionResults.size() == 0 || closestCollision.getDistance()
 				> MINIMAL_DISTANCE_TO_PICK_OBJECT)) {
-
-			gameStateDTO.setCursorNotShowing();
+			throwableObjectInRangeAppState.setEnabled(false);
 		}
 
 	}

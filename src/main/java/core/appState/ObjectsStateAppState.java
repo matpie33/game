@@ -35,40 +35,9 @@ public class ObjectsStateAppState extends AbstractAppState {
 	public void update(float tpf) {
 		timeSinceLastHpDecrease += tpf;
 		handleDaleState();
-		handleCursorState();
 	}
 
-	private void handleCursorState() {
-		if (gameStateDTO.isCursorShowing() && !GameApplication.getInstance()
-															  .getRootNode()
-															  .getChildren()
-															  .contains(
-																	  objectsHolderDTO.getArrow())) {
-			showArrow();
-		}
-		if (!gameStateDTO.isCursorShowing()) {
-			objectsHolderDTO.getArrow()
-							.removeFromParent();
-		}
-	}
 
-	private void showArrow() {
-		Geometry throwableObject = gameStateDTO.getSpatialOnWhichCursorIsShowing();
-		Spatial arrow = objectsHolderDTO.getArrow();
-		BoundingBox throwableObjectSize = CoordinatesUtil.getSizeOfSpatial(
-				throwableObject);
-		float yDimensionArrow = CoordinatesUtil.getSizeOfSpatial(arrow)
-											   .getYExtent();
-		float yDimensionCollisionObject = throwableObjectSize.getYExtent();
-		Vector3f throwableObjectPosition = throwableObject.getWorldTranslation();
-		arrow.setLocalTranslation(throwableObjectPosition.getX(),
-				throwableObjectPosition.getY() + yDimensionArrow
-						+ yDimensionCollisionObject,
-				throwableObjectPosition.getZ());
-		GameApplication.getInstance()
-					   .getRootNode()
-					   .attachChild(arrow);
-	}
 
 	private void handleDaleState() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();

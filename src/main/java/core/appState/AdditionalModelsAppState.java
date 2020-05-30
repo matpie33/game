@@ -45,7 +45,7 @@ public class AdditionalModelsAppState extends AbstractAppState {
 
 	private void createModels() {
 
-		objectsHolderDTO.setArrow(loadModel("arrow"));
+		objectsHolderDTO.setThrowableObjectMarker(loadModel("arrow"));
 		objectsHolderDTO.setMark(loadModel("mark"));
 	}
 

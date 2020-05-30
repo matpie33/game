@@ -2,6 +2,7 @@ package core.controls;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -102,6 +103,8 @@ public class CarriedObjectControl extends AbstractControl {
 		carriedObject.setLocalTranslation(new Vector3f(dalePosition.getX(),
 				dalePosition.getY() + daleHeight + boxHeight + 1f,
 				dalePosition.getZ()));
+		carriedObject.setLocalRotation(
+				new Quaternion().fromAngleAxis(0, new Vector3f(1, 1, 1)));
 	}
 
 	@Override

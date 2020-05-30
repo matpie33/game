@@ -3,24 +3,24 @@ package core.appState;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.input.InputManager;
 import com.jme3.input.RawInputListener;
 import com.jme3.input.event.*;
-import core.GameApplication;
 
 public class IdleTimeCheckAppState extends AbstractAppState
 		implements RawInputListener {
 
 	private float idleTime;
 
-
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
-		app.getInputManager().addRawInputListener(this);
+		app.getInputManager()
+		   .addRawInputListener(this);
 	}
 
-	public void updateTimePassed(float timePassed) {
-		idleTime += timePassed;
+	@Override
+	public void update(float tpf) {
+		super.update(tpf);
+		idleTime += tpf;
 	}
 
 	public float getIdleTime() {

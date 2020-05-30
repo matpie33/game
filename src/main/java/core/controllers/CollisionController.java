@@ -145,7 +145,7 @@ public class CollisionController implements PhysicsCollisionListener {
 		if (objectsHolderDTO.getFieldOfView()
 							.equals(node) || objectsHolderDTO.getMark()
 															 .equals(node)
-				|| objectsHolderDTO.getArrow()
+				|| objectsHolderDTO.getThrowableObjectMarker()
 								   .equals(node)) {
 			return ObjectsTypes.NONE;
 		}

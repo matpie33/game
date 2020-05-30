@@ -1,6 +1,7 @@
 package core.appState;
 
 import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bounding.BoundingBox;
@@ -39,6 +40,7 @@ public class ObjectsAddAppState extends AbstractAppState {
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
+	private ThrowableObjectInRangeAppState throwableObjectInRangeAppState;
 
 	public ObjectsAddAppState(ObjectsHolderDTO objectsHolderDTO,
 			GameStateDTO gameStateDTO) {
@@ -51,8 +53,10 @@ public class ObjectsAddAppState extends AbstractAppState {
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
 		BulletAppState bulletAppState = initializeBulletAppState();
-		Node rootNode = GameApplication.getInstance()
-									   .getRootNode();
+		throwableObjectInRangeAppState = new ThrowableObjectInRangeAppState(objectsHolderDTO);
+		stateManager.attach(throwableObjectInRangeAppState);
+		throwableObjectInRangeAppState.setEnabled(false);
+		Node rootNode = ((SimpleApplication) app).getRootNode();
 		Node throwables = new Node(NodeNames.THROWABLES);
 		rootNode.attachChild(throwables);
 		List<SpatialDTO> spatials = stateManager.getState(LevelAppState.class)
@@ -251,7 +255,7 @@ public class ObjectsAddAppState extends AbstractAppState {
 		DaleMovingControl daleMovingControl = new DaleMovingControl(
 				gameStateDTO, objectsHolderDTO);
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
-				gameStateDTO, objectsHolderDTO);
+				gameStateDTO, objectsHolderDTO, throwableObjectInRangeAppState);
 		DaleClimbingControl daleClimbingControl = new DaleClimbingControl(
 				gameStateDTO, objectsHolderDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);

@@ -1,6 +1,5 @@
 package dto;
 
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.texture.Texture;
@@ -16,7 +15,7 @@ public class ObjectsHolderDTO {
 	private Spatial dale;
 	private Spatial scene;
 	private Spatial mark;
-	private Spatial arrow;
+	private Spatial throwableObjectMarker;
 	private Spatial sky;
 	private Spatial fieldOfView;
 
@@ -81,12 +80,12 @@ public class ObjectsHolderDTO {
 		this.mark = mark;
 	}
 
-	public Spatial getArrow() {
-		return arrow;
+	public Spatial getThrowableObjectMarker() {
+		return throwableObjectMarker;
 	}
 
-	public void setArrow(Spatial arrow) {
-		this.arrow = arrow;
+	public void setThrowableObjectMarker(Spatial throwableObjectMarker) {
+		this.throwableObjectMarker = throwableObjectMarker;
 	}
 
 	public Spatial getSky() {
