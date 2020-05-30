@@ -15,7 +15,6 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
 import enums.State;
 
 import java.util.ArrayList;
@@ -27,15 +26,12 @@ public class DaleClimbingControl extends AbstractControl {
 	private Camera camera;
 	private Node rootNode;
 	private GameStateDTO gameStateDTO;
-	private ObjectsHolderDTO objectsHolderDTO;
 
-	public DaleClimbingControl(GameStateDTO gameStateDTO,
-			ObjectsHolderDTO objectsHolderDTO) {
+	public DaleClimbingControl(GameStateDTO gameStateDTO) {
 		GameApplication instance = GameApplication.getInstance();
 		camera = instance.getCamera();
 		rootNode = instance.getRootNode();
 		this.gameStateDTO = gameStateDTO;
-		this.objectsHolderDTO = objectsHolderDTO;
 	}
 
 	@Override
@@ -95,8 +91,7 @@ public class DaleClimbingControl extends AbstractControl {
 				new Vector3f());
 		CollisionResult closestCollision = getClosestObjectFromCharacterHeadForward(
 				control, spatialExtent);
-		boolean isVeryCloseToObstacle = isVeryCloseToObstacle(control,
-				spatialExtent, closestCollision);
+		boolean isVeryCloseToObstacle = isVeryCloseToObstacle(closestCollision);
 
 		if (isVeryCloseToObstacle) {
 			boolean enoughSpaceToWalkOnIt = isEnoughSpaceToWalkOnLedge(
@@ -239,8 +234,7 @@ public class DaleClimbingControl extends AbstractControl {
 															  .length();
 	}
 
-	private boolean isVeryCloseToObstacle(CharacterControl control,
-			Vector3f spatialExtent, CollisionResult closestCollision) {
+	private boolean isVeryCloseToObstacle(CollisionResult closestCollision) {
 		return closestCollision != null
 				&& closestCollision.getDistance() < MIN_DISTANCE;
 

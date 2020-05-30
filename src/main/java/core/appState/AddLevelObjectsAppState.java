@@ -257,7 +257,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
 				gameStateDTO, objectsHolderDTO, throwableObjectInRangeAppState);
 		DaleClimbingControl daleClimbingControl = new DaleClimbingControl(
-				gameStateDTO, objectsHolderDTO);
+				gameStateDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl characterControl = new CharacterControl(capsuleShape,
 				0.05f);
