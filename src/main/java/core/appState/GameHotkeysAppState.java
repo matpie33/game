@@ -11,7 +11,6 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
-import enums.State;
 
 public class GameHotkeysAppState extends AbstractAppState
 		implements ActionListener {
@@ -58,10 +57,9 @@ public class GameHotkeysAppState extends AbstractAppState
 			daleStateDTO.setMovingRight(isPressed);
 		}
 		if (MOVE_FORWARD_OR_MOVE_IN_LEDGE.equals(name)) {
+			gameStateDTO.getKeyPressDTO()
+						.setMoveForwardOrMoveInLedgePress(isPressed);
 			daleStateDTO.setMovingForward(isPressed);
-			if (isPressed) {
-				daleStateDTO.setMoveInLedge(State.REQUESTED);
-			}
 
 		}
 		if (MOVE_BACKWARD.equals(name)) {
@@ -76,9 +74,8 @@ public class GameHotkeysAppState extends AbstractAppState
 					isPressed && !daleStateDTO.isCarryingThrowableObject());
 			daleStateDTO.setPuttingAsideObject(
 					isPressed && daleStateDTO.isCarryingThrowableObject());
-			if (isPressed) {
-				daleStateDTO.setLetGoLedge(State.REQUESTED);
-			}
+			gameStateDTO.getKeyPressDTO()
+						.setLetGoLedgePress(isPressed);
 		}
 		if (THROW_OBJECT.equals(name)) {
 			if (daleStateDTO.isCarryingThrowableObject()) {

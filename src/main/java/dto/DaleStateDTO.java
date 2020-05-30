@@ -2,7 +2,7 @@ package dto;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import enums.State;
+import enums.ClimbingState;
 
 public class DaleStateDTO {
 
@@ -18,10 +18,16 @@ public class DaleStateDTO {
 	private boolean isPickingObject;
 	private boolean isPuttingAsideObject;
 	private boolean isCollidingWithEnemy;
-	private State isGrabbingLedge = State.NOT_RUNNING;
-	private State isLetGoLedge = State.NOT_RUNNING;
-	private State moveInLedge = State.NOT_RUNNING;
 	private Vector3f ledgeCollisionPoint;
+	private ClimbingState climbingState = ClimbingState.NOT_STARTED;
+
+	public ClimbingState getClimbingState() {
+		return climbingState;
+	}
+
+	public void setClimbingState(ClimbingState climbingState) {
+		this.climbingState = climbingState;
+	}
 
 	public Vector3f getLedgeCollisionPoint() {
 		return ledgeCollisionPoint;
@@ -29,37 +35,6 @@ public class DaleStateDTO {
 
 	public void setLedgeCollisionPoint(Vector3f ledgeCollisionPoint) {
 		this.ledgeCollisionPoint = ledgeCollisionPoint;
-	}
-
-	public State isMoveInLedge() {
-		return moveInLedge;
-	}
-
-	public void setMoveInLedge(State moveInLedge) {
-		this.moveInLedge = changeState(this.moveInLedge, moveInLedge);
-	}
-
-	public State changeState(State oldState, State newState) {
-		if (oldState.inProgress() && newState.requested()) {
-			return oldState;
-		}
-		return newState;
-	}
-
-	public State isLetGoLedge() {
-		return isLetGoLedge;
-	}
-
-	public void setLetGoLedge(State letGoLedge) {
-		isLetGoLedge = changeState(isLetGoLedge, letGoLedge);
-	}
-
-	public State isGrabbingLedge() {
-		return isGrabbingLedge;
-	}
-
-	public void setGrabbingLedge(State grabbingLedge) {
-		isGrabbingLedge = changeState(isGrabbingLedge, grabbingLedge);
 	}
 
 	public boolean isCollidingWithEnemy() {

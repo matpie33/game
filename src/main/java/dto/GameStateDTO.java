@@ -10,6 +10,11 @@ public class GameStateDTO {
 	private List<DogStateDTO> dogStateDTOS = new ArrayList<>();
 	private DaleStateDTO daleStateDTO;
 	private List<Spatial> objectsToRemove = new ArrayList<>();
+	private KeyPressDTO keyPressDTO = new KeyPressDTO();
+
+	public KeyPressDTO getKeyPressDTO() {
+		return keyPressDTO;
+	}
 
 	public List<Spatial> getObjectsToRemove() {
 		return objectsToRemove;

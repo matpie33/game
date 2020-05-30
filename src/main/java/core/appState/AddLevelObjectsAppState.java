@@ -256,7 +256,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 				gameStateDTO, objectsHolderDTO);
 		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
 				gameStateDTO, objectsHolderDTO, throwableObjectInRangeAppState);
-		DaleClimbingControl daleClimbingControl = new DaleClimbingControl(
+		DaleLedgeGrabControl daleLedgeGrabControl = new DaleLedgeGrabControl(
 				gameStateDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl characterControl = new CharacterControl(capsuleShape,
@@ -269,7 +269,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		bulletAppState.getPhysicsSpace()
 					  .add(characterControl);
 		model.addControl(characterControl);
-		model.addControl(daleClimbingControl);
+		model.addControl(daleLedgeGrabControl);
 
 		bulletAppState.getPhysicsSpace()
 					  .add(ghostControl);

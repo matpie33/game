@@ -8,6 +8,7 @@ import com.jme3.bullet.control.CharacterControl;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
+import enums.ClimbingState;
 
 public class DaleAnimationListener implements AnimEventListener {
 
@@ -86,12 +87,10 @@ public class DaleAnimationListener implements AnimEventListener {
 
 		}
 		else {
-			if (daleStateDTO.isGrabbingLedge()
-							.inProgress()) {
+			if (daleStateDTO.getClimbingState().equals(ClimbingState.GRABBING_LEDGE)) {
 				setAnimation(GRABBING_LEDGE);
 			}
-			else if (daleStateDTO.isMoveInLedge()
-								 .inProgress()) {
+			else if (daleStateDTO.getClimbingState().equals(ClimbingState.MOVE_IN)) {
 				setAnimation(MOVE_IN_LEDGE);
 			}
 			else {
