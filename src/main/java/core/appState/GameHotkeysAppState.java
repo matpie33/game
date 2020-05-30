@@ -11,6 +11,7 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
+import dto.KeyPressDTO;
 
 public class GameHotkeysAppState extends AbstractAppState
 		implements ActionListener {
@@ -50,23 +51,22 @@ public class GameHotkeysAppState extends AbstractAppState
 	@Override
 	public void onAction(String name, boolean isPressed, float tpf) {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
+		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
 		if (MOVE_LEFT.equals(name)) {
-			daleStateDTO.setMovingLeft(isPressed);
+			keyPressDTO.setMoveLeftPress(isPressed);
 		}
 		if (MOVE_RIGHT.equals(name)) {
-			daleStateDTO.setMovingRight(isPressed);
+			keyPressDTO.setMoveRightPress(isPressed);
 		}
 		if (MOVE_FORWARD_OR_MOVE_IN_LEDGE.equals(name)) {
-			gameStateDTO.getKeyPressDTO()
-						.setMoveForwardOrMoveInLedgePress(isPressed);
-			daleStateDTO.setMovingForward(isPressed);
-
+			keyPressDTO.setMoveInLedgePress(isPressed);
+			keyPressDTO.setMoveForwardPress(isPressed);
 		}
 		if (MOVE_BACKWARD.equals(name)) {
-			daleStateDTO.setMovingBackward(isPressed);
+			keyPressDTO.setMoveBackwardPress(isPressed);
 		}
 		if (JUMP.equals(name)) {
-			daleStateDTO.setJumping(isPressed);
+			keyPressDTO.setJumpPress(isPressed);
 		}
 		if (PICK_THROWABLE_OBJECT_OR_LET_GO_LEDGE.equals(name)) {
 			//TODO only set state here, do not check state
@@ -74,8 +74,7 @@ public class GameHotkeysAppState extends AbstractAppState
 					isPressed && !daleStateDTO.isCarryingThrowableObject());
 			daleStateDTO.setPuttingAsideObject(
 					isPressed && daleStateDTO.isCarryingThrowableObject());
-			gameStateDTO.getKeyPressDTO()
-						.setLetGoLedgePress(isPressed);
+			keyPressDTO.setLetGoLedgePress(isPressed);
 		}
 		if (THROW_OBJECT.equals(name)) {
 			if (daleStateDTO.isCarryingThrowableObject()) {

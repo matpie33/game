@@ -6,14 +6,9 @@ import enums.ClimbingState;
 
 public class DaleStateDTO {
 
-	private boolean isMovingForward;
-	private boolean isMovingBackward;
-	private boolean isMovingLeft;
-	private boolean isMovingRight;
 	private boolean alive;
 	private ThrowingDTO carriedObject = new ThrowingDTO();
 	private int hp;
-	private boolean isJumping;
 	private boolean isThrowingObject;
 	private boolean isPickingObject;
 	private boolean isPuttingAsideObject;
@@ -85,38 +80,6 @@ public class DaleStateDTO {
 		return carriedObject;
 	}
 
-	public boolean isMovingForward() {
-		return isMovingForward;
-	}
-
-	public void setMovingForward(boolean movingForward) {
-		isMovingForward = movingForward;
-	}
-
-	public boolean isMovingBackward() {
-		return isMovingBackward;
-	}
-
-	public void setMovingBackward(boolean movingBackward) {
-		isMovingBackward = movingBackward;
-	}
-
-	public boolean isMovingLeft() {
-		return isMovingLeft;
-	}
-
-	public boolean isMovingRight() {
-		return isMovingRight;
-	}
-
-	public void setMovingLeft(boolean movingLeft) {
-		isMovingLeft = movingLeft;
-	}
-
-	public void setMovingRight(boolean movingRight) {
-		isMovingRight = movingRight;
-	}
-
 	public boolean isCarryingThrowableObject() {
 		return carriedObject.isCarried();
 	}
@@ -127,14 +90,6 @@ public class DaleStateDTO {
 
 	public void setCarriedObject(Spatial geometry) {
 		carriedObject.setCarriedObject(geometry);
-	}
-
-	public boolean isJumping() {
-		return isJumping;
-	}
-
-	public void setJumping(boolean jumping) {
-		isJumping = jumping;
 	}
 
 	public void setThrowingObject(boolean throwingObject) {

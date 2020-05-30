@@ -7,6 +7,7 @@ import com.jme3.animation.LoopMode;
 import com.jme3.bullet.control.CharacterControl;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
+import dto.KeyPressDTO;
 import dto.ObjectsHolderDTO;
 import enums.ClimbingState;
 
@@ -64,6 +65,7 @@ public class DaleAnimationListener implements AnimEventListener {
 
 	public void handleAnimation() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
+		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
 		if (!daleStateDTO.isAlive()) {
 			return;
 		}
@@ -72,10 +74,10 @@ public class DaleAnimationListener implements AnimEventListener {
 										   .getControl(CharacterControl.class)
 										   .onGround();
 		if (onGround) {
-			if (daleStateDTO.isMovingForward()) {
+			if (keyPressDTO.isMoveForwardPress()) {
 				setAnimation(RUN_ANIMATION);
 			}
-			else if (daleStateDTO.isMovingBackward()) {
+			else if (keyPressDTO.isMoveBackwardPress()) {
 				setAnimation(WALK_BACK_ANIMATION);
 			}
 			else if (daleStateDTO.isCarryingThrowableObject()) {

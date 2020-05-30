@@ -14,6 +14,7 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
+import dto.KeyPressDTO;
 import dto.ObjectsHolderDTO;
 
 public class DaleMovingControl extends AbstractControl {
@@ -45,24 +46,24 @@ public class DaleMovingControl extends AbstractControl {
 										 .clone()
 										 .multLocal(0.5f)
 										 .setY(0);
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isJumping()) {
+		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
+		if (keyPressDTO.isJumpPress()) {
 			daleJump();
 		}
 		else if (spatial.getControl(CharacterControl.class).onGround()){
-			if (daleStateDTO.isMovingForward()) {
+			if (keyPressDTO.isMoveForwardPress()) {
 				setDaleViewDirectionToCameraDirection();
 				modifiableWalkDirectionVector.addLocal(camDir);
 			}
-			if (daleStateDTO.isMovingBackward()) {
+			if (keyPressDTO.isMoveBackwardPress()) {
 				setDaleViewDirectionToCameraDirection();
 				modifiableWalkDirectionVector.addLocal(camDir.negate()
 															 .mult(0.5f));
 			}
-			if (daleStateDTO.isMovingLeft()) {
+			if (keyPressDTO.isMoveLeftPress()) {
 				rotateCharacter(tpf, true);
 			}
-			if (daleStateDTO.isMovingRight()) {
+			if (keyPressDTO.isMoveRightPress()) {
 				rotateCharacter(tpf, false);
 			}
 			setMovementDirection();
