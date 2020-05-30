@@ -2,6 +2,7 @@ package core.appState;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class GameStartAppState extends AbstractAppState {
 
-	private List<AbstractAppState> appStates = new ArrayList<>();
+	private List<AppState> appStates = new ArrayList<>();
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
 	private Application app;
@@ -28,7 +29,7 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new GameHotkeysAppState(gameStateDTO));
 		appStates.add(new HUDAppState());
 		appStates.add(new LightAppState());
-		appStates.add(new ObjectsStateAppState(gameStateDTO, objectsHolderDTO));
+		appStates.add(new DaleHPAppState(gameStateDTO, objectsHolderDTO));
 		appStates.add(new LevelAppState(objectsHolderDTO));
 		appStates.add(new AdditionalModelsAppState(objectsHolderDTO));
 		appStates.add(new ObjectsAddAppState(objectsHolderDTO, gameStateDTO));

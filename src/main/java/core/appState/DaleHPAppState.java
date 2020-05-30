@@ -1,47 +1,37 @@
 package core.appState;
 
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.bounding.BoundingBox;
+import com.jme3.app.Application;
+import com.jme3.app.state.BaseAppState;
+import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
+import constants.PhysicsControls;
 import core.GameApplication;
-import core.controllers.ObjectsMovementController;
-import core.util.CoordinatesUtil;
+import core.appState.HUDAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 
-public class ObjectsStateAppState extends AbstractAppState {
+public class DaleHPAppState extends BaseAppState {
 
 	private GameStateDTO gameStateDTO;
 	public static final int HP_DECREASE_VALUE = 20;
 	public static final float MINIMUM_TIME_BETWEEN_HP_DECREASE_SECONDS = 1;
 
 	private float timeSinceLastHpDecrease;
-	private ObjectsMovementController objectsMovementController;
 	private ObjectsHolderDTO objectsHolderDTO;
+	private Application application;
 
-	public ObjectsStateAppState(GameStateDTO gameStateDTO,
+	public DaleHPAppState(GameStateDTO gameStateDTO,
 			ObjectsHolderDTO objectsHolderDTO) {
 		this.gameStateDTO = gameStateDTO;
 		timeSinceLastHpDecrease = 0;
 		this.objectsHolderDTO = objectsHolderDTO;
-		objectsMovementController = new ObjectsMovementController(gameStateDTO,
-				objectsHolderDTO);
 	}
-
-	@Override
-	public void update(float tpf) {
-		timeSinceLastHpDecrease += tpf;
-		handleDaleState();
-	}
-
-
 
 	private void handleDaleState() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.getHp() <= 0) {
+			application.getStateManager().detach(this);
 			gameStateDTO.getDaleStateDTO()
 						.setAlive(false);
 		}
@@ -51,7 +41,7 @@ public class ObjectsStateAppState extends AbstractAppState {
 			timeSinceLastHpDecrease = 0;
 			daleStateDTO.setCollidingWithEnemy(false);
 			daleStateDTO.setHp(daleStateDTO.getHp() - HP_DECREASE_VALUE);
-			objectsMovementController.moveDaleBack();
+			moveDaleBack();
 			HUDAppState hudAppState = GameApplication.getInstance()
 													 .getStateManager()
 													 .getState(
@@ -66,4 +56,40 @@ public class ObjectsStateAppState extends AbstractAppState {
 				> MINIMUM_TIME_BETWEEN_HP_DECREASE_SECONDS;
 	}
 
+	public void moveDaleBack() {
+		CharacterControl control = objectsHolderDTO.getDale()
+												   .getControl(
+														   PhysicsControls.DALE);
+		Vector3f direction = application.getCamera()
+										.getDirection();
+		Vector3f multiplied = direction.mult(new Vector3f(30f, 1, 30f));
+		control.setPhysicsLocation(control.getPhysicsLocation()
+										  .subtract(multiplied));
+	}
+
+	@Override
+	protected void initialize(Application app) {
+		application = app;
+	}
+
+	@Override
+	protected void cleanup(Application app) {
+
+	}
+
+	@Override
+	protected void onEnable() {
+
+	}
+
+	@Override
+	protected void onDisable() {
+
+	}
+
+	@Override
+	public void update(float tpf) {
+		timeSinceLastHpDecrease += tpf;
+		handleDaleState();
+	}
 }

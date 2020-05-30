@@ -47,7 +47,7 @@ public class DaleAnimationListener implements AnimEventListener {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (!daleStateDTO.isAlive()) {
 			setAnimation(DEAD_ANIMATION);
-
+			channel.setLoopMode(LoopMode.DontLoop);
 		}
 		else {
 			handleAnimation();
