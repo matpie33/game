@@ -31,8 +31,8 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new LightAppState());
 		appStates.add(new DaleHPAppState(gameStateDTO, objectsHolderDTO));
 		appStates.add(new LevelAppState(objectsHolderDTO));
-		appStates.add(new AdditionalModelsAppState(objectsHolderDTO));
-		appStates.add(new ObjectsAddAppState(objectsHolderDTO, gameStateDTO));
+		appStates.add(new InitializeAdditionalObjectsAppState(objectsHolderDTO));
+		appStates.add(new AddLevelObjectsAppState(objectsHolderDTO, gameStateDTO));
 		appStates.add(new AnimationsAppState(gameStateDTO, objectsHolderDTO));
 		appStates.add(new IdleTimeCheckAppState());
 		appStates.add(new SoundsAppState());

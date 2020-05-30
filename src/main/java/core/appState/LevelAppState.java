@@ -35,7 +35,7 @@ public class LevelAppState extends AbstractAppState {
 				PATH_TO_LEVELS + LEVEL);
 		modelsLoadAppState.setPaths(Collections.singletonList(
 				System.getProperty("user.dir") + MODELS_DIRECTORY));
-		stateManager.attach(new AdditionalModelsAppState(objectsHolderDTO));
+		stateManager.attach(new InitializeAdditionalObjectsAppState(objectsHolderDTO));
 
 		spatialDTOS = new FileLoad().readFile(levelsFileStream);
 		spatialDTOS.forEach(dto -> {

@@ -9,7 +9,7 @@ import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import dto.ObjectsHolderDTO;
 
-public class AdditionalModelsAppState extends AbstractAppState {
+public class InitializeAdditionalObjectsAppState extends AbstractAppState {
 
 	private static final String TEXTURES_DIRECTORY = "textures/";
 	private static final String SCENE_DIRECTORY = "scene/";
@@ -19,7 +19,7 @@ public class AdditionalModelsAppState extends AbstractAppState {
 	private ObjectsHolderDTO objectsHolderDTO;
 	private AssetManager assetManager;
 
-	public AdditionalModelsAppState(ObjectsHolderDTO objectsHolderDTO) {
+	public InitializeAdditionalObjectsAppState(ObjectsHolderDTO objectsHolderDTO) {
 		this.objectsHolderDTO = objectsHolderDTO;
 	}
 

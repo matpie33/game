@@ -33,7 +33,7 @@ import enums.MovementDirection;
 
 import java.util.List;
 
-public class ObjectsAddAppState extends AbstractAppState {
+public class AddLevelObjectsAppState extends AbstractAppState {
 
 	public static final int INITIAL_HP_OF_DALE = 100;
 
@@ -42,7 +42,7 @@ public class ObjectsAddAppState extends AbstractAppState {
 	private GameStateDTO gameStateDTO;
 	private ThrowableObjectInRangeAppState throwableObjectInRangeAppState;
 
-	public ObjectsAddAppState(ObjectsHolderDTO objectsHolderDTO,
+	public AddLevelObjectsAppState(ObjectsHolderDTO objectsHolderDTO,
 			GameStateDTO gameStateDTO) {
 		collisionController = new CollisionController(objectsHolderDTO,
 				gameStateDTO);
