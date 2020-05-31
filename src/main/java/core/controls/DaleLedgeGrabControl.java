@@ -65,7 +65,7 @@ public class DaleLedgeGrabControl extends AbstractControl {
 
 	private void handleKeyPress(DaleStateDTO daleStateDTO) {
 		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
-		if (keyPressDTO.isMoveForwardOrMoveInLedgePress()
+		if (keyPressDTO.isMoveInLedgePress()
 				&& daleStateDTO.getClimbingState()
 							   .equals(ClimbingState.GRABBING_LEDGE)) {
 			daleStateDTO.setClimbingState(ClimbingState.MOVE_IN);

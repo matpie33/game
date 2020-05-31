@@ -9,7 +9,6 @@ import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
 
@@ -21,7 +20,8 @@ public class GameHotkeysAppState extends AbstractAppState
 	public static final String MOVE_FORWARD_OR_MOVE_IN_LEDGE = "moveForward";
 	public static final String MOVE_BACKWARD = "moveBackward";
 	public static final String JUMP = "jump";
-	public static final String PICK_THROWABLE_OBJECT_OR_LET_GO_LEDGE = "pickThrowableObject";
+	public static final String PICK_THROWABLE_OBJECT = "pickThrowableObject";
+	public static final String PUT_ASIDE_THROWABLE_OBJECT_OR_LET_GO_LEDGE = "putAsideThrowableObjectOrLetGoLedge";
 	public static final String THROW_OBJECT = "throwObject";
 
 	private GameStateDTO gameStateDTO;
@@ -39,18 +39,20 @@ public class GameHotkeysAppState extends AbstractAppState
 				new KeyTrigger(KeyInput.KEY_W));
 		inputManager.addMapping(MOVE_BACKWARD, new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addMapping(JUMP, new KeyTrigger(KeyInput.KEY_SPACE));
-		inputManager.addMapping(PICK_THROWABLE_OBJECT_OR_LET_GO_LEDGE,
+		inputManager.addMapping(PUT_ASIDE_THROWABLE_OBJECT_OR_LET_GO_LEDGE,
 				new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
 		inputManager.addMapping(THROW_OBJECT,
 				new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+		inputManager.addMapping(PICK_THROWABLE_OBJECT,
+				new KeyTrigger(KeyInput.KEY_E));
 		inputManager.addListener(this, MOVE_LEFT, MOVE_RIGHT,
 				MOVE_FORWARD_OR_MOVE_IN_LEDGE, MOVE_BACKWARD, JUMP,
-				PICK_THROWABLE_OBJECT_OR_LET_GO_LEDGE, THROW_OBJECT);
+				PUT_ASIDE_THROWABLE_OBJECT_OR_LET_GO_LEDGE, THROW_OBJECT,
+				PICK_THROWABLE_OBJECT);
 	}
 
 	@Override
 	public void onAction(String name, boolean isPressed, float tpf) {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
 		if (MOVE_LEFT.equals(name)) {
 			keyPressDTO.setMoveLeftPress(isPressed);
@@ -68,18 +70,15 @@ public class GameHotkeysAppState extends AbstractAppState
 		if (JUMP.equals(name)) {
 			keyPressDTO.setJumpPress(isPressed);
 		}
-		if (PICK_THROWABLE_OBJECT_OR_LET_GO_LEDGE.equals(name)) {
-			//TODO only set state here, do not check state
-			daleStateDTO.setPickingObject(
-					isPressed && !daleStateDTO.isCarryingThrowableObject());
-			daleStateDTO.setPuttingAsideObject(
-					isPressed && daleStateDTO.isCarryingThrowableObject());
+		if (PICK_THROWABLE_OBJECT.equals(name)) {
+			keyPressDTO.setPickObjectPress(isPressed);
+		}
+		if (PUT_ASIDE_THROWABLE_OBJECT_OR_LET_GO_LEDGE.equals(name)) {
+			keyPressDTO.setPutAsideObjectPress(isPressed);
 			keyPressDTO.setLetGoLedgePress(isPressed);
 		}
 		if (THROW_OBJECT.equals(name)) {
-			if (daleStateDTO.isCarryingThrowableObject()) {
-				daleStateDTO.setThrowingObject(isPressed);
-			}
+			keyPressDTO.setThrowObjectPress(isPressed);
 		}
 
 	}

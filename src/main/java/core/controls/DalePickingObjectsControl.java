@@ -14,7 +14,9 @@ import core.GameApplication;
 import core.appState.ThrowableObjectInRangeAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
+import dto.KeyPressDTO;
 import dto.ObjectsHolderDTO;
+import enums.ThrowingState;
 
 public class DalePickingObjectsControl extends AbstractControl {
 
@@ -45,24 +47,26 @@ public class DalePickingObjectsControl extends AbstractControl {
 
 	private void markThrowableObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isCarryingThrowableObject()) {
+		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
+		if (daleStateDTO.getThrowingState().equals(ThrowingState.PICKING_OBJECT)) {
 			return;
 		}
 		CollisionResults collisionResults = getDistanceToObjects();
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
 
 		if (isCloseEnoughToAnyObject(collisionResults)) {
-			if (!daleStateDTO.isCarryingThrowableObject()) {
-
-				throwableObjectInRangeAppState.setThrowableObject(
-						closestCollision.getGeometry());
-				throwableObjectInRangeAppState.setEnabled(true);
-			}
-			if (daleStateDTO.isPickingObject()) {
-				daleStateDTO.setCarryingThrowableObject(true);
+			if (keyPressDTO.isPickObjectPress()
+					&& daleStateDTO.getThrowingState()
+								   .equals(ThrowingState.NOT_STARTED)) {
 				daleStateDTO.setCarriedObject(closestCollision.getGeometry()
 															  .getParent());
 				throwableObjectInRangeAppState.setEnabled(false);
+				daleStateDTO.setThrowingState(ThrowingState.PICKING_OBJECT);
+			}
+			else {
+				throwableObjectInRangeAppState.setThrowableObject(
+						closestCollision.getGeometry());
+				throwableObjectInRangeAppState.setEnabled(true);
 			}
 
 		}

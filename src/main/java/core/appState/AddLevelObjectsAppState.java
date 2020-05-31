@@ -282,7 +282,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 	private void initializeDaleState() {
 		DaleStateDTO daleStateDTO = new DaleStateDTO();
 		daleStateDTO.setHp(INITIAL_HP_OF_DALE);
-		daleStateDTO.setCarryingThrowableObject(false);
 		gameStateDTO.setDaleStateDTO(daleStateDTO);
 	}
 

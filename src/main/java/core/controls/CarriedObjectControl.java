@@ -13,7 +13,9 @@ import core.GameApplication;
 import core.util.CoordinatesUtil;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
+import dto.KeyPressDTO;
 import dto.ObjectsHolderDTO;
+import enums.ThrowingState;
 
 public class CarriedObjectControl extends AbstractControl {
 
@@ -30,14 +32,40 @@ public class CarriedObjectControl extends AbstractControl {
 
 	@Override
 	protected void controlUpdate(float tpf) {
-		handleBeingCarried();
-		handlePuttingAside();
-		handleThrowingObject();
+		handleKeyPress();
+		switch (gameStateDTO.getDaleStateDTO()
+							.getThrowingState()) {
+		case THROWING:
+			handleThrowingObject();
+			break;
+		case PICKING_OBJECT:
+			handleBeingCarried();
+			break;
+		case PUTTING_ASIDE_OBJECT:
+			handlePuttingAside();
+			break;
+		}
+	}
+
+	private void handleKeyPress() {
+		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
+		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
+		if (keyPressDTO.isThrowObjectPress() && daleStateDTO.getThrowingState()
+															.equals(ThrowingState.PICKING_OBJECT)) {
+			daleStateDTO.setThrowingState(ThrowingState.THROWING);
+		}
+		else if (keyPressDTO.isPutAsideObjectPress()
+				&& daleStateDTO.getThrowingState()
+							   .equals(ThrowingState.PICKING_OBJECT)) {
+			daleStateDTO.setThrowingState(ThrowingState.PUTTING_ASIDE_OBJECT);
+		}
+
 	}
 
 	private void handlePuttingAside() {
 		if (gameStateDTO.getDaleStateDTO()
-						.isPuttingAsideObject()) {
+						.getThrowingState()
+						.equals(ThrowingState.PUTTING_ASIDE_OBJECT)) {
 			putAsideObject();
 		}
 	}
@@ -52,15 +80,15 @@ public class CarriedObjectControl extends AbstractControl {
 		control.applyImpulse(gameApplication.getCamera()
 											.getDirection()
 											.mult(-20), Vector3f.ZERO);
-		daleStateDTO.setCarryingThrowableObject(false);
-		daleStateDTO.setPuttingAsideObject(false);
+		daleStateDTO.setThrowingState(ThrowingState.NOT_STARTED);
 		daleStateDTO.setCarriedObject(null);
 
 	}
 
 	private void handleThrowingObject() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.isThrowingObject()) {
+		if (daleStateDTO.getThrowingState()
+						.equals(ThrowingState.THROWING)) {
 			Object control = daleStateDTO.getCarriedObject()
 										 .getCarriedObject()
 										 .getControl(PhysicsControls.BOX);
@@ -74,18 +102,14 @@ public class CarriedObjectControl extends AbstractControl {
 			force.setY(force.getY() + 60f);
 			PhysicsControls.BOX.cast(control)
 							   .applyImpulse(force, new Vector3f(0, 0.5f, 0));
-			daleStateDTO.setCarryingThrowableObject(false);
+			daleStateDTO.setThrowingState(ThrowingState.NOT_STARTED);
 			daleStateDTO.setCarriedObject(null);
-			daleStateDTO.setThrowingObject(false);
 		}
 
 	}
 
 	private void handleBeingCarried() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (!daleStateDTO.isCarryingThrowableObject()) {
-			return;
-		}
 		Spatial carriedObject = daleStateDTO.getCarriedObject()
 											.getCarriedObject();
 		Vector3f dalePosition = objectsHolderDTO.getDale()

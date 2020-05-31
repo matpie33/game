@@ -10,6 +10,7 @@ import dto.GameStateDTO;
 import dto.KeyPressDTO;
 import dto.ObjectsHolderDTO;
 import enums.ClimbingState;
+import enums.ThrowingState;
 
 public class DaleAnimationListener implements AnimEventListener {
 
@@ -80,7 +81,7 @@ public class DaleAnimationListener implements AnimEventListener {
 			else if (keyPressDTO.isMoveBackwardPress()) {
 				setAnimation(WALK_BACK_ANIMATION);
 			}
-			else if (daleStateDTO.isCarryingThrowableObject()) {
+			else if (daleStateDTO.getThrowingState().equals(ThrowingState.PICKING_OBJECT)) {
 				setAnimation(HOLDING_OBJECT);
 			}
 			else {

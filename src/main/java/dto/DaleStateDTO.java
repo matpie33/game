@@ -3,18 +3,25 @@ package dto;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import enums.ClimbingState;
+import enums.ThrowingState;
 
 public class DaleStateDTO {
 
 	private boolean alive;
 	private ThrowingDTO carriedObject = new ThrowingDTO();
 	private int hp;
-	private boolean isThrowingObject;
-	private boolean isPickingObject;
-	private boolean isPuttingAsideObject;
 	private boolean isCollidingWithEnemy;
 	private Vector3f ledgeCollisionPoint;
 	private ClimbingState climbingState = ClimbingState.NOT_STARTED;
+	private ThrowingState throwingState = ThrowingState.NOT_STARTED;
+
+	public ThrowingState getThrowingState() {
+		return throwingState;
+	}
+
+	public void setThrowingState(ThrowingState throwingState) {
+		this.throwingState = throwingState;
+	}
 
 	public ClimbingState getClimbingState() {
 		return climbingState;
@@ -38,22 +45,6 @@ public class DaleStateDTO {
 
 	public void setCollidingWithEnemy(boolean collidingWithEnemy) {
 		isCollidingWithEnemy = collidingWithEnemy;
-	}
-
-	public boolean isPickingObject() {
-		return isPickingObject;
-	}
-
-	public void setPickingObject(boolean pickingObject) {
-		isPickingObject = pickingObject;
-	}
-
-	public boolean isPuttingAsideObject() {
-		return isPuttingAsideObject;
-	}
-
-	public void setPuttingAsideObject(boolean puttingAsideObject) {
-		isPuttingAsideObject = puttingAsideObject;
 	}
 
 	public DaleStateDTO() {
@@ -80,24 +71,8 @@ public class DaleStateDTO {
 		return carriedObject;
 	}
 
-	public boolean isCarryingThrowableObject() {
-		return carriedObject.isCarried();
-	}
-
-	public void setCarryingThrowableObject(boolean carrying) {
-		carriedObject.setCarried(carrying);
-	}
-
 	public void setCarriedObject(Spatial geometry) {
 		carriedObject.setCarriedObject(geometry);
-	}
-
-	public void setThrowingObject(boolean throwingObject) {
-		this.isThrowingObject = throwingObject;
-	}
-
-	public boolean isThrowingObject() {
-		return isThrowingObject;
 	}
 
 	public void setThrowingDestination(Spatial throwingDestination) {
@@ -109,7 +84,7 @@ public class DaleStateDTO {
 	}
 
 	public boolean hasThrowingDestination() {
-		return isCarryingThrowableObject()
+		return getThrowingState().equals(ThrowingState.PICKING_OBJECT)
 				&& carriedObject.getThrowingDestination() != null;
 	}
 

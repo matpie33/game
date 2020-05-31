@@ -12,6 +12,7 @@ import core.appState.IdleTimeCheckAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
+import enums.ThrowingState;
 
 public class DaleFollowingCameraControl extends AbstractControl {
 
@@ -83,7 +84,7 @@ public class DaleFollowingCameraControl extends AbstractControl {
 			Vector3f dalePositionMinusViewDirection) {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		float distanceAboveHead = 3;
-		if (daleStateDTO.isCarryingThrowableObject()) {
+		if (daleStateDTO.getThrowingState().equals(ThrowingState.PICKING_OBJECT)) {
 			distanceAboveHead = 10;
 		}
 		dalePositionMinusViewDirection.setY(

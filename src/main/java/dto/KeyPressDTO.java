@@ -1,20 +1,39 @@
 package dto;
 
 public class KeyPressDTO {
-	private boolean moveForwardOrMoveInLedgePress;
+	private boolean moveInLedgePress;
 	private boolean letGoLedgePress;
 	private boolean moveForwardPress;
 	private boolean moveBackwardPress;
 	private boolean moveRightPress;
 	private boolean moveLeftPress;
 	private boolean jumpPress;
+	private boolean pickObjectPress;
+	private boolean throwObjectPress;
+	private boolean putAsideObjectPress;
 
-	public boolean isJumpPress() {
-		return jumpPress;
+	public boolean isPutAsideObjectPress() {
+		return putAsideObjectPress;
 	}
 
-	public void setJumpPress(boolean jumpPress) {
-		this.jumpPress = jumpPress;
+	public void setPutAsideObjectPress(boolean putAsideObjectPress) {
+		this.putAsideObjectPress = putAsideObjectPress;
+	}
+
+	public boolean isMoveInLedgePress() {
+		return moveInLedgePress;
+	}
+
+	public void setMoveInLedgePress(boolean moveForwardOrMoveInLedgePress) {
+		this.moveInLedgePress = moveForwardOrMoveInLedgePress;
+	}
+
+	public boolean isLetGoLedgePress() {
+		return letGoLedgePress;
+	}
+
+	public void setLetGoLedgePress(boolean letGoLedgePress) {
+		this.letGoLedgePress = letGoLedgePress;
 	}
 
 	public boolean isMoveForwardPress() {
@@ -49,20 +68,27 @@ public class KeyPressDTO {
 		this.moveLeftPress = moveLeftPress;
 	}
 
-	public boolean isLetGoLedgePress() {
-		return letGoLedgePress;
+	public boolean isJumpPress() {
+		return jumpPress;
 	}
 
-	public void setLetGoLedgePress(boolean letGoLedgePress) {
-		this.letGoLedgePress = letGoLedgePress;
+	public void setJumpPress(boolean jumpPress) {
+		this.jumpPress = jumpPress;
 	}
 
-	public boolean isMoveForwardOrMoveInLedgePress() {
-		return moveForwardOrMoveInLedgePress;
+	public boolean isPickObjectPress() {
+		return pickObjectPress;
 	}
 
-	public void setMoveInLedgePress(
-			boolean moveForwardOrMoveInLedgePress) {
-		this.moveForwardOrMoveInLedgePress = moveForwardOrMoveInLedgePress;
+	public void setPickObjectPress(boolean pickObjectPress) {
+		this.pickObjectPress = pickObjectPress;
+	}
+
+	public boolean isThrowObjectPress() {
+		return throwObjectPress;
+	}
+
+	public void setThrowObjectPress(boolean throwObjectPress) {
+		this.throwObjectPress = throwObjectPress;
 	}
 }

@@ -12,6 +12,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
+import enums.ThrowingState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,8 @@ public class DaleFieldOfViewControl extends AbstractControl {
 
 		List<Spatial> enemiesSeeingDaleInThisUpdate = handleThrowingFieldOfView();
 		if (!gameStateDTO.getDaleStateDTO()
-						 .isCarryingThrowableObject()) {
+						 .getThrowingState()
+						 .equals(ThrowingState.PICKING_OBJECT)) {
 
 			resetThrowingDestination();
 		}
@@ -67,7 +69,8 @@ public class DaleFieldOfViewControl extends AbstractControl {
 				enemiesSeeingDaleInThisUpdate.add(collidingObject);
 				this.enemiesSeeingDale.remove(collidingObject);
 				if (gameStateDTO.getDaleStateDTO()
-								.isCarryingThrowableObject()) {
+								.getThrowingState()
+								.equals(ThrowingState.PICKING_OBJECT)) {
 					containsAnyThrowingDestination = handleThrowingDestination(
 							collidingObject);
 				}
