@@ -16,11 +16,13 @@ public class CollisionController implements PhysicsCollisionListener {
 
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
+	private ObjectsRemovingController objectsRemovingController;
 
 	public CollisionController(ObjectsHolderDTO objectsHolderDTO,
 			GameStateDTO gameStateDTO) {
 		this.objectsHolderDTO = objectsHolderDTO;
 		this.gameStateDTO = gameStateDTO;
+		this.objectsRemovingController = new ObjectsRemovingController(gameStateDTO);
 	}
 
 	@Override
@@ -43,10 +45,6 @@ public class CollisionController implements PhysicsCollisionListener {
 			return;
 		}
 
-		if ((isABox || isBBox) && isEnoughSpeedOfBoxToDestroy) {
-			gameStateDTO.getObjectsToRemove()
-						.add(isABox ? nodeA : nodeB);
-		}
 		if (isDogWithDaleCollision(nodeAType, nodeBType)) {
 			DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 			daleStateDTO.setCollidingWithEnemy(true);
@@ -69,7 +67,9 @@ public class CollisionController implements PhysicsCollisionListener {
 
 		if (isDogWithBoxCollision(nodeAType, nodeBType)
 				&& isEnoughSpeedOfBoxToDestroy) {
-			markDogNotAlive(nodeAType, nodeA, nodeB);
+			objectsRemovingController.removeDog(
+					ObjectsTypes.DOG.equals(nodeAType) ? nodeA : nodeB);
+			objectsRemovingController.removeBox(isABox ? nodeA : nodeB);
 		}
 
 	}
@@ -83,27 +83,8 @@ public class CollisionController implements PhysicsCollisionListener {
 	private IllegalArgumentException createExeptionForDogCollision(
 			Spatial dogNode) {
 		return new IllegalArgumentException(
-				"Dog " + "collided with obstacle, but dog state not "
-						+ "found: " + dogNode);
-	}
-
-	private void markDogNotAlive(ObjectsTypes nodeAType, Spatial nodeA,
-			Spatial nodeB) {
-
-		Spatial dog;
-		if (ObjectsTypes.DOG.equals(nodeAType)) {
-			dog = nodeA;
-		}
-		else {
-			dog = nodeB;
-		}
-		gameStateDTO.getDogStateDTOS()
-					.stream()
-					.filter(dogData -> dogData.getDog()
-											  .equals(dog))
-					.findFirst()
-					.ifPresent(dogData -> dogData.setAlive(false));
-
+				"Dog collided with obstacle, but dog state not " + "found: "
+						+ dogNode);
 	}
 
 	private boolean isDogWithBoxCollision(ObjectsTypes nodeA,

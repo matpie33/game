@@ -36,7 +36,6 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new AnimationsAppState(gameStateDTO, objectsHolderDTO));
 		appStates.add(new IdleTimeCheckAppState());
 		appStates.add(new SoundsAppState());
-		appStates.add(new ObjectsRemovingAppState(gameStateDTO));
 		appStates.add(new TerrainAppState(objectsHolderDTO));
 		appStates.forEach(stateManager::attach);
 		super.initialize(stateManager, app);
