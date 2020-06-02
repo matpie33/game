@@ -1,7 +1,5 @@
 package dto;
 
-import com.jme3.scene.Spatial;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,15 +7,10 @@ public class GameStateDTO {
 
 	private List<DogStateDTO> dogStateDTOS = new ArrayList<>();
 	private DaleStateDTO daleStateDTO;
-	private List<Spatial> objectsToRemove = new ArrayList<>();
 	private KeyPressDTO keyPressDTO = new KeyPressDTO();
 
 	public KeyPressDTO getKeyPressDTO() {
 		return keyPressDTO;
-	}
-
-	public List<Spatial> getObjectsToRemove() {
-		return objectsToRemove;
 	}
 
 	public DaleStateDTO getDaleStateDTO() {

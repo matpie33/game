@@ -5,7 +5,6 @@ import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
-import core.controllers.EffectsController;
 import dto.DogStateDTO;
 import dto.GameStateDTO;
 
@@ -25,9 +24,8 @@ public class ObjectsRemovingController {
 		}
 		DogStateDTO dogStateDTO = gameStateDTO.getDogStateDTOS()
 											  .stream()
-											  .
-													  filter(dogState -> dogState.getDog()
-																				 .equals(dog))
+											  .filter(dogState -> dogState.getDog()
+																		  .equals(dog))
 											  .findFirst()
 											  .orElseThrow(
 													  () -> createExeptionForDogCollision(
