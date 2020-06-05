@@ -58,7 +58,7 @@ public class DaleFollowingCameraControl extends AbstractControl {
 
 	}
 
-	public void handleMovement(float tpf) {
+	private void handleMovement(float tpf) {
 		if (gameStateDTO.getKeyPressDTO()
 						.isMoveLeftPress()) {
 			rotateCharacterAndCamera(tpf, true);

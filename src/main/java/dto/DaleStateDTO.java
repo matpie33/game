@@ -19,10 +19,6 @@ public class DaleStateDTO {
 		return throwingState;
 	}
 
-	public void setThrowingState(ThrowingState throwingState) {
-		this.throwingState = throwingState;
-	}
-
 	public ClimbingState getClimbingState() {
 		return climbingState;
 	}

@@ -40,7 +40,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 	private CollisionController collisionController;
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameStateDTO gameStateDTO;
-	private ThrowableObjectInRangeAppState throwableObjectInRangeAppState;
 
 	public AddLevelObjectsAppState(ObjectsHolderDTO objectsHolderDTO,
 			GameStateDTO gameStateDTO) {
@@ -53,9 +52,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
 		BulletAppState bulletAppState = initializeBulletAppState();
-		throwableObjectInRangeAppState = new ThrowableObjectInRangeAppState(objectsHolderDTO);
-		stateManager.attach(throwableObjectInRangeAppState);
-		throwableObjectInRangeAppState.setEnabled(false);
 		Node rootNode = ((SimpleApplication) app).getRootNode();
 		Node throwables = new Node(NodeNames.THROWABLES);
 		rootNode.attachChild(throwables);
@@ -204,14 +200,11 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		objectsHolderDTO.addBox(box);
 		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
 
-		CarriedObjectControl carriedObjectControl = new CarriedObjectControl(
-				gameStateDTO, objectsHolderDTO);
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 5f);
 		rigidBodyControl.setGravity(new Vector3f(0, -30f, 0));
 		rigidBodyControl.setPhysicsLocation(box.getLocalTranslation());
 
 		box.addControl(rigidBodyControl);
-		box.addControl(carriedObjectControl);
 		bulletAppState.getPhysicsSpace()
 					  .add(rigidBodyControl);
 		throwables.attachChild(box);
@@ -254,8 +247,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 			Spatial model, CapsuleCollisionShape capsuleShape) {
 		DaleMovingControl daleMovingControl = new DaleMovingControl(
 				gameStateDTO, objectsHolderDTO);
-		DalePickingObjectsControl dalePickingObjectsControl = new DalePickingObjectsControl(
-				gameStateDTO, objectsHolderDTO, throwableObjectInRangeAppState);
 		DaleLedgeGrabControl daleLedgeGrabControl = new DaleLedgeGrabControl(
 				gameStateDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
@@ -275,7 +266,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 					  .add(ghostControl);
 
 		model.addControl(ghostControl);
-		model.addControl(dalePickingObjectsControl);
 		model.addControl(daleMovingControl);
 	}
 

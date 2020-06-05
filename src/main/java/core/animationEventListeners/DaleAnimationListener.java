@@ -4,13 +4,15 @@ import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
+import com.jme3.app.Application;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.scene.Spatial;
+import core.appState.CarriedObjectAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
 import dto.ObjectsHolderDTO;
 import enums.ClimbingState;
-import enums.ThrowingState;
 
 public class DaleAnimationListener implements AnimEventListener {
 
@@ -21,19 +23,21 @@ public class DaleAnimationListener implements AnimEventListener {
 	private static final String DEAD_ANIMATION = "dead";
 	private static final String GRABBING_LEDGE = "grabbingLedge";
 	private static final String MOVE_IN_LEDGE = "moveInLedge";
+	private final Application app;
 	private AnimChannel channel;
 	private GameStateDTO gameStateDTO;
 	private ObjectsHolderDTO objectsHolderDTO;
 
 	public DaleAnimationListener(GameStateDTO gameStateDTO,
-			ObjectsHolderDTO objectsHolderDTO) {
+			ObjectsHolderDTO objectsHolderDTO, Application app) {
 		this.gameStateDTO = gameStateDTO;
 		this.objectsHolderDTO = objectsHolderDTO;
+		this.app = app;
 	}
 
 	public void setUpAnimations() {
-		AnimControl control = objectsHolderDTO.getDale()
-											  .getControl(AnimControl.class);
+		Spatial dale = objectsHolderDTO.getDale();
+		AnimControl control = dale.getControl(AnimControl.class);
 		control.addListener(this);
 		channel = control.createChannel();
 
@@ -81,7 +85,9 @@ public class DaleAnimationListener implements AnimEventListener {
 			else if (keyPressDTO.isMoveBackwardPress()) {
 				setAnimation(WALK_BACK_ANIMATION);
 			}
-			else if (daleStateDTO.getThrowingState().equals(ThrowingState.PICKING_OBJECT)) {
+			else if (app.getStateManager()
+						.getState(CarriedObjectAppState.class)
+						.isEnabled()) {
 				setAnimation(HOLDING_OBJECT);
 			}
 			else {
@@ -90,17 +96,18 @@ public class DaleAnimationListener implements AnimEventListener {
 
 		}
 		else {
-			if (daleStateDTO.getClimbingState().equals(ClimbingState.GRABBING_LEDGE)) {
+			if (daleStateDTO.getClimbingState()
+							.equals(ClimbingState.GRABBING_LEDGE)) {
 				setAnimation(GRABBING_LEDGE);
 			}
-			else if (daleStateDTO.getClimbingState().equals(ClimbingState.MOVE_IN)) {
+			else if (daleStateDTO.getClimbingState()
+								 .equals(ClimbingState.MOVE_IN)) {
 				setAnimation(MOVE_IN_LEDGE);
 			}
 			else {
 				setAnimation(STAND_ANIMATION);
 			}
 		}
-
 
 	}
 

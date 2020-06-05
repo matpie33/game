@@ -28,7 +28,7 @@ public class AnimationsAppState extends AbstractAppState {
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
 		daleAnimationListener = new DaleAnimationListener(gameStateDTO,
-				objectsHolderDTO);
+				objectsHolderDTO, app);
 		daleAnimationListener.setUpAnimations();
 		for (DogStateDTO dog : gameStateDTO.getDogStateDTOS()) {
 			DogAnimationListener dogAnimationListener = new DogAnimationListener(

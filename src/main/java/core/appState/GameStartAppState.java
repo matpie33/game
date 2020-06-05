@@ -39,6 +39,9 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new IdleTimeCheckAppState());
 		appStates.add(new SoundsAppState());
 		appStates.add(new TerrainAppState(objectsHolderDTO));
+		appStates.add(new MarkThrowableObjectsAppState(gameStateDTO, objectsHolderDTO));
+		appStates.add(
+				new CarriedObjectAppState(gameStateDTO, objectsHolderDTO));
 		appStates.forEach(stateManager::attach);
 		super.initialize(stateManager, app);
 	}
