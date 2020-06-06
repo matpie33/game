@@ -18,17 +18,14 @@ import dto.NodeNamesDTO;
 
 public class DaleMovingControl extends AbstractControl {
 
-	public static final float START_OF_VIEW = 10f;
+
 	private GameStateDTO gameStateDTO;
 	private Vector3f modifiableWalkDirectionVector = new Vector3f(0, 0, 0);
 	private GameApplication gameApplication;
-	private NodeNamesDTO nodeNamesDTO;
 
-	public DaleMovingControl(GameStateDTO gameStateDTO,
-			NodeNamesDTO nodeNamesDTO) {
+	public DaleMovingControl(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
 		gameApplication = GameApplication.getInstance();
-		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
@@ -67,25 +64,11 @@ public class DaleMovingControl extends AbstractControl {
 				rotateCharacter(tpf, false);
 			}
 			setMovementDirection();
-			moveFieldOfView();
 		}
 
 	}
 
-	private void moveFieldOfView() {
-		CharacterControl control = spatial.getControl(PhysicsControls.DALE);
-		Spatial fieldOfView = GameApplication.getInstance()
-											 .getRootNode()
-											 .getChild(
-													 nodeNamesDTO.getFieldOfViewNodeName());
-		float fieldOfViewRadius = ((SphereCollisionShape) fieldOfView.getControl(
-				GhostControl.class)
-																	 .getCollisionShape()).getRadius();
-		fieldOfView.setLocalTranslation(spatial.getWorldTranslation()
-											   .add(control.getViewDirection()
-														   .mult(fieldOfViewRadius
-																   + START_OF_VIEW)));
-	}
+
 
 	private void setMovementDirection() {
 		spatial.getControl(PhysicsControls.DALE)

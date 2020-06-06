@@ -1,20 +1,22 @@
-package core.controllers;
+package core.appState;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.material.MatParam;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import core.appState.CarriedObjectAppState;
+import constants.PhysicsControls;
+import core.GameApplication;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
-import enums.ThrowingState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class FieldOfViewAppState extends AbstractAppState {
 	private GameStateDTO gameStateDTO;
 	private List<Spatial> enemiesSeeingDale = new ArrayList<>();
 	private SimpleApplication app;
+	public static final float OFFSET_FROM_DALE_TO_FIELD_OF_VIEW = 3F;
 
 	public FieldOfViewAppState(NodeNamesDTO nodeNamesDTO,
 			GameStateDTO gameStateDTO) {
@@ -44,15 +47,27 @@ public class FieldOfViewAppState extends AbstractAppState {
 	@Override
 	public void update(float tpf) {
 		List<Spatial> enemiesSeeingDaleInThisUpdate = handleThrowingFieldOfView();
-		if (!gameStateDTO.getDaleStateDTO()
-						 .getThrowingState()
-						 .equals(ThrowingState.PICKING_OBJECT)) {
-
-			resetThrowingDestination();
-		}
 		enemiesSeeingDale.forEach(
 				enemy -> findDogAndSetSeeingDale(enemy, false));
 		enemiesSeeingDale = enemiesSeeingDaleInThisUpdate;
+		moveFieldOfView();
+	}
+
+	private void moveFieldOfView() {
+		Spatial dale = app.getRootNode()
+						  .getChild(nodeNamesDTO.getDaleNodeName());
+		CharacterControl control = dale.getControl(PhysicsControls.DALE);
+		Spatial fieldOfView = GameApplication.getInstance()
+											 .getRootNode()
+											 .getChild(
+													 nodeNamesDTO.getFieldOfViewNodeName());
+		float fieldOfViewRadius = ((SphereCollisionShape) fieldOfView.getControl(
+				GhostControl.class)
+																	 .getCollisionShape()).getRadius();
+		fieldOfView.setLocalTranslation(dale.getWorldTranslation()
+											   .add(control.getViewDirection()
+														   .mult(fieldOfViewRadius
+																   + OFFSET_FROM_DALE_TO_FIELD_OF_VIEW)));
 	}
 
 	private void findDogAndSetSeeingDale(Spatial enemy, boolean seeingDale) {
