@@ -38,14 +38,14 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 	public static final int INITIAL_HP_OF_DALE = 100;
 
 	private CollisionController collisionController;
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 	private GameStateDTO gameStateDTO;
 
-	public AddLevelObjectsAppState(ObjectsHolderDTO objectsHolderDTO,
+	public AddLevelObjectsAppState(NodeNamesDTO nodeNamesDTO,
 			GameStateDTO gameStateDTO) {
-		collisionController = new CollisionController(objectsHolderDTO,
+		collisionController = new CollisionController(nodeNamesDTO,
 				gameStateDTO);
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
 	}
 
@@ -86,13 +86,13 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 				initializeBox(bulletAppState, spatial, throwables);
 			}
 			if (spatialName.startsWith("arrow")) {
-				objectsHolderDTO.setThrowableObjectMarkerNodeName(
+				nodeNamesDTO.setThrowableObjectMarkerNodeName(
 						spatial.getName());
 				spatial.addControl(new ThrowableObjectMarkerControl());
 				spatial.setCullHint(Spatial.CullHint.Always);
 			}
 			if (spatialName.startsWith("mark")) {
-				objectsHolderDTO.setMarkNodeName(
+				nodeNamesDTO.setMarkNodeName(
 						spatial.getName());
 				spatial.setCullHint(Spatial.CullHint.Always);
 			}
@@ -163,19 +163,19 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 				50);
 		GhostControl control = new GhostControl(sphereCollisionShape);
 		Vector3f daleCoordinates = rootNode.getChild(
-				objectsHolderDTO.getDaleNodeName())
+				nodeNamesDTO.getDaleNodeName())
 										   .getWorldTranslation();
 		sphereGeometry.setLocalTranslation(daleCoordinates);
 		control.setPhysicsLocation(daleCoordinates);
 
 		sphereGeometry.addControl(control);
 		sphereGeometry.addControl(
-				new DaleFieldOfViewControl(objectsHolderDTO, gameStateDTO));
+				new DaleFieldOfViewControl(nodeNamesDTO, gameStateDTO));
 
 		bulletAppState.getPhysicsSpace()
 					  .add(control);
 		rootNode.attachChild(sphereGeometry);
-		objectsHolderDTO.setFieldOfViewNodeName(sphereGeometry.getName());
+		nodeNamesDTO.setFieldOfViewNodeName(sphereGeometry.getName());
 
 	}
 
@@ -185,10 +185,10 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		CameraNode cameraNode = new CameraNode("Main camera", camera);
 		cameraNode.addControl(
 				new DaleFollowingCameraControl(gameStateDTO, camera,
-						objectsHolderDTO));
+						nodeNamesDTO));
 		cameraNode.removeControl(CameraControl.class);
 		camera.lookAtDirection(
-				rootNode.getChild(objectsHolderDTO.getDaleNodeName())
+				rootNode.getChild(nodeNamesDTO.getDaleNodeName())
 						.getControl(PhysicsControls.DALE)
 						.getViewDirection(), Vector3f.UNIT_Y);
 		rootNode.attachChild(cameraNode);
@@ -211,7 +211,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 	private void initializeBox(BulletAppState bulletAppState, Spatial box,
 			Node throwables) {
-		objectsHolderDTO.setBoxNodeName(box.getName());
+		nodeNamesDTO.setBoxNodeName(box.getName());
 		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
 
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 5f);
@@ -227,7 +227,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 	private void initializeTree(BulletAppState bulletAppState, Node rootNode,
 			Spatial tree) {
-		objectsHolderDTO.setTreeNodeName(tree.getName());
+		nodeNamesDTO.setTreeNodeName(tree.getName());
 		CollisionShape collisionShape = CollisionShapeFactory.createMeshShape(
 				tree);
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape,
@@ -250,7 +250,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 	}
 
 	private void initializeDale(BulletAppState bulletAppState, Spatial model) {
-		objectsHolderDTO.setDaleNodeName(model.getName());
+		nodeNamesDTO.setDaleNodeName(model.getName());
 		CapsuleCollisionShape capsuleShape = initializeDaleShape(model);
 		initializeDaleState();
 		initializeDaleControls(bulletAppState, model, capsuleShape);
@@ -260,7 +260,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 	private void initializeDaleControls(BulletAppState bulletAppState,
 			Spatial model, CapsuleCollisionShape capsuleShape) {
 		DaleMovingControl daleMovingControl = new DaleMovingControl(
-				gameStateDTO, objectsHolderDTO);
+				gameStateDTO, nodeNamesDTO);
 		DaleLedgeGrabControl daleLedgeGrabControl = new DaleLedgeGrabControl(
 				gameStateDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
@@ -299,7 +299,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 	private void initializeDog(BulletAppState bulletAppState, Node rootNode,
 			Spatial model) {
-		objectsHolderDTO.setDogNodeName(model.getName());
+		nodeNamesDTO.setDogNodeName(model.getName());
 		CapsuleCollisionShape capsuleShape = initializeDogShape(model);
 		initializeDogControls(bulletAppState, model, capsuleShape);
 		rootNode.attachChild(model);
@@ -311,7 +311,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		CharacterControl control = new CharacterControl(capsuleShape, 0.05f);
 		DogStateDTO dogStateDTO = addDogState(model, control);
 		DogMovementControl dogMovementControl = new DogMovementControl(
-				dogStateDTO, objectsHolderDTO, gameStateDTO);
+				dogStateDTO, nodeNamesDTO, gameStateDTO);
 
 		ghostControl.setPhysicsLocation(model.getLocalTranslation());
 		control.setPhysicsLocation(model.getLocalTranslation());
@@ -346,7 +346,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 	private void initializeScene(BulletAppState bulletAppState, Node rootNode,
 			Spatial scene) {
-		objectsHolderDTO.setSceneNodeName(scene.getName());
+		nodeNamesDTO.setSceneNodeName(scene.getName());
 		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(
 				scene);
 		RigidBodyControl landscape = new RigidBodyControl(sceneShape, 0);

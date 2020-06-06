@@ -7,7 +7,7 @@ import core.animationEventListeners.DaleAnimationListener;
 import core.animationEventListeners.DogAnimationListener;
 import dto.DogStateDTO;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +17,18 @@ public class AnimationsAppState extends AbstractAppState {
 	private DaleAnimationListener daleAnimationListener;
 	private List<DogAnimationListener> dogAnimationListeners = new ArrayList<>();
 	private GameStateDTO gameStateDTO;
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 
 	public AnimationsAppState(GameStateDTO gameStateDTO,
-			ObjectsHolderDTO objectsHolderDTO) {
+			NodeNamesDTO nodeNamesDTO) {
 		this.gameStateDTO = gameStateDTO;
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
 		daleAnimationListener = new DaleAnimationListener(gameStateDTO,
-				objectsHolderDTO, app);
+				nodeNamesDTO, app);
 		daleAnimationListener.setUpAnimations();
 		for (DogStateDTO dog : gameStateDTO.getDogStateDTOS()) {
 			DogAnimationListener dogAnimationListener = new DogAnimationListener(

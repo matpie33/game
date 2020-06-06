@@ -4,9 +4,8 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
-import core.loading.AdditionalModelsLoader;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +13,13 @@ import java.util.List;
 public class GameStartAppState extends AbstractAppState {
 
 	private List<AppState> appStates = new ArrayList<>();
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 	private GameStateDTO gameStateDTO;
 	private Application app;
 
-	public GameStartAppState(ObjectsHolderDTO objectsHolderDTO,
+	public GameStartAppState(NodeNamesDTO nodeNamesDTO,
 			GameStateDTO gameStateDTO) {
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
 	}
 
@@ -30,17 +29,18 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new GameHotkeysAppState(gameStateDTO));
 		appStates.add(new HUDAppState());
 		appStates.add(new LightAppState());
-		appStates.add(new DaleHPAppState(gameStateDTO, objectsHolderDTO));
-		appStates.add(new LevelAppState(objectsHolderDTO));
+		appStates.add(new DaleHPAppState(gameStateDTO, nodeNamesDTO));
+		appStates.add(new LevelAppState(nodeNamesDTO));
 		appStates.add(
-				new AddLevelObjectsAppState(objectsHolderDTO, gameStateDTO));
-		appStates.add(new AnimationsAppState(gameStateDTO, objectsHolderDTO));
+				new AddLevelObjectsAppState(nodeNamesDTO, gameStateDTO));
+		appStates.add(new AnimationsAppState(gameStateDTO, nodeNamesDTO));
 		appStates.add(new IdleTimeCheckAppState());
 		appStates.add(new SoundsAppState());
-		appStates.add(new TerrainAppState(objectsHolderDTO));
-		appStates.add(new MarkThrowableObjectsAppState(gameStateDTO, objectsHolderDTO));
+		appStates.add(new TerrainAppState(nodeNamesDTO));
+		appStates.add(new MarkThrowableObjectsAppState(gameStateDTO,
+				nodeNamesDTO));
 		appStates.add(
-				new CarriedObjectAppState(gameStateDTO, objectsHolderDTO));
+				new CarriedObjectAppState(gameStateDTO, nodeNamesDTO));
 		appStates.forEach(stateManager::attach);
 		super.initialize(stateManager, app);
 	}

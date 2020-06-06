@@ -14,7 +14,7 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 
 public class DaleMovingControl extends AbstractControl {
 
@@ -22,13 +22,13 @@ public class DaleMovingControl extends AbstractControl {
 	private GameStateDTO gameStateDTO;
 	private Vector3f modifiableWalkDirectionVector = new Vector3f(0, 0, 0);
 	private GameApplication gameApplication;
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 
 	public DaleMovingControl(GameStateDTO gameStateDTO,
-			ObjectsHolderDTO objectsHolderDTO) {
+			NodeNamesDTO nodeNamesDTO) {
 		this.gameStateDTO = gameStateDTO;
 		gameApplication = GameApplication.getInstance();
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class DaleMovingControl extends AbstractControl {
 		Spatial fieldOfView = GameApplication.getInstance()
 											 .getRootNode()
 											 .getChild(
-													 objectsHolderDTO.getFieldOfViewNodeName());
+													 nodeNamesDTO.getFieldOfViewNodeName());
 		float fieldOfViewRadius = ((SphereCollisionShape) fieldOfView.getControl(
 				GhostControl.class)
 																	 .getCollisionShape()).getRadius();

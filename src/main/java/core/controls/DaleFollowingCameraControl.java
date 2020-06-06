@@ -11,20 +11,20 @@ import core.GameApplication;
 import core.appState.IdleTimeCheckAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 import enums.ThrowingState;
 
 public class DaleFollowingCameraControl extends AbstractControl {
 
 	private GameStateDTO gameStateDTO;
 	private Camera camera;
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 
 	public DaleFollowingCameraControl(GameStateDTO gameStateDTO, Camera camera,
-			ObjectsHolderDTO objectsHolderDTO) {
+			NodeNamesDTO nodeNamesDTO) {
 		this.gameStateDTO = gameStateDTO;
 		this.camera = camera;
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class DaleFollowingCameraControl extends AbstractControl {
 			camera.lookAt(throwingDestinationLocation, Vector3f.UNIT_Y);
 			GameApplication.getInstance()
 						   .getRootNode()
-						   .getChild(objectsHolderDTO.getDaleNodeName())
+						   .getChild(nodeNamesDTO.getDaleNodeName())
 						   .lookAt(throwingDestinationLocation,
 								   Vector3f.UNIT_Y);
 		}
@@ -77,7 +77,7 @@ public class DaleFollowingCameraControl extends AbstractControl {
 		Vector3f dalePosition = GameApplication.getInstance()
 											   .getRootNode()
 											   .getChild(
-													   objectsHolderDTO.getDaleNodeName())
+													   nodeNamesDTO.getDaleNodeName())
 											   .getLocalTranslation();
 		Vector3f dalePositionMinusViewDirection = calculateCameraPositionBasedOnDaleViewDirection(
 				dalePosition);

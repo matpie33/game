@@ -7,7 +7,7 @@ import com.jme3.texture.Texture;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObjectsHolderDTO {
+public class NodeNamesDTO {
 
 	private String treeNodeName;
 	private String boxNodeName;

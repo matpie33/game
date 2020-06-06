@@ -9,7 +9,7 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 
 public class DaleHPAppState extends BaseAppState {
 
@@ -18,14 +18,14 @@ public class DaleHPAppState extends BaseAppState {
 	public static final float MINIMUM_TIME_BETWEEN_HP_DECREASE_SECONDS = 1;
 
 	private float timeSinceLastHpDecrease;
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 	private SimpleApplication application;
 
 	public DaleHPAppState(GameStateDTO gameStateDTO,
-			ObjectsHolderDTO objectsHolderDTO) {
+			NodeNamesDTO nodeNamesDTO) {
 		this.gameStateDTO = gameStateDTO;
 		timeSinceLastHpDecrease = 0;
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	private void handleDaleState() {
@@ -60,7 +60,7 @@ public class DaleHPAppState extends BaseAppState {
 	public void moveDaleBack() {
 		CharacterControl control = application.getRootNode()
 											  .getChild(
-													  objectsHolderDTO.getDaleNodeName())
+													  nodeNamesDTO.getDaleNodeName())
 											  .getControl(PhysicsControls.DALE);
 		Vector3f direction = application.getCamera()
 										.getDirection();

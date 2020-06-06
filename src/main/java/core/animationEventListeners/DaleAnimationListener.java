@@ -12,7 +12,7 @@ import core.appState.CarriedObjectAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 import enums.ClimbingState;
 
 public class DaleAnimationListener implements AnimEventListener {
@@ -27,12 +27,12 @@ public class DaleAnimationListener implements AnimEventListener {
 	private final Application app;
 	private AnimChannel channel;
 	private GameStateDTO gameStateDTO;
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 
 	public DaleAnimationListener(GameStateDTO gameStateDTO,
-			ObjectsHolderDTO objectsHolderDTO, Application app) {
+			NodeNamesDTO nodeNamesDTO, Application app) {
 		this.gameStateDTO = gameStateDTO;
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 		this.app = app;
 	}
 
@@ -47,7 +47,7 @@ public class DaleAnimationListener implements AnimEventListener {
 	private Spatial getDale() {
 		return ((SimpleApplication) app).getRootNode()
 										.getChild(
-												objectsHolderDTO.getDaleNodeName());
+												nodeNamesDTO.getDaleNodeName());
 	}
 
 	@Override

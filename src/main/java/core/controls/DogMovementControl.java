@@ -11,7 +11,7 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import dto.DogStateDTO;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 import enums.MovementDirection;
 
 import java.util.Random;
@@ -24,12 +24,12 @@ public class DogMovementControl extends AbstractControl {
 	public static final float MOVEMENT_SPEED = 0.1f;
 	private GameStateDTO gameStateDTO;
 	private DogStateDTO dogStateDTO;
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 
 	public DogMovementControl(DogStateDTO dogStateDTO,
-			ObjectsHolderDTO objectsHolderDTO, GameStateDTO gameStateDTO) {
+			NodeNamesDTO nodeNamesDTO, GameStateDTO gameStateDTO) {
 		this.dogStateDTO = dogStateDTO;
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
 	}
 
@@ -64,7 +64,7 @@ public class DogMovementControl extends AbstractControl {
 			control.setViewDirection(GameApplication.getInstance()
 													.getRootNode()
 													.getChild(
-															objectsHolderDTO.getDaleNodeName())
+															nodeNamesDTO.getDaleNodeName())
 													.getLocalTranslation()
 													.subtract(
 															control.getPhysicsLocation()));

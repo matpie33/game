@@ -7,7 +7,7 @@ import constants.PhysicsControls;
 import core.controls.DogMovementControl;
 import dto.DogStateDTO;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 import enums.MovementDirection;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class DogMovementControlTest {
 	public static final float TPF = 0.25f;
 	private Vector3f characterPosition = Vector3f.ZERO;
 
-	private ObjectsHolderDTO objectsHolderDTO = new ObjectsHolderDTO();
+	private NodeNamesDTO nodeNamesDTO = new NodeNamesDTO();
 
 	@Test
 	public void shouldTestThatEnemiesStayInSquare() {
@@ -50,7 +50,7 @@ public class DogMovementControlTest {
 		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(20);
 		GameStateDTO gameState = new GameStateDTO();
 		DogMovementControl dogMovementControl = new DogMovementControl(
-				dogStateDTO, objectsHolderDTO, gameState);
+				dogStateDTO, nodeNamesDTO, gameState);
 
 		//when, then
 		for (int i = 0; i < 10000; i++) {

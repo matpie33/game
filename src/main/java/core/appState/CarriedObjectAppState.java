@@ -13,20 +13,20 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import core.util.CoordinatesUtil;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 
 public class CarriedObjectAppState extends AbstractAppState {
 
 	private GameStateDTO gameStateDTO;
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 	private GameApplication gameApplication;
 	private Spatial carriedObject;
 	private SimpleApplication app;
 
 	public CarriedObjectAppState(GameStateDTO gameStateDTO,
-			ObjectsHolderDTO objectsHolderDTO) {
+			NodeNamesDTO nodeNamesDTO) {
 		this.gameStateDTO = gameStateDTO;
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 		gameApplication = GameApplication.getInstance();
 	}
 
@@ -82,7 +82,7 @@ public class CarriedObjectAppState extends AbstractAppState {
 
 	private void handleBeingCarried() {
 		Spatial dale = app.getRootNode()
-						   .getChild(objectsHolderDTO.getDaleNodeName());
+						   .getChild(nodeNamesDTO.getDaleNodeName());
 		Vector3f dalePosition = dale
 								   .getLocalTranslation();
 		BoundingBox daleSize = CoordinatesUtil.getSizeOfSpatial(

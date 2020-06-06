@@ -7,20 +7,20 @@ import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 import enums.ObjectsTypes;
 
 public class CollisionController implements PhysicsCollisionListener {
 
 	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 40;
 
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 	private GameStateDTO gameStateDTO;
 	private ObjectsRemovingController objectsRemovingController;
 
-	public CollisionController(ObjectsHolderDTO objectsHolderDTO,
+	public CollisionController(NodeNamesDTO nodeNamesDTO,
 			GameStateDTO gameStateDTO) {
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
 		this.objectsRemovingController = new ObjectsRemovingController(gameStateDTO);
 	}
@@ -111,23 +111,23 @@ public class CollisionController implements PhysicsCollisionListener {
 	}
 
 	private ObjectsTypes getObjectType(Spatial node) {
-		if (objectsHolderDTO.getDogNodeName()
-							.equals(node.getName())) {
+		if (nodeNamesDTO.getDogNodeName()
+						.equals(node.getName())) {
 			return ObjectsTypes.DOG;
 		}
-		if (objectsHolderDTO.getDaleNodeName()
-							.equals(node.getName())) {
+		if (nodeNamesDTO.getDaleNodeName()
+						.equals(node.getName())) {
 			return ObjectsTypes.DALE;
 		}
-		if (objectsHolderDTO.getBoxNodeName()
-							.contains(node.getName())) {
+		if (nodeNamesDTO.getBoxNodeName()
+						.contains(node.getName())) {
 			return ObjectsTypes.BOX;
 		}
-		if (objectsHolderDTO.getFieldOfViewNodeName()
-							.equals(node.getName()) || objectsHolderDTO.getMarkNodeName()
-															 .equals(node.getName())
-				|| objectsHolderDTO.getThrowableObjectMarkerNodeName()
-								   .equals(node.getName())) {
+		if (nodeNamesDTO.getFieldOfViewNodeName()
+						.equals(node.getName()) || nodeNamesDTO.getMarkNodeName()
+															   .equals(node.getName())
+				|| nodeNamesDTO.getThrowableObjectMarkerNodeName()
+							   .equals(node.getName())) {
 			return ObjectsTypes.NONE;
 		}
 		return ObjectsTypes.NONE;

@@ -11,7 +11,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import dto.GameStateDTO;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 import enums.ThrowingState;
 
 import java.util.ArrayList;
@@ -20,15 +20,15 @@ import java.util.List;
 public class DaleFieldOfViewControl extends AbstractControl {
 
 	public static final String DIFFUSE_PARAM = "Diffuse";
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 	private Geometry spatialPreviouslyMarkedAsThrowingDestination;
 	private ColorRGBA previousColorOfThrowingDestination;
 	private GameStateDTO gameStateDTO;
 	private List<Spatial> enemiesSeeingDale = new ArrayList<>();
 
-	public DaleFieldOfViewControl(ObjectsHolderDTO objectsHolderDTO,
+	public DaleFieldOfViewControl(NodeNamesDTO nodeNamesDTO,
 			GameStateDTO gameStateDTO) {
-		this.objectsHolderDTO = objectsHolderDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
 	}
 
@@ -64,8 +64,8 @@ public class DaleFieldOfViewControl extends AbstractControl {
 				GhostControl.class)
 																	.getOverlappingObjects()) {
 			Node collidingObject = (Node) physicsCollisionObject.getUserObject();
-			if (objectsHolderDTO.getDogNodeName()
-								.equals(collidingObject.getName())) {
+			if (nodeNamesDTO.getDogNodeName()
+							.equals(collidingObject.getName())) {
 				enemiesSeeingDaleInThisUpdate.add(collidingObject);
 				this.enemiesSeeingDale.remove(collidingObject);
 				if (gameStateDTO.getDaleStateDTO()

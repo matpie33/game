@@ -6,7 +6,7 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.scene.Spatial;
 import core.loading.AdditionalModelsLoader;
-import dto.ObjectsHolderDTO;
+import dto.NodeNamesDTO;
 import dto.SpatialDTO;
 import initialization.ModelsLoadAppState;
 import saveAndLoad.FileLoad;
@@ -21,11 +21,11 @@ public class LevelAppState extends AbstractAppState {
 	public static final String PATH_TO_LEVELS = "/levels/";
 	public static final String LEVEL = "level.txt";
 
-	private ObjectsHolderDTO objectsHolderDTO;
+	private NodeNamesDTO nodeNamesDTO;
 	private List<SpatialDTO> spatialDTOS;
 
-	public LevelAppState(ObjectsHolderDTO objectsHolderDTO) {
-		this.objectsHolderDTO = objectsHolderDTO;
+	public LevelAppState(NodeNamesDTO nodeNamesDTO) {
+		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
