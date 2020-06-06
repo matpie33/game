@@ -4,7 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
-import core.controls.FieldOfViewAppState;
+import core.controllers.FieldOfViewAppState;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
