@@ -46,9 +46,11 @@ public class DaleFollowingCameraControl extends AbstractControl {
 															   .getThrowingDestination()
 															   .getWorldTranslation();
 			camera.lookAt(throwingDestinationLocation, Vector3f.UNIT_Y);
-			objectsHolderDTO.getDale()
-							.lookAt(throwingDestinationLocation,
-									Vector3f.UNIT_Y);
+			GameApplication.getInstance()
+						   .getRootNode()
+						   .getChild(objectsHolderDTO.getDaleNodeName())
+						   .lookAt(throwingDestinationLocation,
+								   Vector3f.UNIT_Y);
 		}
 
 	}
@@ -72,8 +74,11 @@ public class DaleFollowingCameraControl extends AbstractControl {
 	}
 
 	private void handleCameraMovement() {
-		Vector3f dalePosition = objectsHolderDTO.getDale()
-												.getLocalTranslation();
+		Vector3f dalePosition = GameApplication.getInstance()
+											   .getRootNode()
+											   .getChild(
+													   objectsHolderDTO.getDaleNodeName())
+											   .getLocalTranslation();
 		Vector3f dalePositionMinusViewDirection = calculateCameraPositionBasedOnDaleViewDirection(
 				dalePosition);
 		adjustCameraYPosition(dalePositionMinusViewDirection);
@@ -84,7 +89,8 @@ public class DaleFollowingCameraControl extends AbstractControl {
 			Vector3f dalePositionMinusViewDirection) {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		float distanceAboveHead = 3;
-		if (daleStateDTO.getThrowingState().equals(ThrowingState.PICKING_OBJECT)) {
+		if (daleStateDTO.getThrowingState()
+						.equals(ThrowingState.PICKING_OBJECT)) {
 			distanceAboveHead = 10;
 		}
 		dalePositionMinusViewDirection.setY(

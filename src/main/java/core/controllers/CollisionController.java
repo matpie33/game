@@ -111,28 +111,24 @@ public class CollisionController implements PhysicsCollisionListener {
 	}
 
 	private ObjectsTypes getObjectType(Spatial node) {
-		if (objectsHolderDTO.getDogs()
-							.contains(node)) {
+		if (objectsHolderDTO.getDogNodeName()
+							.equals(node.getName())) {
 			return ObjectsTypes.DOG;
 		}
-		if (objectsHolderDTO.getDale()
-							.equals(node)) {
+		if (objectsHolderDTO.getDaleNodeName()
+							.equals(node.getName())) {
 			return ObjectsTypes.DALE;
 		}
-		if (objectsHolderDTO.getBoxes()
-							.contains(node)) {
+		if (objectsHolderDTO.getBoxNodeName()
+							.contains(node.getName())) {
 			return ObjectsTypes.BOX;
 		}
-		if (objectsHolderDTO.getFieldOfView()
-							.equals(node) || objectsHolderDTO.getMark()
-															 .equals(node)
-				|| objectsHolderDTO.getThrowableObjectMarker()
-								   .equals(node)) {
+		if (objectsHolderDTO.getFieldOfViewNodeName()
+							.equals(node.getName()) || objectsHolderDTO.getMarkNodeName()
+															 .equals(node.getName())
+				|| objectsHolderDTO.getThrowableObjectMarkerNodeName()
+								   .equals(node.getName())) {
 			return ObjectsTypes.NONE;
-		}
-		if (objectsHolderDTO.getTrees()
-							.contains(node)) {
-			return ObjectsTypes.TREE;
 		}
 		return ObjectsTypes.NONE;
 	}

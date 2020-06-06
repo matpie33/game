@@ -19,9 +19,8 @@ import dto.ObjectsHolderDTO;
 public class MarkThrowableObjectsAppState extends AbstractAppState {
 
 	private final ObjectsHolderDTO objectsHolderDTO;
-	private Application app;
+	private SimpleApplication app;
 	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
-	private ThrowableObjectMarkerControl throwableObjectMarkerControl;
 	private GameStateDTO gameStateDTO;
 
 	public MarkThrowableObjectsAppState(GameStateDTO gameStateDTO,
@@ -32,8 +31,7 @@ public class MarkThrowableObjectsAppState extends AbstractAppState {
 
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
-		this.app = app;
-		throwableObjectMarkerControl = new ThrowableObjectMarkerControl();
+		this.app = (SimpleApplication) app;
 		super.initialize(stateManager, app);
 	}
 
@@ -45,14 +43,14 @@ public class MarkThrowableObjectsAppState extends AbstractAppState {
 	}
 
 	private void markThrowableObject() {
-		SimpleApplication app = (SimpleApplication) this.app;
 		Node rootNode = app.getRootNode();
 
 		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
 		CollisionResults collisionResults = getDistanceToObjects();
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
 
-		Spatial throwableCursor = objectsHolderDTO.getThrowableObjectMarker();
+		Spatial throwableCursor = rootNode.getChild(
+				objectsHolderDTO.getThrowableObjectMarkerNodeName());
 		if (isCloseEnoughToAnyObject(collisionResults)) {
 			if (keyPressDTO.isPickObjectPress()) {
 
@@ -64,19 +62,13 @@ public class MarkThrowableObjectsAppState extends AbstractAppState {
 										.getParent());
 				carriedObjectAppState.setEnabled(true);
 				setEnabled(false);
-				app.getRootNode()
-				   .detachChild(objectsHolderDTO.getThrowableObjectMarker());
+				throwableCursor.setCullHint(Spatial.CullHint.Always);
 			}
 			else {
-				if (throwableCursor.getControl(
-						ThrowableObjectMarkerControl.class) == null) {
-					app.getRootNode()
-					   .attachChild(
-							   objectsHolderDTO.getThrowableObjectMarker());
-					throwableObjectMarkerControl.setThrowableObject(
-							closestCollision.getGeometry());
-					throwableCursor.addControl(throwableObjectMarkerControl);
-				}
+				throwableCursor.setCullHint(Spatial.CullHint.Never);
+				throwableCursor.getControl(ThrowableObjectMarkerControl.class)
+							   .setThrowableObject(
+									   closestCollision.getGeometry());
 
 			}
 
@@ -84,8 +76,7 @@ public class MarkThrowableObjectsAppState extends AbstractAppState {
 
 		if ((collisionResults.size() == 0 || closestCollision.getDistance()
 				> MINIMAL_DISTANCE_TO_PICK_OBJECT)) {
-			throwableCursor.removeControl(throwableObjectMarkerControl);
-			rootNode.detachChild(objectsHolderDTO.getThrowableObjectMarker());
+			throwableCursor.setCullHint(Spatial.CullHint.Always);
 		}
 
 	}
@@ -101,8 +92,8 @@ public class MarkThrowableObjectsAppState extends AbstractAppState {
 	}
 
 	private CollisionResults getDistanceToObjects() {
-		Node rootNode = ((SimpleApplication) app).getRootNode();
-		Spatial dale = objectsHolderDTO.getDale();
+		Node rootNode = app.getRootNode();
+		Spatial dale = rootNode.getChild(objectsHolderDTO.getDaleNodeName());
 		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
 							  .getPhysicsLocation(),
 				dale.getControl(PhysicsControls.DALE)

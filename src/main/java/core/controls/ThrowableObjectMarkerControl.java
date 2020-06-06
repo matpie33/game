@@ -18,6 +18,9 @@ public class ThrowableObjectMarkerControl extends AbstractControl {
 
 	@Override
 	protected void controlUpdate(float tpf) {
+		if (throwableObject == null){
+			return;
+		}
 		BoundingBox throwableObjectSize = CoordinatesUtil.getSizeOfSpatial(
 				throwableObject);
 		float yDimensionArrow = CoordinatesUtil.getSizeOfSpatial(spatial)

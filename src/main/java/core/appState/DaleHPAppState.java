@@ -1,12 +1,12 @@
 package core.appState;
 
 import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.BaseAppState;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
 import constants.PhysicsControls;
 import core.GameApplication;
-import core.appState.HUDAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -19,7 +19,7 @@ public class DaleHPAppState extends BaseAppState {
 
 	private float timeSinceLastHpDecrease;
 	private ObjectsHolderDTO objectsHolderDTO;
-	private Application application;
+	private SimpleApplication application;
 
 	public DaleHPAppState(GameStateDTO gameStateDTO,
 			ObjectsHolderDTO objectsHolderDTO) {
@@ -31,7 +31,8 @@ public class DaleHPAppState extends BaseAppState {
 	private void handleDaleState() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		if (daleStateDTO.getHp() <= 0) {
-			application.getStateManager().detach(this);
+			application.getStateManager()
+					   .detach(this);
 			gameStateDTO.getDaleStateDTO()
 						.setAlive(false);
 		}
@@ -57,9 +58,10 @@ public class DaleHPAppState extends BaseAppState {
 	}
 
 	public void moveDaleBack() {
-		CharacterControl control = objectsHolderDTO.getDale()
-												   .getControl(
-														   PhysicsControls.DALE);
+		CharacterControl control = application.getRootNode()
+											  .getChild(
+													  objectsHolderDTO.getDaleNodeName())
+											  .getControl(PhysicsControls.DALE);
 		Vector3f direction = application.getCamera()
 										.getDirection();
 		Vector3f multiplied = direction.mult(new Vector3f(30f, 1, 30f));
@@ -69,7 +71,7 @@ public class DaleHPAppState extends BaseAppState {
 
 	@Override
 	protected void initialize(Application app) {
-		application = app;
+		application = (SimpleApplication) app;
 	}
 
 	@Override

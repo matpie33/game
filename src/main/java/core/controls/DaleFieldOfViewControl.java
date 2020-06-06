@@ -64,8 +64,8 @@ public class DaleFieldOfViewControl extends AbstractControl {
 				GhostControl.class)
 																	.getOverlappingObjects()) {
 			Node collidingObject = (Node) physicsCollisionObject.getUserObject();
-			if (objectsHolderDTO.getDogs()
-								.contains(collidingObject)) {
+			if (objectsHolderDTO.getDogNodeName()
+								.equals(collidingObject.getName())) {
 				enemiesSeeingDaleInThisUpdate.add(collidingObject);
 				this.enemiesSeeingDale.remove(collidingObject);
 				if (gameStateDTO.getDaleStateDTO()

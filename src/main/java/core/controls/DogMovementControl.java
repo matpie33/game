@@ -8,6 +8,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
+import core.GameApplication;
 import dto.DogStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
@@ -60,10 +61,13 @@ public class DogMovementControl extends AbstractControl {
 											.normalize()
 											.mult(0.2f));
 
-			control.setViewDirection(objectsHolderDTO.getDale()
-													 .getLocalTranslation()
-													 .subtract(
-															 control.getPhysicsLocation()));
+			control.setViewDirection(GameApplication.getInstance()
+													.getRootNode()
+													.getChild(
+															objectsHolderDTO.getDaleNodeName())
+													.getLocalTranslation()
+													.subtract(
+															control.getPhysicsLocation()));
 			return;
 		}
 		if (enemyMovedEnoughInCurrentDirection(dogStateDTO)) {

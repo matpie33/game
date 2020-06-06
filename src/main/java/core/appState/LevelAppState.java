@@ -5,6 +5,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.scene.Spatial;
+import core.loading.AdditionalModelsLoader;
 import dto.ObjectsHolderDTO;
 import dto.SpatialDTO;
 import initialization.ModelsLoadAppState;
@@ -35,8 +36,22 @@ public class LevelAppState extends AbstractAppState {
 				PATH_TO_LEVELS + LEVEL);
 		modelsLoadAppState.setPaths(Collections.singletonList(
 				System.getProperty("user.dir") + MODELS_DIRECTORY));
-		stateManager.attach(new InitializeAdditionalObjectsAppState(objectsHolderDTO));
 
+		loadModelsFromLevelFile(modelsLoadAppState, levelsFileStream);
+		loadAdditionalInvisibleModels(app);
+	}
+
+	private void loadAdditionalInvisibleModels(Application app) {
+		new AdditionalModelsLoader().loadModels(app).forEach(spatial->{
+			SpatialDTO spatialDTO = new SpatialDTO();
+			spatialDTO.setSpatial(spatial);
+			spatialDTO.setPathToModel(spatial.getName());
+			spatialDTOS.add(spatialDTO);
+		});
+	}
+
+	private void loadModelsFromLevelFile(ModelsLoadAppState modelsLoadAppState,
+			InputStream levelsFileStream) {
 		spatialDTOS = new FileLoad().readFile(levelsFileStream);
 		spatialDTOS.forEach(dto -> {
 			String pathToModel = dto.getPathToModel();

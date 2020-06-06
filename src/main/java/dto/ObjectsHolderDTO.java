@@ -9,114 +9,86 @@ import java.util.List;
 
 public class ObjectsHolderDTO {
 
-	private List<Spatial> trees = new ArrayList<>();
-	private List<Spatial> boxes = new ArrayList<>();
-	private List<Spatial> dogs = new ArrayList<>();
-	private Spatial dale;
-	private Spatial scene;
-	private Spatial mark;
-	private Spatial throwableObjectMarker;
-	private Spatial sky;
-	private Spatial fieldOfView;
+	private String treeNodeName;
+	private String boxNodeName;
+	private String dogNodeName;
+	private String daleNodeName;
+	private String sceneNodeName;
+	private String markNodeName;
+	private String throwableObjectMarkerNodeName;
+	private String skyNodeName;
+	private String fieldOfViewNodeName;
 
-	private Texture road;
-	private Texture heightMap;
-
-	private TerrainQuad terrain;
-
-	public Spatial getFieldOfView() {
-		return fieldOfView;
+	public String getTreeNodeName() {
+		return treeNodeName;
 	}
 
-	public void setFieldOfView(Spatial fieldOfView) {
-		this.fieldOfView = fieldOfView;
+	public void setTreeNodeName(String treeNodeName) {
+		this.treeNodeName = treeNodeName;
 	}
 
-	public TerrainQuad getTerrain() {
-		return terrain;
+	public String getBoxNodeName() {
+		return boxNodeName;
 	}
 
-	public void setTerrain(TerrainQuad terrain) {
-		this.terrain = terrain;
+	public void setBoxNodeName(String boxNodeName) {
+		this.boxNodeName = boxNodeName;
 	}
 
-	public List<Spatial> getTrees() {
-		return trees;
+	public String getDogNodeName() {
+		return dogNodeName;
 	}
 
-	public void addTree(Spatial tree) {
-		trees.add(tree);
+	public void setDogNodeName(String dogNodeName) {
+		this.dogNodeName = dogNodeName;
 	}
 
-	public List<Spatial> getBoxes() {
-		return boxes;
+	public String getDaleNodeName() {
+		return daleNodeName;
 	}
 
-	public void addBox(Spatial box) {
-		boxes.add(box);
+	public void setDaleNodeName(String daleNodeName) {
+		this.daleNodeName = daleNodeName;
 	}
 
-	public Spatial getDale() {
-		return dale;
+	public String getSceneNodeName() {
+		return sceneNodeName;
 	}
 
-	public void setDale(Spatial dale) {
-		this.dale = dale;
+	public void setSceneNodeName(String sceneNodeName) {
+		this.sceneNodeName = sceneNodeName;
 	}
 
-	public Spatial getScene() {
-		return scene;
+	public String getMarkNodeName() {
+		return markNodeName;
 	}
 
-	public void setScene(Spatial scene) {
-		this.scene = scene;
+	public void setMarkNodeName(String markNodeName) {
+		this.markNodeName = markNodeName;
 	}
 
-	public Spatial getMark() {
-		return mark;
+	public String getThrowableObjectMarkerNodeName() {
+		return throwableObjectMarkerNodeName;
 	}
 
-	public void setMark(Spatial mark) {
-		this.mark = mark;
+	public void setThrowableObjectMarkerNodeName(
+			String throwableObjectMarkerNodeName) {
+		this.throwableObjectMarkerNodeName = throwableObjectMarkerNodeName;
 	}
 
-	public Spatial getThrowableObjectMarker() {
-		return throwableObjectMarker;
+	public String getSkyNodeName() {
+		return skyNodeName;
 	}
 
-	public void setThrowableObjectMarker(Spatial throwableObjectMarker) {
-		this.throwableObjectMarker = throwableObjectMarker;
+	public void setSkyNodeName(String skyNodeName) {
+		this.skyNodeName = skyNodeName;
 	}
 
-	public Spatial getSky() {
-		return sky;
+	public String getFieldOfViewNodeName() {
+		return fieldOfViewNodeName;
 	}
 
-	public void setSky(Spatial sky) {
-		this.sky = sky;
-	}
-
-	public Texture getRoad() {
-		return road;
-	}
-
-	public void setRoad(Texture road) {
-		this.road = road;
-	}
-
-	public Texture getHeightMap() {
-		return heightMap;
-	}
-
-	public void setHeightMap(Texture heightMap) {
-		this.heightMap = heightMap;
-	}
-
-	public List<Spatial> getDogs() {
-		return dogs;
-	}
-
-	public void addDog(Spatial dog){
-		this.dogs.add(dog);
+	public void setFieldOfViewNodeName(String fieldOfViewNodeName) {
+		this.fieldOfViewNodeName = fieldOfViewNodeName;
 	}
 }

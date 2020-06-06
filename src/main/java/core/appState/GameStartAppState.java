@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
+import core.loading.AdditionalModelsLoader;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 
@@ -31,8 +32,6 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new LightAppState());
 		appStates.add(new DaleHPAppState(gameStateDTO, objectsHolderDTO));
 		appStates.add(new LevelAppState(objectsHolderDTO));
-		appStates.add(
-				new InitializeAdditionalObjectsAppState(objectsHolderDTO));
 		appStates.add(
 				new AddLevelObjectsAppState(objectsHolderDTO, gameStateDTO));
 		appStates.add(new AnimationsAppState(gameStateDTO, objectsHolderDTO));

@@ -5,6 +5,7 @@ import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.animation.LoopMode;
 import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.scene.Spatial;
 import core.appState.CarriedObjectAppState;
@@ -36,11 +37,17 @@ public class DaleAnimationListener implements AnimEventListener {
 	}
 
 	public void setUpAnimations() {
-		Spatial dale = objectsHolderDTO.getDale();
+		Spatial dale = getDale();
 		AnimControl control = dale.getControl(AnimControl.class);
 		control.addListener(this);
 		channel = control.createChannel();
 
+	}
+
+	private Spatial getDale() {
+		return ((SimpleApplication) app).getRootNode()
+										.getChild(
+												objectsHolderDTO.getDaleNodeName());
 	}
 
 	@Override
@@ -75,9 +82,8 @@ public class DaleAnimationListener implements AnimEventListener {
 			return;
 		}
 
-		boolean onGround = objectsHolderDTO.getDale()
-										   .getControl(CharacterControl.class)
-										   .onGround();
+		boolean onGround = getDale().getControl(CharacterControl.class)
+									.onGround();
 		if (onGround) {
 			if (keyPressDTO.isMoveForwardPress()) {
 				setAnimation(RUN_ANIMATION);

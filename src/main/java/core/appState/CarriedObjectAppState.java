@@ -1,6 +1,7 @@
 package core.appState;
 
 import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bounding.BoundingBox;
@@ -11,7 +12,6 @@ import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
 import core.GameApplication;
 import core.util.CoordinatesUtil;
-import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.ObjectsHolderDTO;
 
@@ -21,7 +21,7 @@ public class CarriedObjectAppState extends AbstractAppState {
 	private ObjectsHolderDTO objectsHolderDTO;
 	private GameApplication gameApplication;
 	private Spatial carriedObject;
-	private Application app;
+	private SimpleApplication app;
 
 	public CarriedObjectAppState(GameStateDTO gameStateDTO,
 			ObjectsHolderDTO objectsHolderDTO) {
@@ -32,7 +32,7 @@ public class CarriedObjectAppState extends AbstractAppState {
 
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
-		this.app = app;
+		this.app = ((SimpleApplication) app);
 		setEnabled(false);
 		super.initialize(stateManager, app);
 	}
@@ -81,10 +81,12 @@ public class CarriedObjectAppState extends AbstractAppState {
 	}
 
 	private void handleBeingCarried() {
-		Vector3f dalePosition = objectsHolderDTO.getDale()
-												.getLocalTranslation();
+		Spatial dale = app.getRootNode()
+						   .getChild(objectsHolderDTO.getDaleNodeName());
+		Vector3f dalePosition = dale
+								   .getLocalTranslation();
 		BoundingBox daleSize = CoordinatesUtil.getSizeOfSpatial(
-				objectsHolderDTO.getDale());
+				dale);
 		BoundingBox carriedObjectSize = CoordinatesUtil.getSizeOfSpatial(
 				carriedObject);
 		float daleHeight = daleSize.getYExtent();

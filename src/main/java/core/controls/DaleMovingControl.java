@@ -12,7 +12,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import core.GameApplication;
-import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
 import dto.ObjectsHolderDTO;
@@ -50,7 +49,8 @@ public class DaleMovingControl extends AbstractControl {
 		if (keyPressDTO.isJumpPress()) {
 			daleJump();
 		}
-		else if (spatial.getControl(CharacterControl.class).onGround()){
+		else if (spatial.getControl(CharacterControl.class)
+						.onGround()) {
 			if (keyPressDTO.isMoveForwardPress()) {
 				setDaleViewDirectionToCameraDirection();
 				modifiableWalkDirectionVector.addLocal(camDir);
@@ -74,16 +74,17 @@ public class DaleMovingControl extends AbstractControl {
 
 	private void moveFieldOfView() {
 		CharacterControl control = spatial.getControl(PhysicsControls.DALE);
-		Spatial fieldOfView = objectsHolderDTO.getFieldOfView();
+		Spatial fieldOfView = GameApplication.getInstance()
+											 .getRootNode()
+											 .getChild(
+													 objectsHolderDTO.getFieldOfViewNodeName());
 		float fieldOfViewRadius = ((SphereCollisionShape) fieldOfView.getControl(
 				GhostControl.class)
 																	 .getCollisionShape()).getRadius();
-		objectsHolderDTO.getFieldOfView()
-
-						.setLocalTranslation(spatial.getWorldTranslation()
-													.add(control.getViewDirection()
-																.mult(fieldOfViewRadius
-																		+ START_OF_VIEW)));
+		fieldOfView.setLocalTranslation(spatial.getWorldTranslation()
+											   .add(control.getViewDirection()
+														   .mult(fieldOfViewRadius
+																   + START_OF_VIEW)));
 	}
 
 	private void setMovementDirection() {
