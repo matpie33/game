@@ -80,7 +80,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 				initializeTree(bulletAppState, rootNode, spatial);
 			}
 			if (spatialName.startsWith("broken")) {
-				initializeBoxShape(bulletAppState, spatial, throwables);
+				initializeBoxShape(bulletAppState, spatial);
 			}
 			if (spatialName.startsWith("box")) {
 				initializeBox(bulletAppState, spatial, throwables);
@@ -118,7 +118,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 	}
 
 	private void initializeBoxShape(BulletAppState bulletAppState,
-			Spatial spatial, Node throwables) {
+			Spatial spatial) {
 		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(spatial);
 
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 5f);
@@ -169,8 +169,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		control.setPhysicsLocation(daleCoordinates);
 
 		sphereGeometry.addControl(control);
-		sphereGeometry.addControl(
-				new DaleFieldOfViewControl(nodeNamesDTO, gameStateDTO));
 
 		bulletAppState.getPhysicsSpace()
 					  .add(control);

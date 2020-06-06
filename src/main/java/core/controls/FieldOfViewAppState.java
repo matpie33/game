@@ -1,15 +1,17 @@
 package core.controls;
 
+import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.material.MatParam;
 import com.jme3.math.ColorRGBA;
-import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.control.AbstractControl;
+import core.appState.CarriedObjectAppState;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 import enums.ThrowingState;
@@ -17,7 +19,7 @@ import enums.ThrowingState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DaleFieldOfViewControl extends AbstractControl {
+public class FieldOfViewAppState extends AbstractAppState {
 
 	public static final String DIFFUSE_PARAM = "Diffuse";
 	private NodeNamesDTO nodeNamesDTO;
@@ -25,16 +27,22 @@ public class DaleFieldOfViewControl extends AbstractControl {
 	private ColorRGBA previousColorOfThrowingDestination;
 	private GameStateDTO gameStateDTO;
 	private List<Spatial> enemiesSeeingDale = new ArrayList<>();
+	private SimpleApplication app;
 
-	public DaleFieldOfViewControl(NodeNamesDTO nodeNamesDTO,
+	public FieldOfViewAppState(NodeNamesDTO nodeNamesDTO,
 			GameStateDTO gameStateDTO) {
 		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
 	}
 
 	@Override
-	protected void controlUpdate(float tpf) {
+	public void initialize(AppStateManager stateManager, Application app) {
+		this.app = ((SimpleApplication) app);
+		super.initialize(stateManager, app);
+	}
 
+	@Override
+	public void update(float tpf) {
 		List<Spatial> enemiesSeeingDaleInThisUpdate = handleThrowingFieldOfView();
 		if (!gameStateDTO.getDaleStateDTO()
 						 .getThrowingState()
@@ -45,7 +53,6 @@ public class DaleFieldOfViewControl extends AbstractControl {
 		enemiesSeeingDale.forEach(
 				enemy -> findDogAndSetSeeingDale(enemy, false));
 		enemiesSeeingDale = enemiesSeeingDaleInThisUpdate;
-
 	}
 
 	private void findDogAndSetSeeingDale(Spatial enemy, boolean seeingDale) {
@@ -60,19 +67,22 @@ public class DaleFieldOfViewControl extends AbstractControl {
 	private List<Spatial> handleThrowingFieldOfView() {
 		boolean containsAnyThrowingDestination = false;
 		List<Spatial> enemiesSeeingDaleInThisUpdate = new ArrayList<>();
-		for (PhysicsCollisionObject physicsCollisionObject : spatial.getControl(
+		Spatial fieldOfView = app.getRootNode()
+								 .getChild(
+										 nodeNamesDTO.getFieldOfViewNodeName());
+		for (PhysicsCollisionObject physicsCollisionObject : fieldOfView.getControl(
 				GhostControl.class)
-																	.getOverlappingObjects()) {
+																		.getOverlappingObjects()) {
 			Node collidingObject = (Node) physicsCollisionObject.getUserObject();
 			if (nodeNamesDTO.getDogNodeName()
 							.equals(collidingObject.getName())) {
 				enemiesSeeingDaleInThisUpdate.add(collidingObject);
 				this.enemiesSeeingDale.remove(collidingObject);
-				if (gameStateDTO.getDaleStateDTO()
-								.getThrowingState()
-								.equals(ThrowingState.PICKING_OBJECT)) {
-					containsAnyThrowingDestination = handleThrowingDestination(
-							collidingObject);
+				if (app.getStateManager()
+					   .getState(CarriedObjectAppState.class)
+					   .isEnabled()) {
+					containsAnyThrowingDestination = true;
+					handleThrowingDestination(collidingObject);
 				}
 				findDogAndSetSeeingDale(collidingObject, true);
 
@@ -84,8 +94,7 @@ public class DaleFieldOfViewControl extends AbstractControl {
 		return enemiesSeeingDaleInThisUpdate;
 	}
 
-	private boolean handleThrowingDestination(Node collidingObject) {
-		boolean containsAnyThrowingDestination;
+	private void handleThrowingDestination(Node collidingObject) {
 		changePreviouslyMarkedTargetToItsColor();
 
 		Geometry geometry = (Geometry) (collidingObject).getChild(0);
@@ -93,8 +102,6 @@ public class DaleFieldOfViewControl extends AbstractControl {
 		gameStateDTO.getDaleStateDTO()
 					.setThrowingDestination(collidingObject);
 		setColor(geometry, ColorRGBA.Red);
-		containsAnyThrowingDestination = true;
-		return containsAnyThrowingDestination;
 	}
 
 	private void markObjectAsCurrentThrowingDestination(Geometry geometry) {
@@ -115,11 +122,6 @@ public class DaleFieldOfViewControl extends AbstractControl {
 		gameStateDTO.getDaleStateDTO()
 					.setThrowingDestination(null);
 		spatialPreviouslyMarkedAsThrowingDestination = null;
-	}
-
-	@Override
-	protected void controlRender(RenderManager rm, ViewPort vp) {
-
 	}
 
 	private void changePreviouslyMarkedTargetToItsColor() {

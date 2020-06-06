@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
+import core.controls.FieldOfViewAppState;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
@@ -31,16 +32,15 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new LightAppState());
 		appStates.add(new DaleHPAppState(gameStateDTO, nodeNamesDTO));
 		appStates.add(new LevelAppState(nodeNamesDTO));
-		appStates.add(
-				new AddLevelObjectsAppState(nodeNamesDTO, gameStateDTO));
+		appStates.add(new FieldOfViewAppState(nodeNamesDTO, gameStateDTO));
+		appStates.add(new AddLevelObjectsAppState(nodeNamesDTO, gameStateDTO));
 		appStates.add(new AnimationsAppState(gameStateDTO, nodeNamesDTO));
 		appStates.add(new IdleTimeCheckAppState());
 		appStates.add(new SoundsAppState());
 		appStates.add(new TerrainAppState(nodeNamesDTO));
-		appStates.add(new MarkThrowableObjectsAppState(gameStateDTO,
-				nodeNamesDTO));
 		appStates.add(
-				new CarriedObjectAppState(gameStateDTO, nodeNamesDTO));
+				new MarkThrowableObjectsAppState(gameStateDTO, nodeNamesDTO));
+		appStates.add(new CarriedObjectAppState(gameStateDTO, nodeNamesDTO));
 		appStates.forEach(stateManager::attach);
 		super.initialize(stateManager, app);
 	}
