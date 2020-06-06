@@ -1,62 +1,45 @@
-package core.controls;
+package core.appState;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
-import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.ViewPort;
-import com.jme3.scene.control.AbstractControl;
 import core.GameApplication;
-import core.appState.IdleTimeCheckAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
-import enums.ThrowingState;
 
-public class DaleFollowingCameraControl extends AbstractControl {
+public class CameraFollowingDaleAppState extends AbstractAppState {
 
 	private GameStateDTO gameStateDTO;
-	private Camera camera;
 	private NodeNamesDTO nodeNamesDTO;
+	private Camera camera;
+	private Application app;
 
-	public DaleFollowingCameraControl(GameStateDTO gameStateDTO, Camera camera,
+	public CameraFollowingDaleAppState(GameStateDTO gameStateDTO,
 			NodeNamesDTO nodeNamesDTO) {
 		this.gameStateDTO = gameStateDTO;
-		this.camera = camera;
 		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
-	protected void controlUpdate(float tpf) {
-		handleMovement(tpf);
-		handleThrowingDestinationChase(tpf);
-	}
-
-	private void handleThrowingDestinationChase(float tpf) {
-
-		IdleTimeCheckAppState idleTimeCheckAppState = GameApplication.getInstance()
-																	 .getStateManager()
-																	 .getState(
-																			 IdleTimeCheckAppState.class);
-		if (gameStateDTO.getDaleStateDTO()
-						.hasThrowingDestination()
-				&& idleTimeCheckAppState.getIdleTime() > 0.5f) {
-			Vector3f throwingDestinationLocation = gameStateDTO.getDaleStateDTO()
-															   .getThrowingDestination()
-															   .getWorldTranslation();
-			camera.lookAt(throwingDestinationLocation, Vector3f.UNIT_Y);
-			GameApplication.getInstance()
-						   .getRootNode()
-						   .getChild(nodeNamesDTO.getDaleNodeName())
-						   .lookAt(throwingDestinationLocation,
-								   Vector3f.UNIT_Y);
-		}
-
+	public void initialize(AppStateManager stateManager, Application app) {
+		camera = app.getCamera();
+		this.app = app;
+		ThrowingDestinationFollowingCameraAppState appState = new ThrowingDestinationFollowingCameraAppState(
+				gameStateDTO, nodeNamesDTO);
+		appState.setEnabled(false);
+		app.getStateManager()
+		   .attach(appState);
+		super.initialize(stateManager, app);
 	}
 
 	@Override
-	protected void controlRender(RenderManager rm, ViewPort vp) {
+	public void update(float tpf) {
+		handleMovement(tpf);
 
 	}
 
@@ -87,10 +70,10 @@ public class DaleFollowingCameraControl extends AbstractControl {
 
 	private void adjustCameraYPosition(
 			Vector3f dalePositionMinusViewDirection) {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		float distanceAboveHead = 3;
-		if (daleStateDTO.getThrowingState()
-						.equals(ThrowingState.PICKING_OBJECT)) {
+		if (app.getStateManager()
+			   .getState(CarriedObjectAppState.class)
+			   .isEnabled()) {
 			distanceAboveHead = 10;
 		}
 		dalePositionMinusViewDirection.setY(
