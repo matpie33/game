@@ -181,6 +181,9 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		Camera camera = GameApplication.getInstance()
 									   .getCamera();
 		CameraNode cameraNode = new CameraNode("Main camera", camera);
+		cameraNode.addControl(
+				new DaleFollowingCameraControl(gameStateDTO, camera,
+						nodeNamesDTO));
 		cameraNode.removeControl(CameraControl.class);
 		camera.lookAtDirection(
 				rootNode.getChild(nodeNamesDTO.getDaleNodeName())

@@ -65,9 +65,9 @@ public class FieldOfViewAppState extends AbstractAppState {
 				GhostControl.class)
 																	 .getCollisionShape()).getRadius();
 		fieldOfView.setLocalTranslation(dale.getWorldTranslation()
-											.add(control.getViewDirection()
-														.mult(fieldOfViewRadius
-																+ OFFSET_FROM_DALE_TO_FIELD_OF_VIEW)));
+											   .add(control.getViewDirection()
+														   .mult(fieldOfViewRadius
+																   + OFFSET_FROM_DALE_TO_FIELD_OF_VIEW)));
 	}
 
 	private void findDogAndSetSeeingDale(Spatial enemy, boolean seeingDale) {
@@ -106,14 +106,6 @@ public class FieldOfViewAppState extends AbstractAppState {
 		if (!containsAnyThrowingDestination) {
 			resetThrowingDestination();
 		}
-		else {
-			ThrowingDestinationFollowingCameraAppState cameraAppState = app.getStateManager()
-																		   .getState(
-																				   ThrowingDestinationFollowingCameraAppState.class);
-			cameraAppState.setEnabled(true);
-			cameraAppState.setThrowingDestination(
-					enemiesSeeingDaleInThisUpdate.get(0));
-		}
 		return enemiesSeeingDaleInThisUpdate;
 	}
 
@@ -122,6 +114,8 @@ public class FieldOfViewAppState extends AbstractAppState {
 
 		Geometry geometry = (Geometry) (collidingObject).getChild(0);
 		markObjectAsCurrentThrowingDestination(geometry);
+		gameStateDTO.getDaleStateDTO()
+					.setThrowingDestination(collidingObject);
 		setColor(geometry, ColorRGBA.Red);
 	}
 
@@ -140,9 +134,8 @@ public class FieldOfViewAppState extends AbstractAppState {
 
 	private void resetThrowingDestination() {
 		changePreviouslyMarkedTargetToItsColor();
-		app.getStateManager()
-		   .getState(ThrowingDestinationFollowingCameraAppState.class)
-		   .setEnabled(false);
+		gameStateDTO.getDaleStateDTO()
+					.setThrowingDestination(null);
 		spatialPreviouslyMarkedAsThrowingDestination = null;
 	}
 

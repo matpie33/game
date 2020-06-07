@@ -29,7 +29,6 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new GameHotkeysAppState(gameStateDTO));
 		appStates.add(new HUDAppState());
 		appStates.add(new LightAppState());
-		appStates.add(new CameraFollowingDaleAppState(gameStateDTO, nodeNamesDTO));
 		appStates.add(new DaleHPAppState(gameStateDTO, nodeNamesDTO));
 		appStates.add(new LevelAppState(nodeNamesDTO));
 		appStates.add(new FieldOfViewAppState(nodeNamesDTO, gameStateDTO));

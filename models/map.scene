@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- exporter: blender2ogre 0.7.0 -->
-<!-- export_time: Thu, 21 May 2020 17:57:54 +0000 -->
+<!-- export_time: Sun, 07 Jun 2020 08:52:33 +0000 -->
 <!-- previous_export_time: Sun, 17 May 2020 18:47:29 +0000 -->
 <scene author="Admin" formatVersion="1.1" >
   <nodes >
@@ -32,24 +32,6 @@
           <property data="0.4000000059604645" name="inertia_tensor" type="float" />
         </userData>
       </entity>
-    </node>
-    <node name="Lamp" >
-      <position x="4.076245" y="5.903862" z="-1.005454" />
-      <rotation qw="0.570947" qx="0.169076" qy="0.755880" qz="-0.272171" />
-      <scale x="1.000000" y="1.000000" z="1.000000" />
-      <light name="Lamp" powerScale="1.0" type="point" >
-        <colourDiffuse b="1.0" g="1.0" r="1.0" />
-        <colourSpecular b="1.0" g="1.0" r="1.0" />
-        <lightAttenuation constant="1.0" linear="0.03333335240683057" quadratic="0.0" range="5000" />
-      </light>
-    </node>
-    <node name="Camera" >
-      <position x="7.481132" y="5.343665" z="6.507640" />
-      <rotation qw="0.781600" qx="0.481707" qy="0.334251" qz="-0.212922" />
-      <scale x="1.000000" y="1.000000" z="1.000000" />
-      <camera fov="0.5033799435163735" name="Camera" projectionType="perspective" >
-        <clipping far="100.0" near="0.10000000149011612" />
-      </camera>
     </node>
     <node name="brick" >
       <position x="0.000000" y="0.000000" z="-0.000000" />
@@ -83,6 +65,9 @@
   </nodes>
   <externals >
     <item type="material" >
+      <file name="grass.material" />
+    </item>
+    <item type="material" >
       <file name="pavement.material" />
     </item>
     <item type="material" >
@@ -90,9 +75,6 @@
     </item>
     <item type="material" >
       <file name="street.material" />
-    </item>
-    <item type="material" >
-      <file name="grass.material" />
     </item>
   </externals>
   <environment >
