@@ -4,7 +4,7 @@ import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
-import core.controls.DogFollowingDaleAppState;
+import core.appState.DogFollowingDaleAppState;
 import dto.DogStateDTO;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;

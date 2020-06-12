@@ -1,4 +1,4 @@
-package core.controls;
+package core.appState;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
@@ -8,6 +8,7 @@ import com.jme3.bullet.control.CharacterControl;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import core.controls.DogMovingInsideAreaControl;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
