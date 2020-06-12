@@ -257,8 +257,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 	private void initializeDaleControls(BulletAppState bulletAppState,
 			Spatial model, CapsuleCollisionShape capsuleShape) {
-		DaleMovingControl daleMovingControl = new DaleMovingControl(
-				gameStateDTO);
 		DaleLedgeGrabControl daleLedgeGrabControl = new DaleLedgeGrabControl(
 				gameStateDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
@@ -278,7 +276,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 					  .add(ghostControl);
 
 		model.addControl(ghostControl);
-		model.addControl(daleMovingControl);
 	}
 
 	private void initializeDaleState() {

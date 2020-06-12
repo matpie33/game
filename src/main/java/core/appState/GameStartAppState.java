@@ -31,6 +31,7 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new LightAppState());
 		appStates.add(new DaleHPAppState(gameStateDTO, nodeNamesDTO));
 		appStates.add(new LevelAppState(nodeNamesDTO));
+		appStates.add(new DaleMovingAppState(gameStateDTO, nodeNamesDTO));
 		appStates.add(new FieldOfViewAppState(nodeNamesDTO, gameStateDTO));
 		appStates.add(new AddLevelObjectsAppState(nodeNamesDTO, gameStateDTO));
 		appStates.add(new AnimationsAppState(gameStateDTO, nodeNamesDTO));
