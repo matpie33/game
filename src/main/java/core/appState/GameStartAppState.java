@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
+import core.controls.DogFollowingDaleAppState;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
@@ -32,6 +33,7 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new DaleHPAppState(gameStateDTO, nodeNamesDTO));
 		appStates.add(new LevelAppState(nodeNamesDTO));
 		appStates.add(new DaleMovingAppState(gameStateDTO, nodeNamesDTO));
+		appStates.add(new DogFollowingDaleAppState(nodeNamesDTO, gameStateDTO));
 		appStates.add(new FieldOfViewAppState(nodeNamesDTO, gameStateDTO));
 		appStates.add(new AddLevelObjectsAppState(nodeNamesDTO, gameStateDTO));
 		appStates.add(new AnimationsAppState(gameStateDTO, nodeNamesDTO));

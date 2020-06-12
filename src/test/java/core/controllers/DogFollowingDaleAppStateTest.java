@@ -4,7 +4,7 @@ import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
-import core.controls.DogFollowingDaleControl;
+import core.controls.DogFollowingDaleAppState;
 import dto.DogStateDTO;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
@@ -15,7 +15,7 @@ import org.mockito.Mockito;
 
 import static org.mockito.Mockito.when;
 
-public class DogFollowingDaleControlTest {
+public class DogFollowingDaleAppStateTest {
 
 	public static final float TPF = 0.25f;
 	private Vector3f characterPosition = Vector3f.ZERO;
@@ -49,12 +49,12 @@ public class DogFollowingDaleControlTest {
 		dogStateDTO.setMovementDirection(MovementDirection.FORWARD_X);
 		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(20);
 		GameStateDTO gameState = new GameStateDTO();
-		DogFollowingDaleControl dogFollowingDaleControl = new DogFollowingDaleControl(
-				dogStateDTO, nodeNamesDTO, gameState);
+		DogFollowingDaleAppState dogFollowingDaleAppState = new DogFollowingDaleAppState(
+				nodeNamesDTO, gameState);
 
 		//when, then
 		for (int i = 0; i < 10000; i++) {
-			dogFollowingDaleControl.moveEnemies(TPF);
+			dogFollowingDaleAppState.moveEnemies(TPF);
 			Assertions.assertThat(characterPosition.getX() >= 130
 					&& characterPosition.getX() <= 170
 					&& characterPosition.getZ() >= -50

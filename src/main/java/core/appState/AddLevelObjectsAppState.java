@@ -303,8 +303,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl control = new CharacterControl(capsuleShape, 0.05f);
 		DogStateDTO dogStateDTO = addDogState(model, control);
-		DogFollowingDaleControl dogFollowingDaleControl = new DogFollowingDaleControl(
-				dogStateDTO, nodeNamesDTO, gameStateDTO);
+
 
 		DogMovingInsideAreaControl dogMovingInsideAreaControl = new DogMovingInsideAreaControl(
 				dogStateDTO);
@@ -315,7 +314,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		control.setGravity(new Vector3f(0, -40f, 0));
 		model.addControl(control);
 		model.addControl(ghostControl);
-		model.addControl(dogFollowingDaleControl);
 		model.addControl(dogMovingInsideAreaControl);
 
 		bulletAppState.getPhysicsSpace()
