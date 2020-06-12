@@ -8,66 +8,31 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
-import core.GameApplication;
 import dto.DogStateDTO;
-import dto.GameStateDTO;
-import dto.NodeNamesDTO;
 import enums.MovementDirection;
 
 import java.util.Random;
 
-public class DogMovementControl extends AbstractControl {
+public class DogMovingInsideAreaControl extends AbstractControl {
 
+	private DogStateDTO dogStateDTO;
 	public static final int NUMBER_OF_POSSIBLE_DIRECTIONS = 4;
 	public static final int DIRECTION_MINIMUM_VALUE = 1;
 	public static final float MINIMUM_PIXEL_MOVEMENT_IN_DIRECTION = 10.000000f;
 	public static final float MOVEMENT_SPEED = 0.1f;
-	private GameStateDTO gameStateDTO;
-	private DogStateDTO dogStateDTO;
-	private NodeNamesDTO nodeNamesDTO;
 
-	public DogMovementControl(DogStateDTO dogStateDTO,
-			NodeNamesDTO nodeNamesDTO, GameStateDTO gameStateDTO) {
+	public DogMovingInsideAreaControl(DogStateDTO dogStateDTO) {
 		this.dogStateDTO = dogStateDTO;
-		this.nodeNamesDTO = nodeNamesDTO;
-		this.gameStateDTO = gameStateDTO;
 	}
 
 	@Override
 	protected void controlUpdate(float tpf) {
-		moveEnemies(tpf);
-	}
-
-	@Override
-	protected void controlRender(RenderManager rm, ViewPort vp) {
-
-	}
-
-	public void moveEnemies(float tpf) {
 		if (!dogStateDTO.getDog()
 						.getControl(PhysicsControls.DOG)
 						.onGround()) {
 			dogStateDTO.getDog()
 					   .getControl(PhysicsControls.DOG)
 					   .setWalkDirection(Vector3f.ZERO);
-			return;
-		}
-		if (dogStateDTO.isSeeingDale() && gameStateDTO.getDaleStateDTO()
-													  .isAlive()) {
-			CharacterControl control = dogStateDTO.getDog()
-												  .getControl(
-														  PhysicsControls.DOG);
-			control.setWalkDirection(control.getViewDirection()
-											.normalize()
-											.mult(0.2f));
-
-			control.setViewDirection(GameApplication.getInstance()
-													.getRootNode()
-													.getChild(
-															nodeNamesDTO.getDaleNodeName())
-													.getLocalTranslation()
-													.subtract(
-															control.getPhysicsLocation()));
 			return;
 		}
 		if (enemyMovedEnoughInCurrentDirection(dogStateDTO)) {
@@ -102,6 +67,11 @@ public class DogMovementControl extends AbstractControl {
 		else {
 			moveEnemy(dogStateDTO);
 		}
+	}
+
+	@Override
+	protected void controlRender(RenderManager rm, ViewPort vp) {
+
 	}
 
 	private void moveEnemy(DogStateDTO dogStateDTO) {

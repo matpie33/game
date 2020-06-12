@@ -92,11 +92,10 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 				spatial.setCullHint(Spatial.CullHint.Always);
 			}
 			if (spatialName.startsWith("mark")) {
-				nodeNamesDTO.setMarkNodeName(
-						spatial.getName());
+				nodeNamesDTO.setMarkNodeName(spatial.getName());
 				spatial.setCullHint(Spatial.CullHint.Always);
 			}
-			if (!spatialName.startsWith("box")){
+			if (!spatialName.startsWith("box")) {
 				rootNode.attachChild(spatial);
 
 			}
@@ -185,10 +184,9 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 				new DaleFollowingCameraControl(gameStateDTO, camera,
 						nodeNamesDTO));
 		cameraNode.removeControl(CameraControl.class);
-		camera.lookAtDirection(
-				rootNode.getChild(nodeNamesDTO.getDaleNodeName())
-						.getControl(PhysicsControls.DALE)
-						.getViewDirection(), Vector3f.UNIT_Y);
+		camera.lookAtDirection(rootNode.getChild(nodeNamesDTO.getDaleNodeName())
+									   .getControl(PhysicsControls.DALE)
+									   .getViewDirection(), Vector3f.UNIT_Y);
 		rootNode.attachChild(cameraNode);
 	}
 
@@ -305,8 +303,11 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl control = new CharacterControl(capsuleShape, 0.05f);
 		DogStateDTO dogStateDTO = addDogState(model, control);
-		DogMovementControl dogMovementControl = new DogMovementControl(
+		DogFollowingDaleControl dogFollowingDaleControl = new DogFollowingDaleControl(
 				dogStateDTO, nodeNamesDTO, gameStateDTO);
+
+		DogMovingInsideAreaControl dogMovingInsideAreaControl = new DogMovingInsideAreaControl(
+				dogStateDTO);
 
 		ghostControl.setPhysicsLocation(model.getLocalTranslation());
 		control.setPhysicsLocation(model.getLocalTranslation());
@@ -314,7 +315,8 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		control.setGravity(new Vector3f(0, -40f, 0));
 		model.addControl(control);
 		model.addControl(ghostControl);
-		model.addControl(dogMovementControl);
+		model.addControl(dogFollowingDaleControl);
+		model.addControl(dogMovingInsideAreaControl);
 
 		bulletAppState.getPhysicsSpace()
 					  .add(control);
