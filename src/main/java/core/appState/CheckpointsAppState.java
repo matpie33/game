@@ -35,7 +35,7 @@ public class CheckpointsAppState extends BaseAppState {
 		checkPointsFileCreator = new CheckPointsFileCreator();
 		file = checkPointsFileCreator.createFile();
 		checkpointsConditionsController = new CheckpointsConditionsController(
-				gameStateDTO);
+				simpleApplication.getRootNode());
 		if (file.length() != 0) {
 			loadCheckpoint();
 		}

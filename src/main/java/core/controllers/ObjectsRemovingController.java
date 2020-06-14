@@ -5,16 +5,12 @@ import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
-import dto.DogStateDTO;
-import dto.GameStateDTO;
 
 public class ObjectsRemovingController {
 
-	private GameStateDTO gameStateDTO;
 	private EffectsController effectsController;
 
-	public ObjectsRemovingController(GameStateDTO gameStateDTO) {
-		this.gameStateDTO = gameStateDTO;
+	public ObjectsRemovingController() {
 		this.effectsController = new EffectsController();
 	}
 

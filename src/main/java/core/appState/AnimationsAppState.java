@@ -1,11 +1,14 @@
 package core.appState;
 
 import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import constants.NodeNames;
 import core.animationEventListeners.DaleAnimationListener;
 import core.animationEventListeners.DogAnimationListener;
-import dto.DogStateDTO;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
@@ -29,8 +32,10 @@ public class AnimationsAppState extends AbstractAppState {
 	public void initialize(AppStateManager stateManager, Application app) {
 		daleAnimationListener = new DaleAnimationListener(gameStateDTO,
 				nodeNamesDTO, app);
+		Node rootNode = ((SimpleApplication) app).getRootNode();
 		daleAnimationListener.setUpAnimations();
-		for (DogStateDTO dog : gameStateDTO.getDogStateDTOS()) {
+		Node dogs = (Node) rootNode.getChild(NodeNames.DOGS);
+		for (Spatial dog : dogs.getChildren()) {
 			DogAnimationListener dogAnimationListener = new DogAnimationListener(
 					dog);
 			dogAnimationListeners.add(dogAnimationListener);

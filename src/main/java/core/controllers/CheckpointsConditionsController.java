@@ -1,14 +1,15 @@
 package core.controllers;
 
-import dto.GameStateDTO;
+import com.jme3.scene.Node;
+import constants.NodeNames;
 
 public class CheckpointsConditionsController {
 
-	private final GameStateDTO gameStateDTO;
+	private final Node rootNode;
 	private int checkpointNumber;
 
-	public CheckpointsConditionsController(GameStateDTO gameStateDTO) {
-		this.gameStateDTO = gameStateDTO;
+	public CheckpointsConditionsController(Node rootNode) {
+		this.rootNode = rootNode;
 	}
 
 	public boolean isNextCheckpointConditionPassedWithUpdateCheckpoint() {
@@ -21,8 +22,8 @@ public class CheckpointsConditionsController {
 
 	private boolean isNextCheckpointConditionPassed() {
 		if (checkpointNumber == 0) {
-			return gameStateDTO.getDogStateDTOS()
-							   .size() == 6;
+			return ((Node) rootNode.getChild(NodeNames.DOGS)).getChildren()
+															 .size() == 6;
 		}
 
 		return false;

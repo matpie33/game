@@ -31,7 +31,10 @@ import core.controls.DaleLedgeGrabControl;
 import core.controls.DogMovingInsideAreaControl;
 import core.controls.ThrowableObjectMarkerControl;
 import core.util.CoordinatesUtil;
-import dto.*;
+import dto.DaleStateDTO;
+import dto.GameStateDTO;
+import dto.NodeNamesDTO;
+import dto.SpatialDTO;
 import enums.MovementDirection;
 
 import java.util.List;
@@ -57,7 +60,9 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		BulletAppState bulletAppState = initializeBulletAppState();
 		Node rootNode = ((SimpleApplication) app).getRootNode();
 		Node throwables = new Node(NodeNames.THROWABLES);
+		Node dogs = new Node(NodeNames.DOGS);
 		rootNode.attachChild(throwables);
+		rootNode.attachChild(dogs);
 		List<SpatialDTO> spatials = stateManager.getState(LevelAppState.class)
 												.getSpatialDTOS();
 		for (SpatialDTO spatialDTO : spatials) {
@@ -71,19 +76,19 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 				initializeRigidObject(bulletAppState, spatial, rootNode);
 			}
 			if (spatialName.startsWith("dale")) {
-				initializeDale(bulletAppState, spatial);
+				initializeDale(bulletAppState, spatial, rootNode);
 			}
 			if (spatialName.startsWith("map")) {
 				initializeScene(bulletAppState, rootNode, spatial);
 			}
 			if (spatialName.startsWith("dog")) {
-				initializeDog(bulletAppState, rootNode, spatial);
+				initializeDog(bulletAppState, dogs, spatial);
 			}
 			if (spatialName.startsWith("tree")) {
 				initializeTree(bulletAppState, rootNode, spatial);
 			}
 			if (spatialName.startsWith("broken")) {
-				initializeBoxShape(bulletAppState, spatial);
+				initializeBoxShape(bulletAppState, spatial, rootNode);
 			}
 			if (spatialName.startsWith("box")) {
 				initializeBox(bulletAppState, spatial, throwables);
@@ -93,14 +98,14 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 						spatial.getName());
 				spatial.addControl(new ThrowableObjectMarkerControl());
 				spatial.setCullHint(Spatial.CullHint.Always);
+				rootNode.attachChild(spatial);
 			}
 			if (spatialName.startsWith("mark")) {
 				nodeNamesDTO.setMarkNodeName(spatial.getName());
 				spatial.setCullHint(Spatial.CullHint.Always);
 			}
-			if (!spatialName.startsWith("box")) {
+			if (spatialName.startsWith("Sky")){
 				rootNode.attachChild(spatial);
-
 			}
 
 			CharacterControl control = spatial.getControl(
@@ -120,7 +125,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 	}
 
 	private void initializeBoxShape(BulletAppState bulletAppState,
-			Spatial spatial) {
+			Spatial spatial, Node rootNode) {
 		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(spatial);
 
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 5f);
@@ -130,6 +135,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		spatial.addControl(rigidBodyControl);
 		bulletAppState.getPhysicsSpace()
 					  .add(rigidBodyControl);
+		rootNode.attachChild(spatial);
 	}
 
 	private void initializeRigidObject(BulletAppState bulletAppState,
@@ -248,11 +254,13 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		return bulletAppState;
 	}
 
-	private void initializeDale(BulletAppState bulletAppState, Spatial model) {
+	private void initializeDale(BulletAppState bulletAppState, Spatial model,
+			Node rootNode) {
 		nodeNamesDTO.setDaleNodeName(model.getName());
 		CapsuleCollisionShape capsuleShape = initializeDaleShape(model);
 		initializeDaleState();
 		initializeDaleControls(bulletAppState, model, capsuleShape);
+		rootNode.attachChild(model);
 
 	}
 
@@ -293,12 +301,12 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		return new CapsuleCollisionShape(zExtent, yExtent, 1);
 	}
 
-	private void initializeDog(BulletAppState bulletAppState, Node rootNode,
+	private void initializeDog(BulletAppState bulletAppState, Node dogsNode,
 			Spatial model) {
 		nodeNamesDTO.setDogNodeName(model.getName());
 		CapsuleCollisionShape capsuleShape = initializeDogShape(model);
 		initializeDogControls(bulletAppState, model, capsuleShape);
-		rootNode.attachChild(model);
+		dogsNode.attachChild(model);
 	}
 
 	private void initializeDogControls(BulletAppState bulletAppState,
@@ -335,11 +343,14 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		Vector3f physicsLocation = control.getPhysicsLocation();
 		DogMovingInsideAreaControl dogMovingInsideAreaControl = model.getControl(
 				DogMovingInsideAreaControl.class);
-		dogMovingInsideAreaControl.setMovementDirection(MovementDirection.FORWARD_X);
+		dogMovingInsideAreaControl.setMovementDirection(
+				MovementDirection.FORWARD_X);
 		dogMovingInsideAreaControl.setNumberOfPixelsToMoveInGivenDirection(10);
-		dogMovingInsideAreaControl.setPositionWhereMovementBegan(physicsLocation.getX());
+		dogMovingInsideAreaControl.setPositionWhereMovementBegan(
+				physicsLocation.getX());
 		dogMovingInsideAreaControl.setSquareWidth(20);
-		dogMovingInsideAreaControl.setStartOfSquareWhereTheDogMoves(physicsLocation);
+		dogMovingInsideAreaControl.setStartOfSquareWhereTheDogMoves(
+				physicsLocation);
 	}
 
 	private void initializeScene(BulletAppState bulletAppState, Node rootNode,

@@ -23,8 +23,7 @@ public class CollisionController implements PhysicsCollisionListener {
 			GameStateDTO gameStateDTO) {
 		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.objectsRemovingController = new ObjectsRemovingController(
-				gameStateDTO);
+		this.objectsRemovingController = new ObjectsRemovingController();
 	}
 
 	@Override
