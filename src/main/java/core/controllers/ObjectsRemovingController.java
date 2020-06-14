@@ -22,14 +22,6 @@ public class ObjectsRemovingController {
 		if (dog.getParent() == null) {
 			return;
 		}
-		DogStateDTO dogStateDTO = gameStateDTO.getDogStateDTOS()
-											  .stream()
-											  .filter(dogState -> dogState.getDog()
-																		  .equals(dog))
-											  .findFirst()
-											  .orElseThrow(
-													  () -> createExeptionForDogCollision(
-															  dog));
 
 		CharacterControl characterControl = dog.getControl(PhysicsControls.DOG);
 		characterControl.getPhysicsSpace()
@@ -38,8 +30,6 @@ public class ObjectsRemovingController {
 		ghostControl.getPhysicsSpace()
 					.remove(ghostControl);
 		dog.removeFromParent();
-		gameStateDTO.getDogStateDTOS()
-					.remove(dogStateDTO);
 	}
 
 	private IllegalArgumentException createExeptionForDogCollision(

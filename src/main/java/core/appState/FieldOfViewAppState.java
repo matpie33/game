@@ -19,7 +19,9 @@ import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FieldOfViewAppState extends AbstractAppState {
 
@@ -28,7 +30,7 @@ public class FieldOfViewAppState extends AbstractAppState {
 	private Geometry spatialPreviouslyMarkedAsThrowingDestination;
 	private ColorRGBA previousColorOfThrowingDestination;
 	private GameStateDTO gameStateDTO;
-	private List<Spatial> enemiesSeeingDale = new ArrayList<>();
+	private Set<Spatial> enemiesSeeingDale = new HashSet<>();
 	private SimpleApplication app;
 	public static final float OFFSET_FROM_DALE_TO_FIELD_OF_VIEW = 3F;
 
@@ -46,7 +48,8 @@ public class FieldOfViewAppState extends AbstractAppState {
 
 	@Override
 	public void update(float tpf) {
-		List<Spatial> enemiesSeeingDaleInThisUpdate = handleThrowingFieldOfView();
+		Set<Spatial> enemiesSeeingDaleInThisUpdate =
+				handleThrowingFieldOfView();
 		enemiesSeeingDale.forEach(
 				enemy -> findDogAndSetSeeingDale(enemy, false));
 		enemiesSeeingDale = enemiesSeeingDaleInThisUpdate;
@@ -65,23 +68,20 @@ public class FieldOfViewAppState extends AbstractAppState {
 				GhostControl.class)
 																	 .getCollisionShape()).getRadius();
 		fieldOfView.setLocalTranslation(dale.getWorldTranslation()
-											   .add(control.getViewDirection()
-														   .mult(fieldOfViewRadius
-																   + OFFSET_FROM_DALE_TO_FIELD_OF_VIEW)));
+											.add(control.getViewDirection()
+														.mult(fieldOfViewRadius
+																+ OFFSET_FROM_DALE_TO_FIELD_OF_VIEW)));
 	}
 
 	private void findDogAndSetSeeingDale(Spatial enemy, boolean seeingDale) {
-		gameStateDTO.getDogStateDTOS()
-					.stream()
-					.filter(dog -> dog.getDog()
-									  .equals(enemy))
-					.findFirst()
-					.ifPresent(dog -> dog.setSeeingDale(seeingDale));
+		app.getStateManager()
+		   .getState(DogFollowingDaleAppState.class)
+		   .setEnemySeeingDale(seeingDale, enemy);
 	}
 
-	private List<Spatial> handleThrowingFieldOfView() {
+	private Set<Spatial> handleThrowingFieldOfView() {
 		boolean containsAnyThrowingDestination = false;
-		List<Spatial> enemiesSeeingDaleInThisUpdate = new ArrayList<>();
+		Set<Spatial> enemiesSeeingDaleInThisUpdate = new HashSet<>();
 		Spatial fieldOfView = app.getRootNode()
 								 .getChild(
 										 nodeNamesDTO.getFieldOfViewNodeName());

@@ -12,11 +12,17 @@ import core.controls.DogMovingInsideAreaControl;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class DogFollowingDaleAppState extends AbstractAppState {
 
 	private GameStateDTO gameStateDTO;
 	private NodeNamesDTO nodeNamesDTO;
 	private SimpleApplication app;
+	private Set<Spatial> enemiesSeeingDale = new HashSet<>();
 
 	public DogFollowingDaleAppState(NodeNamesDTO nodeNamesDTO,
 			GameStateDTO gameStateDTO) {
@@ -39,30 +45,34 @@ public class DogFollowingDaleAppState extends AbstractAppState {
 	public void moveEnemies(float tpf) {
 		Node rootNode = app.getRootNode();
 		Spatial dale = rootNode.getChild(nodeNamesDTO.getDaleNodeName());
-		gameStateDTO.getDogStateDTOS()
-					.forEach(state -> {
-						Spatial dog = state.getDog();
-						if (state.isSeeingDale()
-								&& gameStateDTO.getDaleStateDTO()
-											   .isAlive()) {
-							CharacterControl control = dog.getControl(
-									PhysicsControls.DOG);
-							dog.getControl(DogMovingInsideAreaControl.class)
-							   .setEnabled(false);
-							control.setWalkDirection(control.getViewDirection()
-															.normalize()
-															.mult(0.2f));
+		enemiesSeeingDale.forEach(enemy -> {
+			if (gameStateDTO.getDaleStateDTO()
+							.isAlive()) {
+				CharacterControl control = enemy.getControl(
+						PhysicsControls.DOG);
+				enemy.getControl(DogMovingInsideAreaControl.class)
+					 .setEnabled(false);
+				control.setWalkDirection(control.getViewDirection()
+												.normalize()
+												.mult(0.2f));
 
-							control.setViewDirection(dale.getLocalTranslation()
-														 .subtract(
-																 control.getPhysicsLocation()));
-						}
-						if (!state.isSeeingDale()) {
-							dog.getControl(DogMovingInsideAreaControl.class)
-							   .setEnabled(true);
-						}
-					});
+				control.setViewDirection(dale.getLocalTranslation()
+											 .subtract(
+													 control.getPhysicsLocation()));
+			}
+		});
 
+	}
+
+	public void setEnemySeeingDale(boolean isSeeing, Spatial enemy) {
+		if (isSeeing) {
+			enemiesSeeingDale.add(enemy);
+		}
+		else {
+			enemiesSeeingDale.remove(enemy);
+			enemy.getControl(DogMovingInsideAreaControl.class)
+				 .setEnabled(true);
+		}
 	}
 
 }
