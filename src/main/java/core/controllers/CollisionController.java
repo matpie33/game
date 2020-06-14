@@ -5,6 +5,7 @@ import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import core.controls.DogMovingInsideAreaControl;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
@@ -22,7 +23,8 @@ public class CollisionController implements PhysicsCollisionListener {
 			GameStateDTO gameStateDTO) {
 		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
-		this.objectsRemovingController = new ObjectsRemovingController(gameStateDTO);
+		this.objectsRemovingController = new ObjectsRemovingController(
+				gameStateDTO);
 	}
 
 	@Override
@@ -55,14 +57,8 @@ public class CollisionController implements PhysicsCollisionListener {
 			Spatial dogNode = nodeAType.equals(ObjectsTypes.DOG) ?
 					nodeA :
 					nodeB;
-			gameStateDTO.getDogStateDTOS()
-						.stream()
-						.filter(state -> state.getDog()
-											  .equals(dogNode))
-						.findFirst()
-						.orElseThrow(
-								() -> createExeptionForDogCollision(dogNode))
-						.setCollidedWithObstacle(true);
+			dogNode.getControl(DogMovingInsideAreaControl.class)
+				   .setCollidingWithObstacle();
 		}
 
 		if (isDogWithBoxCollision(nodeAType, nodeBType)
@@ -124,8 +120,9 @@ public class CollisionController implements PhysicsCollisionListener {
 			return ObjectsTypes.BOX;
 		}
 		if (nodeNamesDTO.getFieldOfViewNodeName()
-						.equals(node.getName()) || nodeNamesDTO.getMarkNodeName()
-															   .equals(node.getName())
+						.equals(node.getName())
+				|| nodeNamesDTO.getMarkNodeName()
+							   .equals(node.getName())
 				|| nodeNamesDTO.getThrowableObjectMarkerNodeName()
 							   .equals(node.getName())) {
 			return ObjectsTypes.NONE;

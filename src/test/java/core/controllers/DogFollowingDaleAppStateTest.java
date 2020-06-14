@@ -42,12 +42,7 @@ public class DogFollowingDaleAppStateTest {
 			   .when(characterControl)
 			   .setWalkDirection(Mockito.any());
 
-		Vector3f positionOfSquare = new Vector3f(150, 0, -30);
 		characterPosition.set(150, 0, -30);
-		DogStateDTO dogStateDTO = new DogStateDTO(dog, positionOfSquare, 20);
-		dogStateDTO.setPositionWhereMovementBegan(150);
-		dogStateDTO.setMovementDirection(MovementDirection.FORWARD_X);
-		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(20);
 		GameStateDTO gameState = new GameStateDTO();
 		DogFollowingDaleAppState dogFollowingDaleAppState = new DogFollowingDaleAppState(
 				nodeNamesDTO, gameState);

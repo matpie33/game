@@ -26,7 +26,10 @@ import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionController;
-import core.controls.*;
+import core.controls.DaleFollowingCameraControl;
+import core.controls.DaleLedgeGrabControl;
+import core.controls.DogMovingInsideAreaControl;
+import core.controls.ThrowableObjectMarkerControl;
 import core.util.CoordinatesUtil;
 import dto.*;
 import enums.MovementDirection;
@@ -302,11 +305,8 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 			Spatial model, CapsuleCollisionShape capsuleShape) {
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl control = new CharacterControl(capsuleShape, 0.05f);
-		DogStateDTO dogStateDTO = addDogState(model, control);
 
-
-		DogMovingInsideAreaControl dogMovingInsideAreaControl = new DogMovingInsideAreaControl(
-				dogStateDTO);
+		DogMovingInsideAreaControl dogMovingInsideAreaControl = new DogMovingInsideAreaControl();
 
 		ghostControl.setPhysicsLocation(model.getLocalTranslation());
 		control.setPhysicsLocation(model.getLocalTranslation());
@@ -315,6 +315,8 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		model.addControl(control);
 		model.addControl(ghostControl);
 		model.addControl(dogMovingInsideAreaControl);
+
+		addDogState(model, control);
 
 		bulletAppState.getPhysicsSpace()
 					  .add(control);
@@ -329,14 +331,15 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		return new CapsuleCollisionShape(height, width, 0);
 	}
 
-	private DogStateDTO addDogState(Spatial model, CharacterControl control) {
+	private void addDogState(Spatial model, CharacterControl control) {
 		Vector3f physicsLocation = control.getPhysicsLocation();
-		DogStateDTO dogStateDTO = new DogStateDTO(model, physicsLocation, 20);
-		dogStateDTO.setMovementDirection(MovementDirection.FORWARD_X);
-		dogStateDTO.setNumberOfPixelsToMoveInGivenDirection(10);
-		dogStateDTO.setPositionWhereMovementBegan(physicsLocation.getX());
-		gameStateDTO.addDogState(dogStateDTO);
-		return dogStateDTO;
+		DogMovingInsideAreaControl dogMovingInsideAreaControl = model.getControl(
+				DogMovingInsideAreaControl.class);
+		dogMovingInsideAreaControl.setMovementDirection(MovementDirection.FORWARD_X);
+		dogMovingInsideAreaControl.setNumberOfPixelsToMoveInGivenDirection(10);
+		dogMovingInsideAreaControl.setPositionWhereMovementBegan(physicsLocation.getX());
+		dogMovingInsideAreaControl.setSquareWidth(20);
+		dogMovingInsideAreaControl.setStartOfSquareWhereTheDogMoves(physicsLocation);
 	}
 
 	private void initializeScene(BulletAppState bulletAppState, Node rootNode,
