@@ -7,9 +7,7 @@ import enums.ThrowingState;
 
 public class DaleStateDTO {
 
-	private boolean alive;
 	private ThrowingDTO carriedObject = new ThrowingDTO();
-	private int hp;
 	private boolean isCollidingWithEnemy;
 	private Vector3f ledgeCollisionPoint;
 	private ClimbingState climbingState = ClimbingState.NOT_STARTED;
@@ -43,25 +41,6 @@ public class DaleStateDTO {
 		isCollidingWithEnemy = collidingWithEnemy;
 	}
 
-	public DaleStateDTO() {
-		alive = true;
-	}
-
-	public boolean isAlive() {
-		return alive;
-	}
-
-	public void setAlive(boolean alive) {
-		this.alive = alive;
-	}
-
-	public int getHp() {
-		return hp;
-	}
-
-	public void setHp(int hp) {
-		this.hp = hp;
-	}
 
 	public ThrowingDTO getCarriedObject() {
 		return carriedObject;

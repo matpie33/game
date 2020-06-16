@@ -12,9 +12,7 @@ import core.controls.DogMovingInsideAreaControl;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class DogFollowingDaleAppState extends AbstractAppState {
@@ -45,9 +43,10 @@ public class DogFollowingDaleAppState extends AbstractAppState {
 	public void moveEnemies(float tpf) {
 		Node rootNode = app.getRootNode();
 		Spatial dale = rootNode.getChild(nodeNamesDTO.getDaleNodeName());
+		DaleHPAppState daleHPAppState = app.getStateManager()
+										   .getState(DaleHPAppState.class);
 		enemiesSeeingDale.forEach(enemy -> {
-			if (gameStateDTO.getDaleStateDTO()
-							.isAlive()) {
+			if (daleHPAppState.isAlive()) {
 				CharacterControl control = enemy.getControl(
 						PhysicsControls.DOG);
 				enemy.getControl(DogMovingInsideAreaControl.class)

@@ -41,7 +41,7 @@ import java.util.List;
 
 public class AddLevelObjectsAppState extends AbstractAppState {
 
-	public static final int INITIAL_HP_OF_DALE = 100;
+
 
 	private CollisionController collisionController;
 	private NodeNamesDTO nodeNamesDTO;
@@ -289,7 +289,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 	private void initializeDaleState() {
 		DaleStateDTO daleStateDTO = new DaleStateDTO();
-		daleStateDTO.setHp(INITIAL_HP_OF_DALE);
 		gameStateDTO.setDaleStateDTO(daleStateDTO);
 	}
 

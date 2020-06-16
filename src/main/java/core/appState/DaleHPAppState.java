@@ -16,10 +16,12 @@ public class DaleHPAppState extends BaseAppState {
 	private GameStateDTO gameStateDTO;
 	public static final int HP_DECREASE_VALUE = 20;
 	public static final float MINIMUM_TIME_BETWEEN_HP_DECREASE_SECONDS = 1;
+	public static final int INITIAL_HP_OF_DALE = 100;
 
 	private float timeSinceLastHpDecrease;
 	private NodeNamesDTO nodeNamesDTO;
 	private SimpleApplication application;
+	private int hp;
 
 	public DaleHPAppState(GameStateDTO gameStateDTO,
 			NodeNamesDTO nodeNamesDTO) {
@@ -28,26 +30,25 @@ public class DaleHPAppState extends BaseAppState {
 		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
+
+
 	private void handleDaleState() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.getHp() <= 0) {
-			application.getStateManager()
-					   .detach(this);
-			gameStateDTO.getDaleStateDTO()
-						.setAlive(false);
+		if (hp <= 0) {
+			setEnabled(false);
 		}
 
 		if (daleStateDTO.isCollidingWithEnemy()
 				&& enoughTimePassedToDecreaseHp()) {
 			timeSinceLastHpDecrease = 0;
 			daleStateDTO.setCollidingWithEnemy(false);
-			daleStateDTO.setHp(daleStateDTO.getHp() - HP_DECREASE_VALUE);
+			hp = hp - HP_DECREASE_VALUE;
 			moveDaleBack();
 			HUDAppState hudAppState = GameApplication.getInstance()
 													 .getStateManager()
 													 .getState(
 															 HUDAppState.class);
-			hudAppState.setHp(daleStateDTO.getHp());
+			hudAppState.setHp(hp);
 		}
 
 	}
@@ -71,6 +72,7 @@ public class DaleHPAppState extends BaseAppState {
 
 	@Override
 	protected void initialize(Application app) {
+		hp = INITIAL_HP_OF_DALE;
 		application = (SimpleApplication) app;
 	}
 
@@ -93,5 +95,9 @@ public class DaleHPAppState extends BaseAppState {
 	public void update(float tpf) {
 		timeSinceLastHpDecrease += tpf;
 		handleDaleState();
+	}
+
+	public boolean isAlive() {
+		return hp >0;
 	}
 }

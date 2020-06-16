@@ -9,6 +9,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.scene.Spatial;
 import core.appState.CarriedObjectAppState;
+import core.appState.DaleHPAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
@@ -58,8 +59,9 @@ public class DaleAnimationListener implements AnimEventListener {
 		}
 		channel.setLoopMode(LoopMode.Loop);
 
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (!daleStateDTO.isAlive()) {
+		DaleHPAppState hpState = app.getStateManager()
+									   .getState(DaleHPAppState.class);
+		if (!hpState.isAlive()) {
 			setAnimation(DEAD_ANIMATION);
 			channel.setLoopMode(LoopMode.DontLoop);
 		}
@@ -78,7 +80,9 @@ public class DaleAnimationListener implements AnimEventListener {
 	public void handleAnimation() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
-		if (!daleStateDTO.isAlive()) {
+		DaleHPAppState hpState = app.getStateManager()
+									.getState(DaleHPAppState.class);
+		if (!hpState.isAlive()) {
 			return;
 		}
 
