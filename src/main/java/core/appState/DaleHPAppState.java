@@ -7,13 +7,11 @@ import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
 import constants.PhysicsControls;
 import core.GameApplication;
-import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
 public class DaleHPAppState extends BaseAppState {
 
-	private GameStateDTO gameStateDTO;
 	public static final int HP_DECREASE_VALUE = 20;
 	public static final float MINIMUM_TIME_BETWEEN_HP_DECREASE_SECONDS = 1;
 	public static final int INITIAL_HP_OF_DALE = 100;
@@ -22,26 +20,18 @@ public class DaleHPAppState extends BaseAppState {
 	private NodeNamesDTO nodeNamesDTO;
 	private SimpleApplication application;
 	private int hp;
+	private boolean collisionDetected;
 
-	public DaleHPAppState(GameStateDTO gameStateDTO,
-			NodeNamesDTO nodeNamesDTO) {
-		this.gameStateDTO = gameStateDTO;
+	public DaleHPAppState(NodeNamesDTO nodeNamesDTO) {
 		timeSinceLastHpDecrease = 0;
 		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
-
-
 	private void handleDaleState() {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (hp <= 0) {
-			setEnabled(false);
-		}
 
-		if (daleStateDTO.isCollidingWithEnemy()
-				&& enoughTimePassedToDecreaseHp()) {
+		if (collisionDetected && enoughTimePassedToDecreaseHp()) {
 			timeSinceLastHpDecrease = 0;
-			daleStateDTO.setCollidingWithEnemy(false);
+			collisionDetected = false;
 			hp = hp - HP_DECREASE_VALUE;
 			moveDaleBack();
 			HUDAppState hudAppState = GameApplication.getInstance()
@@ -49,6 +39,10 @@ public class DaleHPAppState extends BaseAppState {
 													 .getState(
 															 HUDAppState.class);
 			hudAppState.setHp(hp);
+		}
+
+		if (hp <= 0) {
+			setEnabled(false);
 		}
 
 	}
@@ -98,6 +92,10 @@ public class DaleHPAppState extends BaseAppState {
 	}
 
 	public boolean isAlive() {
-		return hp >0;
+		return hp > 0;
+	}
+
+	public void setCollisionDetected() {
+		this.collisionDetected = true;
 	}
 }

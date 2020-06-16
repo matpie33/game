@@ -25,7 +25,7 @@ import com.jme3.scene.shape.Sphere;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
-import core.controllers.CollisionController;
+import core.controllers.CollisionDetectionAppState;
 import core.controls.DaleFollowingCameraControl;
 import core.controls.DaleLedgeGrabControl;
 import core.controls.DogMovingInsideAreaControl;
@@ -41,22 +41,19 @@ import java.util.List;
 
 public class AddLevelObjectsAppState extends AbstractAppState {
 
-
-
-	private CollisionController collisionController;
 	private NodeNamesDTO nodeNamesDTO;
 	private GameStateDTO gameStateDTO;
+	private Application app;
 
 	public AddLevelObjectsAppState(NodeNamesDTO nodeNamesDTO,
 			GameStateDTO gameStateDTO) {
-		collisionController = new CollisionController(nodeNamesDTO,
-				gameStateDTO);
 		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
 	}
 
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
+		this.app = app;
 		BulletAppState bulletAppState = initializeBulletAppState();
 		Node rootNode = ((SimpleApplication) app).getRootNode();
 		Node throwables = new Node(NodeNames.THROWABLES);
@@ -104,7 +101,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 				nodeNamesDTO.setMarkNodeName(spatial.getName());
 				spatial.setCullHint(Spatial.CullHint.Always);
 			}
-			if (spatialName.startsWith("Sky")){
+			if (spatialName.startsWith("Sky")) {
 				rootNode.attachChild(spatial);
 			}
 
@@ -250,7 +247,9 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		BulletAppState bulletAppState = new BulletAppState();
 		stateManager.attach(bulletAppState);
 		bulletAppState.getPhysicsSpace()
-					  .addCollisionListener(collisionController);
+					  .addCollisionListener(app.getStateManager()
+											   .getState(
+													   CollisionDetectionAppState.class));
 		return bulletAppState;
 	}
 

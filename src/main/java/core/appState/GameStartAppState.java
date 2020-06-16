@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
+import core.controllers.CollisionDetectionAppState;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 
@@ -29,7 +30,8 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new GameHotkeysAppState(gameStateDTO));
 		appStates.add(new HUDAppState());
 		appStates.add(new LightAppState());
-		appStates.add(new DaleHPAppState(gameStateDTO, nodeNamesDTO));
+		appStates.add(new CollisionDetectionAppState(nodeNamesDTO, gameStateDTO));
+		appStates.add(new DaleHPAppState(nodeNamesDTO));
 		appStates.add(new LevelAppState(nodeNamesDTO));
 		appStates.add(new DaleMovingAppState(gameStateDTO, nodeNamesDTO));
 		appStates.add(new DogFollowingDaleAppState(nodeNamesDTO, gameStateDTO));

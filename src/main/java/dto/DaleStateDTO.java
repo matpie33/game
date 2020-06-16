@@ -8,7 +8,6 @@ import enums.ThrowingState;
 public class DaleStateDTO {
 
 	private ThrowingDTO carriedObject = new ThrowingDTO();
-	private boolean isCollidingWithEnemy;
 	private Vector3f ledgeCollisionPoint;
 	private ClimbingState climbingState = ClimbingState.NOT_STARTED;
 	private ThrowingState throwingState = ThrowingState.NOT_STARTED;
@@ -31,23 +30,6 @@ public class DaleStateDTO {
 
 	public void setLedgeCollisionPoint(Vector3f ledgeCollisionPoint) {
 		this.ledgeCollisionPoint = ledgeCollisionPoint;
-	}
-
-	public boolean isCollidingWithEnemy() {
-		return isCollidingWithEnemy;
-	}
-
-	public void setCollidingWithEnemy(boolean collidingWithEnemy) {
-		isCollidingWithEnemy = collidingWithEnemy;
-	}
-
-
-	public ThrowingDTO getCarriedObject() {
-		return carriedObject;
-	}
-
-	public void setCarriedObject(Spatial geometry) {
-		carriedObject.setCarriedObject(geometry);
 	}
 
 	public void setThrowingDestination(Spatial throwingDestination) {

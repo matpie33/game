@@ -1,25 +1,30 @@
 package core.controllers;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.BaseAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
+import core.appState.DaleHPAppState;
 import core.controls.DogMovingInsideAreaControl;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.NodeNamesDTO;
 import enums.ObjectsTypes;
 
-public class CollisionController implements PhysicsCollisionListener {
+public class CollisionDetectionAppState extends BaseAppState
+		implements PhysicsCollisionListener {
 
 	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 40;
 
 	private NodeNamesDTO nodeNamesDTO;
 	private GameStateDTO gameStateDTO;
 	private ObjectsRemovingController objectsRemovingController;
+	private Application app;
 
-	public CollisionController(NodeNamesDTO nodeNamesDTO,
+	public CollisionDetectionAppState(NodeNamesDTO nodeNamesDTO,
 			GameStateDTO gameStateDTO) {
 		this.nodeNamesDTO = nodeNamesDTO;
 		this.gameStateDTO = gameStateDTO;
@@ -47,9 +52,9 @@ public class CollisionController implements PhysicsCollisionListener {
 		}
 
 		if (isDogWithDaleCollision(nodeAType, nodeBType)) {
-			DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-			daleStateDTO.setCollidingWithEnemy(true);
-
+			app.getStateManager()
+			   .getState(DaleHPAppState.class)
+			   .setCollisionDetected();
 		}
 		if (isDogWithImmobileObjectCollision(nodeA, nodeB, nodeAType,
 				nodeBType)) {
@@ -73,13 +78,6 @@ public class CollisionController implements PhysicsCollisionListener {
 		return box != null && box.getControl(PhysicsControls.BOX)
 								 .getLinearVelocity()
 								 .length() > 40f;
-	}
-
-	private IllegalArgumentException createExeptionForDogCollision(
-			Spatial dogNode) {
-		return new IllegalArgumentException(
-				"Dog collided with obstacle, but dog state not " + "found: "
-						+ dogNode);
 	}
 
 	private boolean isDogWithBoxCollision(ObjectsTypes nodeA,
@@ -153,5 +151,25 @@ public class CollisionController implements PhysicsCollisionListener {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	protected void initialize(Application app) {
+		this.app = app;
+	}
+
+	@Override
+	protected void cleanup(Application app) {
+
+	}
+
+	@Override
+	protected void onEnable() {
+
+	}
+
+	@Override
+	protected void onDisable() {
+
 	}
 }
