@@ -1,6 +1,5 @@
 package dto;
 
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import enums.ClimbingState;
 import enums.ThrowingState;
@@ -8,7 +7,6 @@ import enums.ThrowingState;
 public class DaleStateDTO {
 
 	private ThrowingDTO carriedObject = new ThrowingDTO();
-	private Vector3f ledgeCollisionPoint;
 	private ClimbingState climbingState = ClimbingState.NOT_STARTED;
 	private ThrowingState throwingState = ThrowingState.NOT_STARTED;
 
@@ -22,14 +20,6 @@ public class DaleStateDTO {
 
 	public void setClimbingState(ClimbingState climbingState) {
 		this.climbingState = climbingState;
-	}
-
-	public Vector3f getLedgeCollisionPoint() {
-		return ledgeCollisionPoint;
-	}
-
-	public void setLedgeCollisionPoint(Vector3f ledgeCollisionPoint) {
-		this.ledgeCollisionPoint = ledgeCollisionPoint;
 	}
 
 	public void setThrowingDestination(Spatial throwingDestination) {

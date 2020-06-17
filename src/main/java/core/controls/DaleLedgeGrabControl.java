@@ -27,6 +27,7 @@ public class DaleLedgeGrabControl extends AbstractControl {
 	private Camera camera;
 	private Node rootNode;
 	private GameStateDTO gameStateDTO;
+	private Vector3f ledgeCollisionPoint;
 
 	public DaleLedgeGrabControl(GameStateDTO gameStateDTO) {
 		GameApplication instance = GameApplication.getInstance();
@@ -65,9 +66,8 @@ public class DaleLedgeGrabControl extends AbstractControl {
 
 	private void handleKeyPress(DaleStateDTO daleStateDTO) {
 		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
-		if (keyPressDTO.isMoveInLedgePress()
-				&& daleStateDTO.getClimbingState()
-							   .equals(ClimbingState.GRABBING_LEDGE)) {
+		if (keyPressDTO.isMoveInLedgePress() && daleStateDTO.getClimbingState()
+															.equals(ClimbingState.GRABBING_LEDGE)) {
 			daleStateDTO.setClimbingState(ClimbingState.MOVE_IN);
 		}
 		if (keyPressDTO.isLetGoLedgePress() && daleStateDTO.getClimbingState()
@@ -78,7 +78,8 @@ public class DaleLedgeGrabControl extends AbstractControl {
 
 	private void handleLetGoLedge() {
 		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.getClimbingState().equals(ClimbingState.LET_GO)) {
+		if (daleStateDTO.getClimbingState()
+						.equals(ClimbingState.LET_GO)) {
 			CharacterControl control = spatial.getControl(PhysicsControls.DALE);
 			control.setEnabled(true);
 
@@ -94,8 +95,8 @@ public class DaleLedgeGrabControl extends AbstractControl {
 		boolean isVeryCloseToObstacle = isVeryCloseToObstacle(closestCollision);
 
 		if (isVeryCloseToObstacle) {
+			ledgeCollisionPoint = closestCollision.getContactPoint();
 			boolean enoughSpaceToWalkOnIt = isEnoughSpaceToWalkOnLedge(
-					closestCollision.getContactPoint(),
 					control.getViewDirection(), spatialExtent);
 			if (enoughSpaceToWalkOnIt) {
 				if (isTheRayInsideObject(closestCollision.getContactPoint(),
@@ -105,12 +106,12 @@ public class DaleLedgeGrabControl extends AbstractControl {
 				control.setEnabled(false);
 				control.setLinearVelocity(Vector3f.ZERO);
 				gameStateDTO.getDaleStateDTO()
-							.setLedgeCollisionPoint(
-									closestCollision.getContactPoint());
-				gameStateDTO.getDaleStateDTO()
 							.setClimbingState(ClimbingState.GRABBING_LEDGE);
 
 			}
+		}
+		else {
+			ledgeCollisionPoint = null;
 		}
 	}
 
@@ -132,8 +133,6 @@ public class DaleLedgeGrabControl extends AbstractControl {
 	private void handleMoveInLedge() {
 		CharacterControl control = spatial.getControl(CharacterControl.class);
 		Vector3f destinationPoint = getDestinationPointAboveLedge(
-				gameStateDTO.getDaleStateDTO()
-							.getLedgeCollisionPoint(),
 				control.getViewDirection());
 		if (isMovingInLedgeCompleted(destinationPoint)) {
 			enablePhysicsAfterReachingLedge(control);
@@ -177,9 +176,9 @@ public class DaleLedgeGrabControl extends AbstractControl {
 		return distanceToFinalPoint < 0.5f;
 	}
 
-	private boolean isEnoughSpaceToWalkOnLedge(Vector3f contactPoint,
-			Vector3f viewDirection, Vector3f spatialExtent) {
-		List<Vector3f> points = getPointsToCheckEnoughHeightToWalk(contactPoint,
+	private boolean isEnoughSpaceToWalkOnLedge(Vector3f viewDirection,
+			Vector3f spatialExtent) {
+		List<Vector3f> points = getPointsToCheckEnoughHeightToWalk(
 				viewDirection, spatialExtent);
 
 		for (Vector3f toCheck : points) {
@@ -191,10 +190,8 @@ public class DaleLedgeGrabControl extends AbstractControl {
 	}
 
 	private List<Vector3f> getPointsToCheckEnoughHeightToWalk(
-			Vector3f contactPoint, Vector3f viewDirection,
-			Vector3f extentOfCharacter) {
-		Vector3f mainPoint = getDestinationPointAboveLedge(contactPoint,
-				viewDirection);
+			Vector3f viewDirection, Vector3f extentOfCharacter) {
+		Vector3f mainPoint = getDestinationPointAboveLedge(viewDirection);
 		Vector3f leftFromMainPoint = mainPoint.add(camera.getLeft()
 														 .mult(extentOfCharacter));
 		Vector3f rightFromMainPoint = mainPoint.add(camera.getLeft()
@@ -208,12 +205,11 @@ public class DaleLedgeGrabControl extends AbstractControl {
 		return points;
 	}
 
-	private Vector3f getDestinationPointAboveLedge(Vector3f contactPoint,
-			Vector3f viewDirection) {
+	private Vector3f getDestinationPointAboveLedge(Vector3f viewDirection) {
 		Vector3f extent = ((BoundingBox) spatial.getWorldBound()).getExtent(
 				new Vector3f());
-		return contactPoint.add(extent.mult(viewDirection))
-						   .add(extent.mult(Vector3f.UNIT_Y.mult(2)));
+		return ledgeCollisionPoint.add(extent.mult(viewDirection))
+								  .add(extent.mult(Vector3f.UNIT_Y.mult(2)));
 	}
 
 	private boolean isEnoughHeightToStandInPoint(Vector3f spatialExtent,
