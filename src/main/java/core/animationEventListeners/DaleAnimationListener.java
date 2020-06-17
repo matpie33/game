@@ -10,6 +10,7 @@ import com.jme3.bullet.control.CharacterControl;
 import com.jme3.scene.Spatial;
 import core.appState.CarriedObjectAppState;
 import core.appState.DaleHPAppState;
+import core.controls.DaleLedgeGrabControl;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
@@ -60,7 +61,7 @@ public class DaleAnimationListener implements AnimEventListener {
 		channel.setLoopMode(LoopMode.Loop);
 
 		DaleHPAppState hpState = app.getStateManager()
-									   .getState(DaleHPAppState.class);
+									.getState(DaleHPAppState.class);
 		if (!hpState.isAlive()) {
 			setAnimation(DEAD_ANIMATION);
 			channel.setLoopMode(LoopMode.DontLoop);
@@ -78,7 +79,6 @@ public class DaleAnimationListener implements AnimEventListener {
 	}
 
 	public void handleAnimation() {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
 		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
 		DaleHPAppState hpState = app.getStateManager()
 									.getState(DaleHPAppState.class);
@@ -106,12 +106,14 @@ public class DaleAnimationListener implements AnimEventListener {
 
 		}
 		else {
-			if (daleStateDTO.getClimbingState()
-							.equals(ClimbingState.GRABBING_LEDGE)) {
+			DaleLedgeGrabControl control = getDale().getControl(
+					DaleLedgeGrabControl.class);
+			if (control.getClimbingState()
+					   .equals(ClimbingState.GRABBING_LEDGE)) {
 				setAnimation(GRABBING_LEDGE);
 			}
-			else if (daleStateDTO.getClimbingState()
-								 .equals(ClimbingState.MOVE_IN)) {
+			else if (control.getClimbingState()
+							.equals(ClimbingState.MOVE_IN)) {
 				setAnimation(MOVE_IN_LEDGE);
 			}
 			else {

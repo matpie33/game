@@ -13,7 +13,6 @@ import com.jme3.scene.Node;
 import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import core.GameApplication;
-import dto.DaleStateDTO;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
 import enums.ClimbingState;
@@ -28,6 +27,7 @@ public class DaleLedgeGrabControl extends AbstractControl {
 	private Node rootNode;
 	private GameStateDTO gameStateDTO;
 	private Vector3f ledgeCollisionPoint;
+	private ClimbingState climbingState = ClimbingState.NONE;
 
 	public DaleLedgeGrabControl(GameStateDTO gameStateDTO) {
 		GameApplication instance = GameApplication.getInstance();
@@ -38,52 +38,48 @@ public class DaleLedgeGrabControl extends AbstractControl {
 
 	@Override
 	protected void controlUpdate(float tpf) {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		handleKeyPress(daleStateDTO);
+
+		handleKeyPress();
 		if (!spatial.getControl(PhysicsControls.DALE)
 					.onGround()) {
-			handleLedgeDetecting(daleStateDTO);
+			handleLedgeDetecting();
 		}
-		else {
-			daleStateDTO.setClimbingState(ClimbingState.NOT_STARTED);
+		else{
+			climbingState = ClimbingState.NONE;
 		}
 
 	}
 
-	private void handleLedgeDetecting(DaleStateDTO daleStateDTO) {
-		switch (daleStateDTO.getClimbingState()) {
+	private void handleLedgeDetecting() {
+		switch (climbingState) {
 		case LET_GO:
 			handleLetGoLedge();
 			break;
 		case MOVE_IN:
 			handleMoveInLedge();
 			break;
-		case NOT_STARTED:
+		case NONE:
 			handleGrabbing();
 			break;
 		}
+
 	}
 
-	private void handleKeyPress(DaleStateDTO daleStateDTO) {
+	private void handleKeyPress() {
 		KeyPressDTO keyPressDTO = gameStateDTO.getKeyPressDTO();
-		if (keyPressDTO.isMoveInLedgePress() && daleStateDTO.getClimbingState()
-															.equals(ClimbingState.GRABBING_LEDGE)) {
-			daleStateDTO.setClimbingState(ClimbingState.MOVE_IN);
+		if (keyPressDTO.isMoveInLedgePress() && climbingState.equals(
+				ClimbingState.GRABBING_LEDGE)) {
+			climbingState = ClimbingState.MOVE_IN;
 		}
-		if (keyPressDTO.isLetGoLedgePress() && daleStateDTO.getClimbingState()
-														   .equals(ClimbingState.GRABBING_LEDGE)) {
-			daleStateDTO.setClimbingState(ClimbingState.LET_GO);
+		if (keyPressDTO.isLetGoLedgePress() && climbingState.equals(
+				ClimbingState.GRABBING_LEDGE)) {
+			climbingState = ClimbingState.LET_GO;
 		}
 	}
 
 	private void handleLetGoLedge() {
-		DaleStateDTO daleStateDTO = gameStateDTO.getDaleStateDTO();
-		if (daleStateDTO.getClimbingState()
-						.equals(ClimbingState.LET_GO)) {
-			CharacterControl control = spatial.getControl(PhysicsControls.DALE);
-			control.setEnabled(true);
-
-		}
+		CharacterControl control = spatial.getControl(PhysicsControls.DALE);
+		control.setEnabled(true);
 	}
 
 	private void handleGrabbing() {
@@ -105,14 +101,17 @@ public class DaleLedgeGrabControl extends AbstractControl {
 				}
 				control.setEnabled(false);
 				control.setLinearVelocity(Vector3f.ZERO);
-				gameStateDTO.getDaleStateDTO()
-							.setClimbingState(ClimbingState.GRABBING_LEDGE);
+				climbingState = ClimbingState.GRABBING_LEDGE;
 
 			}
 		}
 		else {
 			ledgeCollisionPoint = null;
 		}
+	}
+
+	public ClimbingState getClimbingState (){
+		return climbingState;
 	}
 
 	private boolean isTheRayInsideObject(Vector3f contactPoint,
@@ -136,6 +135,7 @@ public class DaleLedgeGrabControl extends AbstractControl {
 				control.getViewDirection());
 		if (isMovingInLedgeCompleted(destinationPoint)) {
 			enablePhysicsAfterReachingLedge(control);
+			climbingState = ClimbingState.NONE;
 		}
 		else {
 			moveIntoLedge(control, spatial.getLocalTranslation(),
@@ -144,8 +144,6 @@ public class DaleLedgeGrabControl extends AbstractControl {
 	}
 
 	private void enablePhysicsAfterReachingLedge(CharacterControl control) {
-		gameStateDTO.getDaleStateDTO()
-					.setClimbingState(ClimbingState.NOT_STARTED);
 		control.setEnabled(true);
 		control.setPhysicsLocation(spatial.getWorldTranslation());
 	}
