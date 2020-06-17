@@ -10,8 +10,7 @@ import com.jme3.bullet.control.CharacterControl;
 import com.jme3.scene.Spatial;
 import core.appState.CarriedObjectAppState;
 import core.appState.DaleHPAppState;
-import core.controls.DaleLedgeGrabControl;
-import dto.DaleStateDTO;
+import core.appState.DaleLedgeGrabAppState;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
 import dto.NodeNamesDTO;
@@ -106,13 +105,14 @@ public class DaleAnimationListener implements AnimEventListener {
 
 		}
 		else {
-			DaleLedgeGrabControl control = getDale().getControl(
-					DaleLedgeGrabControl.class);
-			if (control.getClimbingState()
+			DaleLedgeGrabAppState ledgeGrabAppState = app.getStateManager()
+											 .getState(
+													 DaleLedgeGrabAppState.class);
+			if (ledgeGrabAppState.getClimbingState()
 					   .equals(ClimbingState.GRABBING_LEDGE)) {
 				setAnimation(GRABBING_LEDGE);
 			}
-			else if (control.getClimbingState()
+			else if (ledgeGrabAppState.getClimbingState()
 							.equals(ClimbingState.MOVE_IN)) {
 				setAnimation(MOVE_IN_LEDGE);
 			}

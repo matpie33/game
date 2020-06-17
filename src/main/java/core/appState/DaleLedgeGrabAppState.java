@@ -1,5 +1,7 @@
-package core.controls;
+package core.appState;
 
+import com.jme3.app.Application;
+import com.jme3.app.state.BaseAppState;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.collision.CollisionResult;
@@ -7,47 +9,53 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
-import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
-import com.jme3.scene.control.AbstractControl;
+import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
+import dto.NodeNamesDTO;
 import enums.ClimbingState;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DaleLedgeGrabControl extends AbstractControl {
+public class DaleLedgeGrabAppState extends BaseAppState {
 
 	public static final float MIN_DISTANCE = 0.5f;
+	private final NodeNamesDTO nodeNamesDTO;
 	private Camera camera;
 	private Node rootNode;
 	private GameStateDTO gameStateDTO;
 	private Vector3f ledgeCollisionPoint;
 	private ClimbingState climbingState = ClimbingState.NONE;
 
-	public DaleLedgeGrabControl(GameStateDTO gameStateDTO) {
+	public DaleLedgeGrabAppState(GameStateDTO gameStateDTO,
+			NodeNamesDTO nodeNamesDTO) {
 		GameApplication instance = GameApplication.getInstance();
 		camera = instance.getCamera();
 		rootNode = instance.getRootNode();
 		this.gameStateDTO = gameStateDTO;
+		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
-	protected void controlUpdate(float tpf) {
-
+	public void update(float tpf) {
 		handleKeyPress();
-		if (!spatial.getControl(PhysicsControls.DALE)
-					.onGround()) {
+		Spatial dale = getDale();
+		if (!dale.getControl(PhysicsControls.DALE)
+				 .onGround()) {
 			handleLedgeDetecting();
 		}
-		else{
+		else {
 			climbingState = ClimbingState.NONE;
 		}
 
+	}
+
+	private Spatial getDale() {
+		return rootNode.getChild(nodeNamesDTO.getDaleNodeName());
 	}
 
 	private void handleLedgeDetecting() {
@@ -78,13 +86,15 @@ public class DaleLedgeGrabControl extends AbstractControl {
 	}
 
 	private void handleLetGoLedge() {
-		CharacterControl control = spatial.getControl(PhysicsControls.DALE);
+		Spatial dale = getDale();
+		CharacterControl control = dale.getControl(PhysicsControls.DALE);
 		control.setEnabled(true);
 	}
 
 	private void handleGrabbing() {
-		CharacterControl control = spatial.getControl(CharacterControl.class);
-		Vector3f spatialExtent = ((BoundingBox) spatial.getWorldBound()).getExtent(
+		Spatial dale = getDale();
+		CharacterControl control = dale.getControl(CharacterControl.class);
+		Vector3f spatialExtent = ((BoundingBox) dale.getWorldBound()).getExtent(
 				new Vector3f());
 		CollisionResult closestCollision = getClosestObjectFromCharacterHeadForward(
 				control, spatialExtent);
@@ -110,7 +120,7 @@ public class DaleLedgeGrabControl extends AbstractControl {
 		}
 	}
 
-	public ClimbingState getClimbingState (){
+	public ClimbingState getClimbingState() {
 		return climbingState;
 	}
 
@@ -130,7 +140,7 @@ public class DaleLedgeGrabControl extends AbstractControl {
 	}
 
 	private void handleMoveInLedge() {
-		CharacterControl control = spatial.getControl(CharacterControl.class);
+		CharacterControl control = getDale().getControl(CharacterControl.class);
 		Vector3f destinationPoint = getDestinationPointAboveLedge(
 				control.getViewDirection());
 		if (isMovingInLedgeCompleted(destinationPoint)) {
@@ -138,14 +148,14 @@ public class DaleLedgeGrabControl extends AbstractControl {
 			climbingState = ClimbingState.NONE;
 		}
 		else {
-			moveIntoLedge(control, spatial.getLocalTranslation(),
+			moveIntoLedge(control, getDale().getLocalTranslation(),
 					destinationPoint);
 		}
 	}
 
 	private void enablePhysicsAfterReachingLedge(CharacterControl control) {
 		control.setEnabled(true);
-		control.setPhysicsLocation(spatial.getWorldTranslation());
+		control.setPhysicsLocation(getDale().getWorldTranslation());
 	}
 
 	private void moveIntoLedge(CharacterControl control,
@@ -164,13 +174,13 @@ public class DaleLedgeGrabControl extends AbstractControl {
 		}
 		moveDirection = moveDirection.clone()
 									 .mult(0.01f);
-		spatial.setLocalTranslation(spatial.getLocalTranslation()
-										   .add(moveDirection));
+		getDale().setLocalTranslation(getDale().getLocalTranslation()
+											   .add(moveDirection));
 	}
 
 	private boolean isMovingInLedgeCompleted(Vector3f finalPoint) {
-		float distanceToFinalPoint = spatial.getLocalTranslation()
-											.distance(finalPoint);
+		float distanceToFinalPoint = getDale().getLocalTranslation()
+											  .distance(finalPoint);
 		return distanceToFinalPoint < 0.5f;
 	}
 
@@ -204,7 +214,7 @@ public class DaleLedgeGrabControl extends AbstractControl {
 	}
 
 	private Vector3f getDestinationPointAboveLedge(Vector3f viewDirection) {
-		Vector3f extent = ((BoundingBox) spatial.getWorldBound()).getExtent(
+		Vector3f extent = ((BoundingBox) getDale().getWorldBound()).getExtent(
 				new Vector3f());
 		return ledgeCollisionPoint.add(extent.mult(viewDirection))
 								  .add(extent.mult(Vector3f.UNIT_Y.mult(2)));
@@ -229,9 +239,9 @@ public class DaleLedgeGrabControl extends AbstractControl {
 
 	private CollisionResult getClosestObjectFromCharacterHeadForward(
 			CharacterControl control, Vector3f extent) {
-		Vector3f rayStart = spatial.getWorldTranslation()
-								   .add(extent.mult(
-										   control.getViewDirection()));
+		Vector3f rayStart = getDale().getWorldTranslation()
+									 .add(extent.mult(
+											 control.getViewDirection()));
 		Ray ray = new Ray(rayStart, control.getViewDirection());
 		CollisionResults collisionResults = new CollisionResults();
 		rootNode.collideWith(ray, collisionResults);
@@ -240,7 +250,22 @@ public class DaleLedgeGrabControl extends AbstractControl {
 	}
 
 	@Override
-	protected void controlRender(RenderManager rm, ViewPort vp) {
+	protected void initialize(Application app) {
+
+	}
+
+	@Override
+	protected void cleanup(Application app) {
+
+	}
+
+	@Override
+	protected void onEnable() {
+
+	}
+
+	@Override
+	protected void onDisable() {
 
 	}
 }

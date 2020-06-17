@@ -27,7 +27,6 @@ import constants.PhysicsControls;
 import core.GameApplication;
 import core.controllers.CollisionDetectionAppState;
 import core.controls.DaleFollowingCameraControl;
-import core.controls.DaleLedgeGrabControl;
 import core.controls.DogMovingInsideAreaControl;
 import core.controls.ThrowableObjectMarkerControl;
 import core.util.CoordinatesUtil;
@@ -265,8 +264,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 	private void initializeDaleControls(BulletAppState bulletAppState,
 			Spatial model, CapsuleCollisionShape capsuleShape) {
-		DaleLedgeGrabControl daleLedgeGrabControl = new DaleLedgeGrabControl(
-				gameStateDTO);
 		GhostControl ghostControl = new GhostControl(capsuleShape);
 		CharacterControl characterControl = new CharacterControl(capsuleShape,
 				0.05f);
@@ -278,7 +275,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		bulletAppState.getPhysicsSpace()
 					  .add(characterControl);
 		model.addControl(characterControl);
-		model.addControl(daleLedgeGrabControl);
 
 		bulletAppState.getPhysicsSpace()
 					  .add(ghostControl);
