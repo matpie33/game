@@ -11,19 +11,13 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture2D;
 import core.GameApplication;
-import dto.NodeNamesDTO;
 import external.HeightBasedAlphaMapGenerator;
 
 public class TerrainAppState extends AbstractAppState {
 
 	private HeightBasedAlphaMapGenerator heightBasedAlphaMapGenerator;
-	private NodeNamesDTO nodeNamesDTO;
 	private AssetManager assetManager;
 	private static final String TEXTURES_DIRECTORY = "textures/";
-
-	public TerrainAppState(NodeNamesDTO nodeNamesDTO) {
-		this.nodeNamesDTO = nodeNamesDTO;
-	}
 
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
@@ -63,6 +57,5 @@ public class TerrainAppState extends AbstractAppState {
 		return assetManager.loadTexture(
 				String.format(TEXTURES_DIRECTORY + "%s", textureName));
 	}
-
 
 }

@@ -22,8 +22,8 @@ public class CheckpointsConditionsController {
 
 	private boolean isNextCheckpointConditionPassed() {
 		if (checkpointNumber == 0) {
-			return ((Node) rootNode.getChild(NodeNames.DOGS)).getChildren()
-															 .size() == 6;
+			return ((Node) rootNode.getChild(NodeNames.getDogs())).getChildren()
+															 .size() == 5;
 		}
 
 		return false;

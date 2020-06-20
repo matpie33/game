@@ -14,19 +14,15 @@ import constants.PhysicsControls;
 import core.controls.ThrowableObjectMarkerControl;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
-import dto.NodeNamesDTO;
 
 public class MarkThrowableObjectsAppState extends AbstractAppState {
 
-	private final NodeNamesDTO nodeNamesDTO;
 	private SimpleApplication app;
 	public static final int MINIMAL_DISTANCE_TO_PICK_OBJECT = 5;
 	private GameStateDTO gameStateDTO;
 
-	public MarkThrowableObjectsAppState(GameStateDTO gameStateDTO,
-			NodeNamesDTO nodeNamesDTO) {
+	public MarkThrowableObjectsAppState(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
-		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
@@ -49,8 +45,7 @@ public class MarkThrowableObjectsAppState extends AbstractAppState {
 		CollisionResults collisionResults = getDistanceToObjects();
 		CollisionResult closestCollision = collisionResults.getClosestCollision();
 
-		Spatial throwableCursor = rootNode.getChild(
-				nodeNamesDTO.getThrowableObjectMarkerNodeName());
+		Spatial throwableCursor = rootNode.getChild(NodeNames.getArrow());
 		if (isCloseEnoughToAnyObject(collisionResults)) {
 			if (keyPressDTO.isPickObjectPress()) {
 
@@ -93,13 +88,13 @@ public class MarkThrowableObjectsAppState extends AbstractAppState {
 
 	private CollisionResults getDistanceToObjects() {
 		Node rootNode = app.getRootNode();
-		Spatial dale = rootNode.getChild(nodeNamesDTO.getDaleNodeName());
+		Spatial dale = rootNode.getChild(NodeNames.getDale());
 		Ray ray = new Ray(dale.getControl(PhysicsControls.DALE)
 							  .getPhysicsLocation(),
 				dale.getControl(PhysicsControls.DALE)
 					.getViewDirection());
 		CollisionResults collisionResults = new CollisionResults();
-		Spatial throwables = rootNode.getChild(NodeNames.THROWABLES);
+		Spatial throwables = rootNode.getChild(NodeNames.getThrowables());
 		for (Spatial spatial : ((Node) throwables).getChildren()) {
 			spatial.collideWith(ray, collisionResults);
 		}

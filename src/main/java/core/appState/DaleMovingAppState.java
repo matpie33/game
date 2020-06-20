@@ -9,11 +9,11 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
-import dto.NodeNamesDTO;
 
 public class DaleMovingAppState extends AbstractAppState {
 
@@ -21,13 +21,10 @@ public class DaleMovingAppState extends AbstractAppState {
 	private Vector3f modifiableWalkDirectionVector = new Vector3f(0, 0, 0);
 	private GameApplication gameApplication;
 	private SimpleApplication app;
-	private NodeNamesDTO nodeNamesDTO;
 
-	public DaleMovingAppState(GameStateDTO gameStateDTO,
-			NodeNamesDTO nodeNamesDTO) {
+	public DaleMovingAppState(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
 		gameApplication = GameApplication.getInstance();
-		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
@@ -40,7 +37,7 @@ public class DaleMovingAppState extends AbstractAppState {
 	public void update(float tpf) {
 		super.update(tpf);
 		Spatial dale = app.getRootNode()
-						  .getChild(nodeNamesDTO.getDaleNodeName());
+						  .getChild(NodeNames.getDale());
 		DaleHPAppState daleHPAppState = app.getStateManager()
 										   .getState(DaleHPAppState.class);
 		if (!daleHPAppState.isAlive()) {

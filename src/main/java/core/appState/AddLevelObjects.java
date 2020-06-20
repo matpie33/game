@@ -2,7 +2,6 @@ package core.appState;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
-import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bullet.BulletAppState;
@@ -30,78 +29,73 @@ import core.controls.DaleFollowingCameraControl;
 import core.controls.DogMovingInsideAreaControl;
 import core.controls.ThrowableObjectMarkerControl;
 import core.util.CoordinatesUtil;
-import dto.DaleStateDTO;
 import dto.GameStateDTO;
-import dto.NodeNamesDTO;
 import dto.SpatialDTO;
-import enums.MovementDirection;
 
 import java.util.List;
 
-public class AddLevelObjectsAppState extends AbstractAppState {
+public class AddLevelObjects {
 
-	private NodeNamesDTO nodeNamesDTO;
 	private GameStateDTO gameStateDTO;
 	private Application app;
 
-	public AddLevelObjectsAppState(NodeNamesDTO nodeNamesDTO,
-			GameStateDTO gameStateDTO) {
-		this.nodeNamesDTO = nodeNamesDTO;
+	public AddLevelObjects(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
 	}
 
-	@Override
-	public void initialize(AppStateManager stateManager, Application app) {
+	public void addObjects(AppStateManager stateManager, Application app) {
 		this.app = app;
-		BulletAppState bulletAppState = initializeBulletAppState();
-		Node rootNode = ((SimpleApplication) app).getRootNode();
-		Node throwables = new Node(NodeNames.THROWABLES);
-		Node dogs = new Node(NodeNames.DOGS);
-		rootNode.attachChild(throwables);
-		rootNode.attachChild(dogs);
+		addObjectsToMap(stateManager, (SimpleApplication) app);
+	}
+
+	private void addObjectsToMap(AppStateManager stateManager,
+			SimpleApplication app) {
+		BulletAppState bulletAppState = stateManager.getState(BulletAppState.class);
+		Node rootNode = app.getRootNode();
+		createFirstLevelNodes(rootNode);
+		createGameObjectsMainNodes(app.getRootNode());
 		List<SpatialDTO> spatials = stateManager.getState(LevelAppState.class)
 												.getSpatialDTOS();
 		for (SpatialDTO spatialDTO : spatials) {
-			String spatialName = spatialDTO.getPathToModel()
-										   .replace("/", "");
+			System.out.println(spatialDTO.getSpatial()
+										 .getName());
+			String spatialName = spatialDTO.getSpatial()
+										   .getName();
 			Spatial spatial = setSpatialPositionAndRotation(spatialDTO);
-			if (spatialName.startsWith("house") || spatialName.startsWith(
-					"sidewalk") || spatialName.startsWith("fence")
-					|| spatialName.startsWith("trash")
-					|| spatialName.startsWith("pylon")) {
-				initializeRigidObject(bulletAppState, spatial, rootNode);
+			if (spatialName.equals(NodeNames.getHouse()) || spatialName.equals(
+					NodeNames.getHouseWithExit()) || spatialName.equals(
+					NodeNames.getTrashbin())) {
+				initializeImmobileObject(bulletAppState, spatial, rootNode);
 			}
-			if (spatialName.startsWith("dale")) {
+			if (spatialName.equals(NodeNames.getDale())) {
 				initializeDale(bulletAppState, spatial, rootNode);
 			}
-			if (spatialName.startsWith("map")) {
+			if (spatialName.equals(NodeNames.getMap())) {
 				initializeScene(bulletAppState, rootNode, spatial);
 			}
-			if (spatialName.startsWith("dog")) {
-				initializeDog(bulletAppState, dogs, spatial);
+			if (spatialName.equals(NodeNames.getDog())) {
+				initializeDog(bulletAppState, rootNode, spatial);
 			}
-			if (spatialName.startsWith("tree")) {
-				initializeTree(bulletAppState, rootNode, spatial);
+			if (spatialName.equals(NodeNames.getBrokenFence())) {
+				initializeBrokenFence(bulletAppState, spatial, rootNode);
 			}
-			if (spatialName.startsWith("broken")) {
-				initializeBoxShape(bulletAppState, spatial, rootNode);
+			if (spatialName.equals(NodeNames.getBox())) {
+				initializeBox(bulletAppState, spatial, rootNode);
 			}
-			if (spatialName.startsWith("box")) {
-				initializeBox(bulletAppState, spatial, throwables);
-			}
-			if (spatialName.startsWith("arrow")) {
-				nodeNamesDTO.setThrowableObjectMarkerNodeName(
-						spatial.getName());
+			if (spatialName.equals(NodeNames.getArrow())) {
 				spatial.addControl(new ThrowableObjectMarkerControl());
 				spatial.setCullHint(Spatial.CullHint.Always);
-				rootNode.attachChild(spatial);
+				Node gameObjects = (Node) rootNode.getChild(
+						NodeNames.getGameObjects());
+				gameObjects.attachChild(spatial);
 			}
-			if (spatialName.startsWith("mark")) {
-				nodeNamesDTO.setMarkNodeName(spatial.getName());
+			if (spatialName.equals(NodeNames.getMark())) {
 				spatial.setCullHint(Spatial.CullHint.Always);
 			}
-			if (spatialName.startsWith("Sky")) {
-				rootNode.attachChild(spatial);
+			if (spatialName.equals(NodeNames.getSky())) {
+				Node gameObjects = (Node) rootNode.getChild(
+						NodeNames.getGameObjects());
+				gameObjects.attachChild(spatial);
 			}
 
 			CharacterControl control = spatial.getControl(
@@ -115,13 +109,32 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		}
 
 		initializeDaleFieldOfView(bulletAppState, rootNode);
-		//		rootNode.attachChild(objectsHolderDTO.getScene());
-		initializeCamera(rootNode);
-		//		rootNode.attachChild(objectsHolderDTO.getTerrain());
+		//		gameObjects.attachChild(objectsHolderDTO.getScene());
+
+		//		gameObjects.attachChild(objectsHolderDTO.getTerrain());
 	}
 
-	private void initializeBoxShape(BulletAppState bulletAppState,
+	private void createGameObjectsMainNodes(Node rootNode) {
+		Node gameObjects = (Node) rootNode.getChild(NodeNames.getGameObjects());
+		Node throwables = new Node(NodeNames.getThrowables());
+		Node dogs = new Node(NodeNames.getDogs());
+		Node immobileObjects = new Node(NodeNames.getImmobileObjects());
+		gameObjects.attachChild(dogs);
+		gameObjects.attachChild(throwables);
+		gameObjects.attachChild(immobileObjects);
+	}
+
+	private void createFirstLevelNodes(Node rootNode) {
+		Node gameObjects = new Node(NodeNames.getGameObjects());
+		Node additionalObjects = new Node(NodeNames.getAdditionalObjects());
+		rootNode.attachChild(gameObjects);
+		rootNode.attachChild(additionalObjects);
+	}
+
+	private void initializeBrokenFence(BulletAppState bulletAppState,
 			Spatial spatial, Node rootNode) {
+		Node immobileObjects = (Node) rootNode.getChild(
+				NodeNames.getImmobileObjects());
 		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(spatial);
 
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 5f);
@@ -131,18 +144,20 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		spatial.addControl(rigidBodyControl);
 		bulletAppState.getPhysicsSpace()
 					  .add(rigidBodyControl);
-		rootNode.attachChild(spatial);
+		immobileObjects.attachChild(spatial);
 	}
 
-	private void initializeRigidObject(BulletAppState bulletAppState,
+	private void initializeImmobileObject(BulletAppState bulletAppState,
 			Spatial spatial, Node rootNode) {
+		Node immobileObjects = (Node) rootNode.getChild(
+				NodeNames.getImmobileObjects());
 		CollisionShape shape = CollisionShapeFactory.createMeshShape(spatial);
 		RigidBodyControl control = new RigidBodyControl(shape, 0);
 		spatial.addControl(control);
 		control.setPhysicsLocation(spatial.getLocalTranslation());
 		bulletAppState.getPhysicsSpace()
 					  .add(control);
-		rootNode.attachChild(spatial);
+		immobileObjects.attachChild(spatial);
 	}
 
 	private Spatial setSpatialPositionAndRotation(SpatialDTO spatialDTO) {
@@ -155,8 +170,10 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 	private void initializeDaleFieldOfView(BulletAppState bulletAppState,
 			Node rootNode) {
+		Node gameObjects = (Node) rootNode.getChild(NodeNames.getGameObjects());
 		Sphere sphere = new Sphere(5, 5, 5);
-		Geometry sphereGeometry = new Geometry("fieldOfView", sphere);
+		Geometry sphereGeometry = new Geometry(NodeNames.getFieldOfView(),
+				sphere);
 		sphereGeometry.setCullHint(Spatial.CullHint.Always);
 		Material material = new Material(GameApplication.getInstance()
 														.getAssetManager(),
@@ -166,8 +183,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		SphereCollisionShape sphereCollisionShape = new SphereCollisionShape(
 				50);
 		GhostControl control = new GhostControl(sphereCollisionShape);
-		Vector3f daleCoordinates = rootNode.getChild(
-				nodeNamesDTO.getDaleNodeName())
+		Vector3f daleCoordinates = rootNode.getChild(NodeNames.getDale())
 										   .getWorldTranslation();
 		sphereGeometry.setLocalTranslation(daleCoordinates);
 		control.setPhysicsLocation(daleCoordinates);
@@ -176,20 +192,18 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 		bulletAppState.getPhysicsSpace()
 					  .add(control);
-		rootNode.attachChild(sphereGeometry);
-		nodeNamesDTO.setFieldOfViewNodeName(sphereGeometry.getName());
+		gameObjects.attachChild(sphereGeometry);
 
 	}
 
-	private void initializeCamera(Node rootNode) {
+	public void initializeCamera(Node rootNode) {
 		Camera camera = GameApplication.getInstance()
 									   .getCamera();
 		CameraNode cameraNode = new CameraNode("Main camera", camera);
 		cameraNode.addControl(
-				new DaleFollowingCameraControl(gameStateDTO, camera,
-						nodeNamesDTO));
+				new DaleFollowingCameraControl(gameStateDTO, camera));
 		cameraNode.removeControl(CameraControl.class);
-		camera.lookAtDirection(rootNode.getChild(nodeNamesDTO.getDaleNodeName())
+		camera.lookAtDirection(rootNode.getChild(NodeNames.getDale())
 									   .getControl(PhysicsControls.DALE)
 									   .getViewDirection(), Vector3f.UNIT_Y);
 		rootNode.attachChild(cameraNode);
@@ -211,8 +225,8 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 	}
 
 	private void initializeBox(BulletAppState bulletAppState, Spatial box,
-			Node throwables) {
-		nodeNamesDTO.setBoxNodeName(box.getName());
+			Node rootNode) {
+		Node throwables = (Node) rootNode.getChild(NodeNames.getThrowables());
 		CollisionShape boxShape = CollisionShapeFactory.createBoxShape(box);
 
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(boxShape, 5f);
@@ -228,7 +242,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 	private void initializeTree(BulletAppState bulletAppState, Node rootNode,
 			Spatial tree) {
-		nodeNamesDTO.setTreeNodeName(tree.getName());
 		CollisionShape collisionShape = CollisionShapeFactory.createMeshShape(
 				tree);
 		RigidBodyControl rigidBodyControl = new RigidBodyControl(collisionShape,
@@ -240,25 +253,14 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		rootNode.attachChild(tree);
 	}
 
-	private BulletAppState initializeBulletAppState() {
-		AppStateManager stateManager = GameApplication.getInstance()
-													  .getStateManager();
-		BulletAppState bulletAppState = new BulletAppState();
-		stateManager.attach(bulletAppState);
-		bulletAppState.getPhysicsSpace()
-					  .addCollisionListener(app.getStateManager()
-											   .getState(
-													   CollisionDetectionAppState.class));
-		return bulletAppState;
-	}
+
 
 	private void initializeDale(BulletAppState bulletAppState, Spatial model,
 			Node rootNode) {
-		nodeNamesDTO.setDaleNodeName(model.getName());
+		Node gameObjects = (Node) rootNode.getChild(NodeNames.getGameObjects());
 		CapsuleCollisionShape capsuleShape = initializeDaleShape(model);
-		initializeDaleState();
 		initializeDaleControls(bulletAppState, model, capsuleShape);
-		rootNode.attachChild(model);
+		gameObjects.attachChild(model);
 
 	}
 
@@ -282,11 +284,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		model.addControl(ghostControl);
 	}
 
-	private void initializeDaleState() {
-		DaleStateDTO daleStateDTO = new DaleStateDTO();
-		gameStateDTO.setDaleStateDTO(daleStateDTO);
-	}
-
 	private CapsuleCollisionShape initializeDaleShape(Spatial model) {
 		BoundingBox sizeOfDale = CoordinatesUtil.getSizeOfSpatial(model);
 		float yExtent = sizeOfDale.getYExtent();
@@ -295,12 +292,12 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		return new CapsuleCollisionShape(zExtent, yExtent, 1);
 	}
 
-	private void initializeDog(BulletAppState bulletAppState, Node dogsNode,
+	private void initializeDog(BulletAppState bulletAppState, Node rootNode,
 			Spatial model) {
-		nodeNamesDTO.setDogNodeName(model.getName());
+		Node dogs = (Node) rootNode.getChild(NodeNames.getDogs());
 		CapsuleCollisionShape capsuleShape = initializeDogShape(model);
 		initializeDogControls(bulletAppState, model, capsuleShape);
-		dogsNode.attachChild(model);
+		dogs.attachChild(model);
 	}
 
 	private void initializeDogControls(BulletAppState bulletAppState,
@@ -318,8 +315,6 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		model.addControl(ghostControl);
 		model.addControl(dogMovingInsideAreaControl);
 
-		addDogState(model, control);
-
 		bulletAppState.getPhysicsSpace()
 					  .add(control);
 		bulletAppState.getPhysicsSpace()
@@ -333,23 +328,10 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 		return new CapsuleCollisionShape(height, width, 0);
 	}
 
-	private void addDogState(Spatial model, CharacterControl control) {
-		Vector3f physicsLocation = control.getPhysicsLocation();
-		DogMovingInsideAreaControl dogMovingInsideAreaControl = model.getControl(
-				DogMovingInsideAreaControl.class);
-		dogMovingInsideAreaControl.setMovementDirection(
-				MovementDirection.FORWARD_X);
-		dogMovingInsideAreaControl.setNumberOfPixelsToMoveInGivenDirection(10);
-		dogMovingInsideAreaControl.setPositionWhereMovementBegan(
-				physicsLocation.getX());
-		dogMovingInsideAreaControl.setSquareWidth(20);
-		dogMovingInsideAreaControl.setStartOfSquareWhereTheDogMoves(
-				physicsLocation);
-	}
-
 	private void initializeScene(BulletAppState bulletAppState, Node rootNode,
 			Spatial scene) {
-		nodeNamesDTO.setSceneNodeName(scene.getName());
+		Node immobileObjects = (Node) rootNode.getChild(
+				NodeNames.getImmobileObjects());
 		CollisionShape sceneShape = CollisionShapeFactory.createMeshShape(
 				scene);
 		RigidBodyControl landscape = new RigidBodyControl(sceneShape, 0);
@@ -358,7 +340,7 @@ public class AddLevelObjectsAppState extends AbstractAppState {
 
 		bulletAppState.getPhysicsSpace()
 					  .add(landscape);
-		rootNode.attachChild(scene);
+		immobileObjects.attachChild(scene);
 	}
 
 }

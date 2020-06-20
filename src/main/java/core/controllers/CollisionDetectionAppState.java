@@ -6,12 +6,10 @@ import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.scene.Spatial;
+import constants.NodeNames;
 import constants.PhysicsControls;
 import core.appState.DaleHPAppState;
 import core.controls.DogMovingInsideAreaControl;
-import dto.DaleStateDTO;
-import dto.GameStateDTO;
-import dto.NodeNamesDTO;
 import enums.ObjectsTypes;
 
 public class CollisionDetectionAppState extends BaseAppState
@@ -19,17 +17,8 @@ public class CollisionDetectionAppState extends BaseAppState
 
 	public static final int MINIMUM_IMPULSE_TO_DESTROY_BOX = 40;
 
-	private NodeNamesDTO nodeNamesDTO;
-	private GameStateDTO gameStateDTO;
-	private ObjectsRemovingController objectsRemovingController;
+	private ObjectsRemovingController objectsRemovingController = new ObjectsRemovingController();
 	private Application app;
-
-	public CollisionDetectionAppState(NodeNamesDTO nodeNamesDTO,
-			GameStateDTO gameStateDTO) {
-		this.nodeNamesDTO = nodeNamesDTO;
-		this.gameStateDTO = gameStateDTO;
-		this.objectsRemovingController = new ObjectsRemovingController();
-	}
 
 	@Override
 	public void collision(PhysicsCollisionEvent event) {
@@ -104,24 +93,23 @@ public class CollisionDetectionAppState extends BaseAppState
 	}
 
 	private ObjectsTypes getObjectType(Spatial node) {
-		if (nodeNamesDTO.getDogNodeName()
-						.equals(node.getName())) {
+		if (NodeNames.getDog()
+					 .equals(node.getName())) {
 			return ObjectsTypes.DOG;
 		}
-		if (nodeNamesDTO.getDaleNodeName()
-						.equals(node.getName())) {
+		if (NodeNames.getDale()
+					 .equals(node.getName())) {
 			return ObjectsTypes.DALE;
 		}
-		if (nodeNamesDTO.getBoxNodeName()
-						.contains(node.getName())) {
+		if (NodeNames.getBox()
+					 .contains(node.getName())) {
 			return ObjectsTypes.BOX;
 		}
-		if (nodeNamesDTO.getFieldOfViewNodeName()
-						.equals(node.getName())
-				|| nodeNamesDTO.getMarkNodeName()
-							   .equals(node.getName())
-				|| nodeNamesDTO.getThrowableObjectMarkerNodeName()
-							   .equals(node.getName())) {
+		if (NodeNames.getFieldOfView()
+					 .equals(node.getName()) || NodeNames.getMark()
+														 .equals(node.getName())
+				|| NodeNames.getArrow()
+							.equals(node.getName())) {
 			return ObjectsTypes.NONE;
 		}
 		return ObjectsTypes.NONE;

@@ -7,24 +7,22 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.control.AbstractControl;
+import constants.NodeNames;
 import core.GameApplication;
 import core.appState.IdleTimeCheckAppState;
 import dto.DaleStateDTO;
 import dto.GameStateDTO;
-import dto.NodeNamesDTO;
 import enums.ThrowingState;
 
 public class DaleFollowingCameraControl extends AbstractControl {
 
 	private GameStateDTO gameStateDTO;
 	private Camera camera;
-	private NodeNamesDTO nodeNamesDTO;
 
-	public DaleFollowingCameraControl(GameStateDTO gameStateDTO, Camera camera,
-			NodeNamesDTO nodeNamesDTO) {
+	public DaleFollowingCameraControl(GameStateDTO gameStateDTO,
+			Camera camera) {
 		this.gameStateDTO = gameStateDTO;
 		this.camera = camera;
-		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
@@ -48,7 +46,7 @@ public class DaleFollowingCameraControl extends AbstractControl {
 			camera.lookAt(throwingDestinationLocation, Vector3f.UNIT_Y);
 			GameApplication.getInstance()
 						   .getRootNode()
-						   .getChild(nodeNamesDTO.getDaleNodeName())
+						   .getChild(NodeNames.getDale())
 						   .lookAt(throwingDestinationLocation,
 								   Vector3f.UNIT_Y);
 		}
@@ -76,8 +74,7 @@ public class DaleFollowingCameraControl extends AbstractControl {
 	private void handleCameraMovement() {
 		Vector3f dalePosition = GameApplication.getInstance()
 											   .getRootNode()
-											   .getChild(
-													   nodeNamesDTO.getDaleNodeName())
+											   .getChild(NodeNames.getDale())
 											   .getLocalTranslation();
 		Vector3f dalePositionMinusViewDirection = calculateCameraPositionBasedOnDaleViewDirection(
 				dalePosition);

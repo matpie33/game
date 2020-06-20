@@ -5,10 +5,9 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.BaseAppState;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.math.Vector3f;
+import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
-import dto.GameStateDTO;
-import dto.NodeNamesDTO;
 
 public class DaleHPAppState extends BaseAppState {
 
@@ -17,15 +16,9 @@ public class DaleHPAppState extends BaseAppState {
 	public static final int INITIAL_HP_OF_DALE = 100;
 
 	private float timeSinceLastHpDecrease;
-	private NodeNamesDTO nodeNamesDTO;
 	private SimpleApplication application;
 	private int hp;
 	private boolean collisionDetected;
-
-	public DaleHPAppState(NodeNamesDTO nodeNamesDTO) {
-		timeSinceLastHpDecrease = 0;
-		this.nodeNamesDTO = nodeNamesDTO;
-	}
 
 	private void handleDaleState() {
 
@@ -54,8 +47,7 @@ public class DaleHPAppState extends BaseAppState {
 
 	public void moveDaleBack() {
 		CharacterControl control = application.getRootNode()
-											  .getChild(
-													  nodeNamesDTO.getDaleNodeName())
+											  .getChild(NodeNames.getDale())
 											  .getControl(PhysicsControls.DALE);
 		Vector3f direction = application.getCamera()
 										.getDirection();

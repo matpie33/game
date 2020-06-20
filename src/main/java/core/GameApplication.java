@@ -2,11 +2,10 @@ package core;
 
 import com.jme3.app.SimpleApplication;
 import core.appState.GameStartAppState;
+import dto.DaleStateDTO;
 import dto.GameStateDTO;
-import dto.NodeNamesDTO;
 
 public class GameApplication extends SimpleApplication {
-
 
 	private GameApplication() {
 		if (Holder.INSTANCE != null) {
@@ -22,9 +21,9 @@ public class GameApplication extends SimpleApplication {
 	@Override
 	public void simpleInitApp() {
 		GameStateDTO gameStateDTO = new GameStateDTO();
-		NodeNamesDTO nodeNamesDTO = new NodeNamesDTO();
-		stateManager.attach(
-				new GameStartAppState(nodeNamesDTO, gameStateDTO));
+		DaleStateDTO daleStateDTO = new DaleStateDTO();
+		gameStateDTO.setDaleStateDTO(daleStateDTO);
+		stateManager.attach(new GameStartAppState(gameStateDTO));
 	}
 
 	private static class Holder {

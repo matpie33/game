@@ -6,7 +6,6 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.scene.Spatial;
 import core.loading.AdditionalModelsLoader;
-import dto.NodeNamesDTO;
 import dto.SpatialDTO;
 import initialization.ModelsLoadAppState;
 import saveAndLoad.FileLoad;
@@ -21,17 +20,13 @@ public class LevelAppState extends AbstractAppState {
 	public static final String PATH_TO_LEVELS = "/levels/";
 	public static final String LEVEL = "level.txt";
 
-	private NodeNamesDTO nodeNamesDTO;
 	private List<SpatialDTO> spatialDTOS;
-
-	public LevelAppState(NodeNamesDTO nodeNamesDTO) {
-		this.nodeNamesDTO = nodeNamesDTO;
-	}
 
 	@Override
 	public void initialize(AppStateManager stateManager, Application app) {
-		ModelsLoadAppState modelsLoadAppState = new ModelsLoadAppState(app.getAssetManager(),
-				app.getCamera(), ((SimpleApplication) app).getRootNode());
+		ModelsLoadAppState modelsLoadAppState = new ModelsLoadAppState(
+				app.getAssetManager(), app.getCamera(),
+				((SimpleApplication) app).getRootNode());
 		InputStream levelsFileStream = getClass().getResourceAsStream(
 				PATH_TO_LEVELS + LEVEL);
 		modelsLoadAppState.setPaths(Collections.singletonList(
@@ -42,12 +37,14 @@ public class LevelAppState extends AbstractAppState {
 	}
 
 	private void loadAdditionalInvisibleModels(Application app) {
-		new AdditionalModelsLoader().loadModels(app).forEach(spatial->{
-			SpatialDTO spatialDTO = new SpatialDTO();
-			spatialDTO.setSpatial(spatial);
-			spatialDTO.setPathToModel(spatial.getName());
-			spatialDTOS.add(spatialDTO);
-		});
+		new AdditionalModelsLoader().loadModels(app)
+									.forEach(spatial -> {
+										SpatialDTO spatialDTO = new SpatialDTO();
+										spatialDTO.setSpatial(spatial);
+										spatialDTO.setPathToModel(
+												spatial.getName());
+										spatialDTOS.add(spatialDTO);
+									});
 	}
 
 	private void loadModelsFromLevelFile(ModelsLoadAppState modelsLoadAppState,

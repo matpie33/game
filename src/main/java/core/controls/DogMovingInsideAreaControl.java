@@ -1,6 +1,7 @@
 package core.controls;
 
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.export.JmeImporter;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
@@ -10,6 +11,7 @@ import com.jme3.scene.control.AbstractControl;
 import constants.PhysicsControls;
 import enums.MovementDirection;
 
+import java.io.IOException;
 import java.util.Random;
 
 public class DogMovingInsideAreaControl extends AbstractControl {
@@ -30,6 +32,23 @@ public class DogMovingInsideAreaControl extends AbstractControl {
 		collidingWithObstacle = true;
 	}
 
+
+	@Override
+	public void setSpatial(Spatial spatial) {
+		super.setSpatial(spatial);
+		setDefaults();
+	}
+
+	private void setDefaults() {
+		setMovementDirection(
+				MovementDirection.FORWARD_X);
+		setNumberOfPixelsToMoveInGivenDirection(10);
+		setPositionWhereMovementBegan(
+				spatial.getLocalTranslation().getX());
+		setSquareWidth(20);
+		setStartOfSquareWhereTheDogMoves(
+				spatial.getLocalTranslation());
+	}
 
 	@Override
 	protected void controlUpdate(float tpf) {
@@ -64,7 +83,6 @@ public class DogMovingInsideAreaControl extends AbstractControl {
 			moveEnemy();
 		}
 	}
-
 
 	@Override
 	protected void controlRender(RenderManager rm, ViewPort vp) {
@@ -206,5 +224,11 @@ public class DogMovingInsideAreaControl extends AbstractControl {
 	public void setStartOfSquareWhereTheDogMoves(
 			Vector3f startOfSquareWhereTheDogMoves) {
 		this.startOfSquareWhereTheDogMoves = startOfSquareWhereTheDogMoves;
+	}
+
+	@Override
+	public void read(JmeImporter im) throws IOException {
+		super.read(im);
+		setDefaults();
 	}
 }

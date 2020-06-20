@@ -8,12 +8,12 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.scene.Spatial;
+import constants.NodeNames;
 import core.appState.CarriedObjectAppState;
 import core.appState.DaleHPAppState;
 import core.appState.DaleLedgeGrabAppState;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
-import dto.NodeNamesDTO;
 import enums.ClimbingState;
 
 public class DaleAnimationListener implements AnimEventListener {
@@ -28,12 +28,10 @@ public class DaleAnimationListener implements AnimEventListener {
 	private final Application app;
 	private AnimChannel channel;
 	private GameStateDTO gameStateDTO;
-	private NodeNamesDTO nodeNamesDTO;
 
 	public DaleAnimationListener(GameStateDTO gameStateDTO,
-			NodeNamesDTO nodeNamesDTO, Application app) {
+			Application app) {
 		this.gameStateDTO = gameStateDTO;
-		this.nodeNamesDTO = nodeNamesDTO;
 		this.app = app;
 	}
 
@@ -47,8 +45,7 @@ public class DaleAnimationListener implements AnimEventListener {
 
 	private Spatial getDale() {
 		return ((SimpleApplication) app).getRootNode()
-										.getChild(
-												nodeNamesDTO.getDaleNodeName());
+										.getChild(NodeNames.getDale());
 	}
 
 	@Override

@@ -11,11 +11,11 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.GameStateDTO;
 import dto.KeyPressDTO;
-import dto.NodeNamesDTO;
 import enums.ClimbingState;
 
 import java.util.ArrayList;
@@ -24,20 +24,17 @@ import java.util.List;
 public class DaleLedgeGrabAppState extends BaseAppState {
 
 	public static final float MIN_DISTANCE = 0.5f;
-	private final NodeNamesDTO nodeNamesDTO;
 	private Camera camera;
 	private Node rootNode;
 	private GameStateDTO gameStateDTO;
 	private Vector3f ledgeCollisionPoint;
 	private ClimbingState climbingState = ClimbingState.NONE;
 
-	public DaleLedgeGrabAppState(GameStateDTO gameStateDTO,
-			NodeNamesDTO nodeNamesDTO) {
+	public DaleLedgeGrabAppState(GameStateDTO gameStateDTO) {
 		GameApplication instance = GameApplication.getInstance();
 		camera = instance.getCamera();
 		rootNode = instance.getRootNode();
 		this.gameStateDTO = gameStateDTO;
-		this.nodeNamesDTO = nodeNamesDTO;
 	}
 
 	@Override
@@ -55,7 +52,7 @@ public class DaleLedgeGrabAppState extends BaseAppState {
 	}
 
 	private Spatial getDale() {
-		return rootNode.getChild(nodeNamesDTO.getDaleNodeName());
+		return rootNode.getChild(NodeNames.getDale());
 	}
 
 	private void handleLedgeDetecting() {

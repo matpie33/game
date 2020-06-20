@@ -6,7 +6,6 @@ import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import core.controllers.CollisionDetectionAppState;
 import dto.GameStateDTO;
-import dto.NodeNamesDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +13,10 @@ import java.util.List;
 public class GameStartAppState extends AbstractAppState {
 
 	private List<AppState> appStates = new ArrayList<>();
-	private NodeNamesDTO nodeNamesDTO;
 	private GameStateDTO gameStateDTO;
 	private Application app;
 
-	public GameStartAppState(NodeNamesDTO nodeNamesDTO,
-			GameStateDTO gameStateDTO) {
-		this.nodeNamesDTO = nodeNamesDTO;
+	public GameStartAppState(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
 	}
 
@@ -30,22 +26,21 @@ public class GameStartAppState extends AbstractAppState {
 		appStates.add(new GameHotkeysAppState(gameStateDTO));
 		appStates.add(new HUDAppState());
 		appStates.add(new LightAppState());
-		appStates.add(new DaleLedgeGrabAppState(gameStateDTO, nodeNamesDTO));
-		appStates.add(
-				new CollisionDetectionAppState(nodeNamesDTO, gameStateDTO));
-		appStates.add(new DaleHPAppState(nodeNamesDTO));
-		appStates.add(new LevelAppState(nodeNamesDTO));
-		appStates.add(new DaleMovingAppState(gameStateDTO, nodeNamesDTO));
-		appStates.add(new DogFollowingDaleAppState(nodeNamesDTO, gameStateDTO));
-		appStates.add(new FieldOfViewAppState(nodeNamesDTO, gameStateDTO));
-		appStates.add(new AddLevelObjectsAppState(nodeNamesDTO, gameStateDTO));
-		appStates.add(new AnimationsAppState(gameStateDTO, nodeNamesDTO));
+		appStates.add(new DaleLedgeGrabAppState(gameStateDTO));
+		appStates.add(new CollisionDetectionAppState());
+		appStates.add(new DaleHPAppState());
+		appStates.add(new LevelAppState());
+		appStates.add(new AddPhysicsAppState());
+		appStates.add(new CheckpointsAppState(gameStateDTO));
+		appStates.add(new DaleMovingAppState(gameStateDTO));
+		appStates.add(new DogFollowingDaleAppState());
+		appStates.add(new FieldOfViewAppState(gameStateDTO));
+		appStates.add(new AnimationsAppState(gameStateDTO));
 		appStates.add(new IdleTimeCheckAppState());
 		appStates.add(new SoundsAppState());
-		appStates.add(new TerrainAppState(nodeNamesDTO));
-		appStates.add(
-				new MarkThrowableObjectsAppState(gameStateDTO, nodeNamesDTO));
-		appStates.add(new CarriedObjectAppState(gameStateDTO, nodeNamesDTO));
+		appStates.add(new TerrainAppState());
+		appStates.add(new MarkThrowableObjectsAppState(gameStateDTO));
+		appStates.add(new CarriedObjectAppState(gameStateDTO));
 		appStates.forEach(stateManager::attach);
 		super.initialize(stateManager, app);
 	}

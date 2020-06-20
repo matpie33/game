@@ -7,6 +7,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.export.binary.BinaryExporter;
 import com.jme3.scene.Spatial;
+import constants.NodeNames;
 import core.controllers.CheckpointsConditionsController;
 import core.util.CheckPointsFileCreator;
 import dto.GameStateDTO;
@@ -17,15 +18,15 @@ import java.nio.file.Paths;
 
 public class CheckpointsAppState extends BaseAppState {
 
-	private GameStateDTO gameStateDTO;
 	private BinaryExporter binaryExporter;
 	private SimpleApplication simpleApplication;
 	private File file;
 	private CheckPointsFileCreator checkPointsFileCreator;
 	private CheckpointsConditionsController checkpointsConditionsController;
+	private AddLevelObjects addLevelObjects;
 
 	public CheckpointsAppState(GameStateDTO gameStateDTO) {
-		this.gameStateDTO = gameStateDTO;
+		addLevelObjects = new AddLevelObjects(gameStateDTO);
 	}
 
 	@Override
@@ -36,9 +37,17 @@ public class CheckpointsAppState extends BaseAppState {
 		file = checkPointsFileCreator.createFile();
 		checkpointsConditionsController = new CheckpointsConditionsController(
 				simpleApplication.getRootNode());
+		addObjectsToMap(app);
+	}
+
+	private void addObjectsToMap(Application app) {
 		if (file.length() != 0) {
 			loadCheckpoint();
 		}
+		else {
+			addLevelObjects.addObjects(app.getStateManager(), app);
+		}
+		addLevelObjects.initializeCamera(simpleApplication.getRootNode());
 	}
 
 	private void loadCheckpoint() {
@@ -77,7 +86,8 @@ public class CheckpointsAppState extends BaseAppState {
 
 	private void saveCheckpoint() {
 		try {
-			binaryExporter.save(simpleApplication.getRootNode(), file);
+			binaryExporter.save(simpleApplication.getRootNode().getChild(
+					NodeNames.getGameObjects()),	file);
 		}
 		catch (IOException e) {
 			e.printStackTrace();

@@ -13,20 +13,17 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
 import dto.GameStateDTO;
-import dto.NodeNamesDTO;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class FieldOfViewAppState extends AbstractAppState {
 
 	public static final String DIFFUSE_PARAM = "Diffuse";
-	private NodeNamesDTO nodeNamesDTO;
 	private Geometry spatialPreviouslyMarkedAsThrowingDestination;
 	private ColorRGBA previousColorOfThrowingDestination;
 	private GameStateDTO gameStateDTO;
@@ -34,9 +31,7 @@ public class FieldOfViewAppState extends AbstractAppState {
 	private SimpleApplication app;
 	public static final float OFFSET_FROM_DALE_TO_FIELD_OF_VIEW = 3F;
 
-	public FieldOfViewAppState(NodeNamesDTO nodeNamesDTO,
-			GameStateDTO gameStateDTO) {
-		this.nodeNamesDTO = nodeNamesDTO;
+	public FieldOfViewAppState(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
 	}
 
@@ -48,8 +43,7 @@ public class FieldOfViewAppState extends AbstractAppState {
 
 	@Override
 	public void update(float tpf) {
-		Set<Spatial> enemiesSeeingDaleInThisUpdate =
-				handleThrowingFieldOfView();
+		Set<Spatial> enemiesSeeingDaleInThisUpdate = handleThrowingFieldOfView();
 		enemiesSeeingDale.forEach(
 				enemy -> findDogAndSetSeeingDale(enemy, false));
 		enemiesSeeingDale = enemiesSeeingDaleInThisUpdate;
@@ -58,12 +52,12 @@ public class FieldOfViewAppState extends AbstractAppState {
 
 	private void moveFieldOfView() {
 		Spatial dale = app.getRootNode()
-						  .getChild(nodeNamesDTO.getDaleNodeName());
+						  .getChild(NodeNames.getDale());
 		CharacterControl control = dale.getControl(PhysicsControls.DALE);
 		Spatial fieldOfView = GameApplication.getInstance()
 											 .getRootNode()
 											 .getChild(
-													 nodeNamesDTO.getFieldOfViewNodeName());
+													 NodeNames.getFieldOfView());
 		float fieldOfViewRadius = ((SphereCollisionShape) fieldOfView.getControl(
 				GhostControl.class)
 																	 .getCollisionShape()).getRadius();
@@ -84,12 +78,12 @@ public class FieldOfViewAppState extends AbstractAppState {
 		Set<Spatial> enemiesSeeingDaleInThisUpdate = new HashSet<>();
 		Spatial fieldOfView = app.getRootNode()
 								 .getChild(
-										 nodeNamesDTO.getFieldOfViewNodeName());
+										 NodeNames.getFieldOfView());
 		for (PhysicsCollisionObject physicsCollisionObject : fieldOfView.getControl(
 				GhostControl.class)
 																		.getOverlappingObjects()) {
 			Node collidingObject = (Node) physicsCollisionObject.getUserObject();
-			if (nodeNamesDTO.getDogNodeName()
+			if (NodeNames.getDog()
 							.equals(collidingObject.getName())) {
 				enemiesSeeingDaleInThisUpdate.add(collidingObject);
 				this.enemiesSeeingDale.remove(collidingObject);

@@ -5,8 +5,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import constants.PhysicsControls;
 import core.appState.DogFollowingDaleAppState;
-import dto.GameStateDTO;
-import dto.NodeNamesDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -17,8 +15,6 @@ public class DogFollowingDaleAppStateTest {
 
 	public static final float TPF = 0.25f;
 	private Vector3f characterPosition = Vector3f.ZERO;
-
-	private NodeNamesDTO nodeNamesDTO = new NodeNamesDTO();
 
 	@Test
 	public void shouldTestThatEnemiesStayInSquare() {
@@ -41,9 +37,7 @@ public class DogFollowingDaleAppStateTest {
 			   .setWalkDirection(Mockito.any());
 
 		characterPosition.set(150, 0, -30);
-		GameStateDTO gameState = new GameStateDTO();
-		DogFollowingDaleAppState dogFollowingDaleAppState = new DogFollowingDaleAppState(
-				nodeNamesDTO, gameState);
+		DogFollowingDaleAppState dogFollowingDaleAppState = new DogFollowingDaleAppState();
 
 		//when, then
 		for (int i = 0; i < 10000; i++) {
