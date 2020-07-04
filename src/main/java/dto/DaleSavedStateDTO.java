@@ -1,7 +1,10 @@
 package dto;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 public class DaleSavedStateDTO extends ObjectSavedStateDTO{
 
+	@XStreamAlias("hp")
 	private int hp;
 
 	public int getHp() {

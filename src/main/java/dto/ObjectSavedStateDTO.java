@@ -2,11 +2,16 @@ package dto;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+@XStreamAlias("objectState")
 public class ObjectSavedStateDTO {
 
+	@XStreamAlias("position")
 	private Vector3f position;
+	@XStreamAlias("rotation")
 	private Quaternion rotation;
+	@XStreamAlias("pathToModel")
 	private String pathToModel;
 
 	public Vector3f getPosition() {

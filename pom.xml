@@ -29,6 +29,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.12</version>
+        </dependency>
+
+        <dependency>
             <groupId>LevelEditor</groupId>
             <artifactId>LevelEditor</artifactId>
             <version>1.0</version>

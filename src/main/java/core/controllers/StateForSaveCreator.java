@@ -3,6 +3,7 @@ package core.controllers;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.thoughtworks.xstream.XStream;
 import constants.NodeNames;
 import core.appState.DaleHPAppState;
 import dto.DaleSavedStateDTO;
@@ -10,12 +11,22 @@ import dto.DogSavedStateDTO;
 import dto.ObjectSavedStateDTO;
 import dto.SavedGameStateDTO;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 public class StateForSaveCreator {
 
-	public void create(Node rootNode, AppStateManager appStateManager) {
+	private final XStream xStream;
+
+	public StateForSaveCreator(XStream xStream) {
+		this.xStream = xStream;
+	}
+
+	public void create(File fileToSaveIn, Node rootNode,
+			AppStateManager appStateManager) {
 		SavedGameStateDTO savedGameStateDTO = new SavedGameStateDTO();
 		savedGameStateDTO.setDaleSavedStateDTO(
 				createDaleState(rootNode, appStateManager));
@@ -26,6 +37,18 @@ public class StateForSaveCreator {
 				NodeNames.getThrowables()));
 		otherObjectsStateDTOs.addAll(createObjectsStates(rootNode,
 				NodeNames.getImmobileObjects()));
+
+		xStream.toXML(savedGameStateDTO, getWriter(fileToSaveIn));
+	}
+
+	private FileWriter getWriter(File file)  {
+		try {
+			return new FileWriter(file);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	private Set<ObjectSavedStateDTO> createObjectsStates(
