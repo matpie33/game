@@ -24,13 +24,13 @@ import com.jme3.scene.shape.Sphere;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.GameApplication;
-import core.controllers.CollisionDetectionAppState;
 import core.controls.DaleFollowingCameraControl;
 import core.controls.DogMovingInsideAreaControl;
 import core.controls.ThrowableObjectMarkerControl;
+import core.loading.SkyLoader;
 import core.util.CoordinatesUtil;
-import dto.GameStateDTO;
-import dto.SpatialDTO;
+import dto.*;
+import initialization.ModelsLoadAppState;
 
 import java.util.List;
 
@@ -38,6 +38,7 @@ public class AddLevelObjects {
 
 	private GameStateDTO gameStateDTO;
 	private Application app;
+	private SkyLoader skyLoader;
 
 	public AddLevelObjects(GameStateDTO gameStateDTO) {
 		this.gameStateDTO = gameStateDTO;
@@ -50,68 +51,74 @@ public class AddLevelObjects {
 
 	private void addObjectsToMap(AppStateManager stateManager,
 			SimpleApplication app) {
-		BulletAppState bulletAppState = stateManager.getState(BulletAppState.class);
+		BulletAppState bulletAppState = stateManager.getState(
+				BulletAppState.class);
 		Node rootNode = app.getRootNode();
 		createFirstLevelNodes(rootNode);
 		createGameObjectsMainNodes(app.getRootNode());
-		List<SpatialDTO> spatials = stateManager.getState(LevelAppState.class)
-												.getSpatialDTOS();
-		for (SpatialDTO spatialDTO : spatials) {
-			System.out.println(spatialDTO.getSpatial()
-										 .getName());
-			String spatialName = spatialDTO.getSpatial()
-										   .getName();
-			Spatial spatial = setSpatialPositionAndRotation(spatialDTO);
-			if (spatialName.equals(NodeNames.getHouse()) || spatialName.equals(
-					NodeNames.getHouseWithExit()) || spatialName.equals(
-					NodeNames.getTrashbin())) {
-				initializeImmobileObject(bulletAppState, spatial, rootNode);
-			}
-			if (spatialName.equals(NodeNames.getDale())) {
-				initializeDale(bulletAppState, spatial, rootNode);
-			}
-			if (spatialName.equals(NodeNames.getMap())) {
-				initializeScene(bulletAppState, rootNode, spatial);
-			}
-			if (spatialName.equals(NodeNames.getDog())) {
-				initializeDog(bulletAppState, rootNode, spatial);
-			}
-			if (spatialName.equals(NodeNames.getBrokenFence())) {
-				initializeBrokenFence(bulletAppState, spatial, rootNode);
-			}
-			if (spatialName.equals(NodeNames.getBox())) {
-				initializeBox(bulletAppState, spatial, rootNode);
-			}
-			if (spatialName.equals(NodeNames.getArrow())) {
-				spatial.addControl(new ThrowableObjectMarkerControl());
-				spatial.setCullHint(Spatial.CullHint.Always);
-				Node gameObjects = (Node) rootNode.getChild(
-						NodeNames.getGameObjects());
-				gameObjects.attachChild(spatial);
-			}
-			if (spatialName.equals(NodeNames.getMark())) {
-				spatial.setCullHint(Spatial.CullHint.Always);
-			}
-			if (spatialName.equals(NodeNames.getSky())) {
-				Node gameObjects = (Node) rootNode.getChild(
-						NodeNames.getGameObjects());
-				gameObjects.attachChild(spatial);
-			}
-
-			CharacterControl control = spatial.getControl(
-					CharacterControl.class);
-			if (control != null) {
-				control.setViewDirection(spatialDTO.getRotation()
-												   .mult(new Vector3f(0, 0,
-														   1)));
-			}
-
+		LevelAppState levelAppState = stateManager.getState(
+				LevelAppState.class);
+		List<ObjectSavedStateDTO> additionalModels = levelAppState.getAdditionalModels();
+		SavedGameStateDTO savedGameDTO = levelAppState.getSavedGameDTO();
+		CheckpointsAppState checkpointsAppState = stateManager.getState(
+				CheckpointsAppState.class);
+		if (checkpointsAppState.hasCheckpoint()) {
+			savedGameDTO = checkpointsAppState.getCheckpoint();
 		}
+		additionalModels.forEach(
+				objectState -> loadObject(objectState, bulletAppState,
+						rootNode));
+		savedGameDTO.getOtherObjectsStateDTOs()
+					.forEach(objectState -> loadObject(objectState,
+							bulletAppState, rootNode));
+		initializeDale(bulletAppState, savedGameDTO, rootNode);
+		savedGameDTO.getDogsSavedStateDTOs()
+					.forEach(dogState -> initializeDog(bulletAppState, rootNode,
+							dogState));
 
 		initializeDaleFieldOfView(bulletAppState, rootNode);
+		initializeSky(rootNode);
 		//		gameObjects.attachChild(objectsHolderDTO.getScene());
 
 		//		gameObjects.attachChild(objectsHolderDTO.getTerrain());
+	}
+
+	private void initializeSky(Node rootNode) {
+		Node gameObjects = (Node) rootNode.getChild(NodeNames.getGameObjects());
+		skyLoader = new SkyLoader(app.getAssetManager());
+		gameObjects.attachChild(skyLoader.loadSky());
+	}
+
+	private void loadObject(ObjectSavedStateDTO objectState,
+			BulletAppState bulletAppState, Node rootNode) {
+		Spatial spatial = loadModel(objectState);
+		String spatialName = spatial.getName();
+		setSpatialPositionAndRotation(objectState, spatial);
+		if (spatialName.equals(NodeNames.getHouse()) || spatialName.equals(
+				NodeNames.getHouseWithExit()) || spatialName.equals(
+				NodeNames.getTrashbin())) {
+			initializeImmobileObject(bulletAppState, spatial, rootNode);
+		}
+		if (spatialName.equals(NodeNames.getMap())) {
+			initializeScene(bulletAppState, rootNode, spatial);
+		}
+		if (spatialName.equals(NodeNames.getBrokenFence())) {
+			initializeBrokenFence(bulletAppState, spatial, rootNode);
+		}
+		if (spatialName.equals(NodeNames.getBox())) {
+			initializeBox(bulletAppState, spatial, rootNode);
+		}
+		if (spatialName.equals(NodeNames.getArrow())) {
+			spatial.addControl(new ThrowableObjectMarkerControl());
+			spatial.setCullHint(Spatial.CullHint.Always);
+			Node gameObjects = (Node) rootNode.getChild(
+					NodeNames.getGameObjects());
+			gameObjects.attachChild(spatial);
+		}
+		if (spatialName.equals(NodeNames.getMark())) {
+			spatial.setCullHint(Spatial.CullHint.Always);
+		}
+
 	}
 
 	private void createGameObjectsMainNodes(Node rootNode) {
@@ -160,12 +167,11 @@ public class AddLevelObjects {
 		immobileObjects.attachChild(spatial);
 	}
 
-	private Spatial setSpatialPositionAndRotation(SpatialDTO spatialDTO) {
-		Spatial spatial = spatialDTO.getSpatial();
-		spatial.setLocalTranslation(spatialDTO.getPosition());
-		spatial.setLocalRotation(spatialDTO.getRotation());
+	private void setSpatialPositionAndRotation(
+			ObjectSavedStateDTO objectSavedStateDTO, Spatial model) {
+		model.setLocalTranslation(objectSavedStateDTO.getPosition());
+		model.setLocalRotation(objectSavedStateDTO.getRotation());
 
-		return spatial;
 	}
 
 	private void initializeDaleFieldOfView(BulletAppState bulletAppState,
@@ -253,10 +259,11 @@ public class AddLevelObjects {
 		rootNode.attachChild(tree);
 	}
 
-
-
-	private void initializeDale(BulletAppState bulletAppState, Spatial model,
-			Node rootNode) {
+	private void initializeDale(BulletAppState bulletAppState,
+			SavedGameStateDTO savedGameStateDTO, Node rootNode) {
+		DaleSavedStateDTO daleSavedStateDTO = savedGameStateDTO.getDaleSavedStateDTO();
+		Spatial model = loadModel(daleSavedStateDTO);
+		setSpatialPositionAndRotation(daleSavedStateDTO, model);
 		Node gameObjects = (Node) rootNode.getChild(NodeNames.getGameObjects());
 		CapsuleCollisionShape capsuleShape = initializeDaleShape(model);
 		initializeDaleControls(bulletAppState, model, capsuleShape);
@@ -272,6 +279,8 @@ public class AddLevelObjects {
 		characterControl.setGravity(new Vector3f(0, -40f, 0));
 		Vector3f position = model.getLocalTranslation();
 		characterControl.setPhysicsLocation(position);
+		characterControl.setViewDirection(model.getWorldRotation()
+											   .mult(new Vector3f(0, 0, 1)));
 		ghostControl.setPhysicsLocation(position);
 
 		bulletAppState.getPhysicsSpace()
@@ -293,11 +302,19 @@ public class AddLevelObjects {
 	}
 
 	private void initializeDog(BulletAppState bulletAppState, Node rootNode,
-			Spatial model) {
+			DogSavedStateDTO dogSavedStateDTO) {
 		Node dogs = (Node) rootNode.getChild(NodeNames.getDogs());
+		Spatial model = loadModel(dogSavedStateDTO);
+		setSpatialPositionAndRotation(dogSavedStateDTO, model);
 		CapsuleCollisionShape capsuleShape = initializeDogShape(model);
 		initializeDogControls(bulletAppState, model, capsuleShape);
 		dogs.attachChild(model);
+	}
+
+	private Spatial loadModel(ObjectSavedStateDTO objectSavedStateDTO) {
+		ModelsLoadAppState state = app.getStateManager()
+									  .getState(ModelsLoadAppState.class);
+		return state.loadModel(objectSavedStateDTO.getPathToModel());
 	}
 
 	private void initializeDogControls(BulletAppState bulletAppState,
@@ -311,6 +328,8 @@ public class AddLevelObjects {
 		control.setPhysicsLocation(model.getLocalTranslation());
 
 		control.setGravity(new Vector3f(0, -40f, 0));
+		control.setViewDirection(model.getWorldRotation()
+									  .mult(new Vector3f(0, 0, 1)));
 		model.addControl(control);
 		model.addControl(ghostControl);
 		model.addControl(dogMovingInsideAreaControl);

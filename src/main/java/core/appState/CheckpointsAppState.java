@@ -7,6 +7,7 @@ import core.controllers.CheckpointsConditionsController;
 import core.controllers.SavedStateController;
 import core.util.CheckPointsFileCreator;
 import dto.GameStateDTO;
+import dto.SavedGameStateDTO;
 
 public class CheckpointsAppState extends BaseAppState {
 
@@ -15,6 +16,7 @@ public class CheckpointsAppState extends BaseAppState {
 	private CheckpointsConditionsController checkpointsConditionsController;
 	private AddLevelObjects addLevelObjects;
 	private SavedStateController savedStateController = new SavedStateController();
+	private SavedGameStateDTO savedState;
 
 	public CheckpointsAppState(GameStateDTO gameStateDTO) {
 		addLevelObjects = new AddLevelObjects(gameStateDTO);
@@ -31,7 +33,7 @@ public class CheckpointsAppState extends BaseAppState {
 
 	private void addObjectsToMap(Application app) {
 		if (savedStateController.doesCheckpointExist()) {
-			savedStateController.load();
+			savedState = savedStateController.load();
 		}
 		addLevelObjects.addObjects(app.getStateManager(), app);
 
@@ -64,5 +66,13 @@ public class CheckpointsAppState extends BaseAppState {
 	private void saveCheckpoint() {
 		savedStateController.save(simpleApplication.getRootNode(),
 				simpleApplication.getStateManager());
+	}
+
+	public SavedGameStateDTO getCheckpoint() {
+		return savedState;
+	}
+
+	public boolean hasCheckpoint() {
+		return savedState != null;
 	}
 }

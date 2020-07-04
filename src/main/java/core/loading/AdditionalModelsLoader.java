@@ -3,7 +3,6 @@ package core.loading;
 import com.jme3.app.Application;
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Spatial;
-import com.jme3.util.SkyFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +19,7 @@ public class AdditionalModelsLoader {
 	public List<Spatial> loadModels(Application app) {
 		assetManager = app.getAssetManager();
 		createModels();
-		createSky();
-
 		return models;
-	}
-
-	private void createSky() {
-		models.add(SkyFactory.createSky(assetManager, "clouds.dds",
-				SkyFactory.EnvMapType.CubeMap));
 	}
 
 	private void createModels() {
