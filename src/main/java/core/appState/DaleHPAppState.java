@@ -20,6 +20,10 @@ public class DaleHPAppState extends BaseAppState {
 	private int hp;
 	private boolean collisionDetected;
 
+	public int getHp() {
+		return hp;
+	}
+
 	private void handleDaleState() {
 
 		if (collisionDetected && enoughTimePassedToDecreaseHp()) {

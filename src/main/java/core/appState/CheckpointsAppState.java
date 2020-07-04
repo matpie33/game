@@ -9,6 +9,7 @@ import com.jme3.export.binary.BinaryExporter;
 import com.jme3.scene.Spatial;
 import constants.NodeNames;
 import core.controllers.CheckpointsConditionsController;
+import core.controllers.StateForSaveCreator;
 import core.util.CheckPointsFileCreator;
 import dto.GameStateDTO;
 
@@ -24,6 +25,7 @@ public class CheckpointsAppState extends BaseAppState {
 	private CheckPointsFileCreator checkPointsFileCreator;
 	private CheckpointsConditionsController checkpointsConditionsController;
 	private AddLevelObjects addLevelObjects;
+	private StateForSaveCreator stateForSaveCreator = new StateForSaveCreator();
 
 	public CheckpointsAppState(GameStateDTO gameStateDTO) {
 		addLevelObjects = new AddLevelObjects(gameStateDTO);
@@ -86,8 +88,12 @@ public class CheckpointsAppState extends BaseAppState {
 
 	private void saveCheckpoint() {
 		try {
-			binaryExporter.save(simpleApplication.getRootNode().getChild(
-					NodeNames.getGameObjects()),	file);
+			binaryExporter.save(simpleApplication.getRootNode()
+												 .getChild(
+														 NodeNames.getGameObjects()),
+					file);
+			stateForSaveCreator.create(simpleApplication.getRootNode(),
+					simpleApplication.getStateManager());
 		}
 		catch (IOException e) {
 			e.printStackTrace();
