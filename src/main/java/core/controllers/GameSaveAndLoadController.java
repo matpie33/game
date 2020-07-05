@@ -7,26 +7,26 @@ import dto.SavedGameStateDTO;
 
 import java.io.File;
 
-public class SavedStateController {
+public class GameSaveAndLoadController {
 
 	public static final String FILE_NAME_TO_SAVE_GAME_IN = "test.xml";
-	private SavedStateLoader savedStateLoader;
-	private StateForSaveCreator stateForSaveCreator;
+	private GameStateLoader gameStateLoader;
+	private GameStateSaver gameStateSaver;
 
-	public SavedStateController() {
+	public GameSaveAndLoadController() {
 		XStream xStream = new XStream();
 		xStream.processAnnotations(SavedGameStateDTO.class);
-		savedStateLoader = new SavedStateLoader(xStream);
-		stateForSaveCreator = new StateForSaveCreator(xStream);
+		gameStateLoader = new GameStateLoader(xStream);
+		gameStateSaver = new GameStateSaver(xStream);
 	}
 
 	public void save(Node rootNode, AppStateManager appStateManager) {
 		File file = new File(FILE_NAME_TO_SAVE_GAME_IN);
-		stateForSaveCreator.create(file, rootNode, appStateManager);
+		gameStateSaver.create(file, rootNode, appStateManager);
 	}
 
 	public SavedGameStateDTO load() {
-		return savedStateLoader.load(new File(FILE_NAME_TO_SAVE_GAME_IN));
+		return gameStateLoader.load(new File(FILE_NAME_TO_SAVE_GAME_IN));
 	}
 
 	public boolean doesCheckpointExist() {

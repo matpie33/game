@@ -5,11 +5,11 @@ import dto.SavedGameStateDTO;
 
 import java.io.File;
 
-public class SavedStateLoader {
+public class GameStateLoader {
 
 	private final XStream xStream;
 
-	public SavedStateLoader(XStream xStream) {
+	public GameStateLoader(XStream xStream) {
 		this.xStream = xStream;
 	}
 

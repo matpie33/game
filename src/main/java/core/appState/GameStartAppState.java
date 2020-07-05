@@ -5,7 +5,6 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
-import core.controllers.CollisionDetectionAppState;
 import dto.GameStateDTO;
 import initialization.ModelsLoadAppState;
 

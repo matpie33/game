@@ -3,7 +3,6 @@ package core.appState;
 import com.jme3.app.Application;
 import com.jme3.app.state.BaseAppState;
 import com.jme3.bullet.BulletAppState;
-import core.controllers.CollisionDetectionAppState;
 
 public class AddPhysicsAppState extends BaseAppState {
 	@Override

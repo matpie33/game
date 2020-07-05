@@ -28,13 +28,6 @@ public class ObjectsRemovingController {
 		dog.removeFromParent();
 	}
 
-	private IllegalArgumentException createExeptionForDogCollision(
-			Spatial dogNode) {
-		return new IllegalArgumentException(
-				"Dog collided with obstacle, but dog state not " + "found: "
-						+ dogNode);
-	}
-
 	public void removeBox(Spatial box) {
 		if (box.getParent() == null) {
 			return;

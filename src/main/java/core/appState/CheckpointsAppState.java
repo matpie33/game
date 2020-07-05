@@ -4,7 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.BaseAppState;
 import core.controllers.CheckpointsConditionsController;
-import core.controllers.SavedStateController;
+import core.controllers.GameSaveAndLoadController;
 import core.util.CheckPointsFileCreator;
 import dto.GameStateDTO;
 import dto.SavedGameStateDTO;
@@ -15,7 +15,7 @@ public class CheckpointsAppState extends BaseAppState {
 	private CheckPointsFileCreator checkPointsFileCreator;
 	private CheckpointsConditionsController checkpointsConditionsController;
 	private AddLevelObjects addLevelObjects;
-	private SavedStateController savedStateController = new SavedStateController();
+	private GameSaveAndLoadController gameSaveAndLoadController = new GameSaveAndLoadController();
 	private SavedGameStateDTO savedState;
 
 	public CheckpointsAppState(GameStateDTO gameStateDTO) {
@@ -32,8 +32,8 @@ public class CheckpointsAppState extends BaseAppState {
 	}
 
 	private void addObjectsToMap(Application app) {
-		if (savedStateController.doesCheckpointExist()) {
-			savedState = savedStateController.load();
+		if (gameSaveAndLoadController.doesCheckpointExist()) {
+			savedState = gameSaveAndLoadController.load();
 		}
 		addLevelObjects.addObjects(app.getStateManager(), app);
 
@@ -64,7 +64,7 @@ public class CheckpointsAppState extends BaseAppState {
 	}
 
 	private void saveCheckpoint() {
-		savedStateController.save(simpleApplication.getRootNode(),
+		gameSaveAndLoadController.save(simpleApplication.getRootNode(),
 				simpleApplication.getStateManager());
 	}
 

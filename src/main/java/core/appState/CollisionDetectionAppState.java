@@ -1,4 +1,4 @@
-package core.controllers;
+package core.appState;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.BaseAppState;
@@ -9,6 +9,7 @@ import com.jme3.scene.Spatial;
 import constants.NodeNames;
 import constants.PhysicsControls;
 import core.appState.DaleHPAppState;
+import core.controllers.ObjectsRemovingController;
 import core.controls.DogMovingInsideAreaControl;
 import enums.ObjectsTypes;
 

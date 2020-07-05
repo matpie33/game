@@ -17,11 +17,11 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class StateForSaveCreator {
+public class GameStateSaver {
 
 	private final XStream xStream;
 
-	public StateForSaveCreator(XStream xStream) {
+	public GameStateSaver(XStream xStream) {
 		this.xStream = xStream;
 	}
 
