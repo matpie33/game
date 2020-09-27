@@ -62,6 +62,11 @@
         </dependency>
         <dependency>
             <groupId>${jme3_groupId}</groupId>
+            <artifactId>jme3-bullet-native</artifactId>
+            <version>${jme3_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${jme3_groupId}</groupId>
             <artifactId>jme3-plugins</artifactId>
             <version>${jme3_version}</version>
         </dependency>
