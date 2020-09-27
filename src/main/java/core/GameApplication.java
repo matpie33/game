@@ -10,7 +10,7 @@ public class GameApplication extends SimpleApplication {
 	private GameApplication() {
 		if (Holder.INSTANCE != null) {
 			throw new IllegalStateException(
-					"Instance of this class already " + "constructed");
+					"Instance of this class already constructed");
 		}
 	}
 
